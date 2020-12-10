@@ -1,0 +1,125 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/template.xhtml">
+		<ui:define name="content">
+			<p:growl id="growl"></p:growl>
+
+
+			<h:form id="form">
+				<h:outputLabel for="name" value="Name"></h:outputLabel>
+				<h:inputText id="name" required="true"
+					value="#{categoryManagedBean.name}"></h:inputText>
+
+
+
+
+				<p:splitButton id="basic" value="Insert"
+					action="#{categoryManagedBean.insert}" update="table growl">
+					<p:menuitem value="Search" action="#{categoryManagedBean.filter}"
+						update="table" />
+					<p:menuitem value="Reset" immediate="true"
+						action="#{categoryManagedBean.reset}" update="table name">
+
+					</p:menuitem>
+
+				</p:splitButton>
+
+				<p:dataTable id="table" value="#{categoryManagedBean.categories}"
+					var="category" sortBy="#{category.lastUpdated}">
+
+					<p:column headerText="Name">
+						<p:outputLabel value="#{category.name}"></p:outputLabel>
+					</p:column>
+
+					<p:column headerText="LastUpdated">
+						<p:outputLabel value="#{category.lastUpdated}">
+							<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+						</p:outputLabel>
+					</p:column>
+
+
+					<p:column headerText="Actions">
+
+						<p:commandButton value="Edit" update="editForm"
+							process="@this" oncomplete="PF('EditDialog').show();">
+
+							<f:setPropertyActionListener
+								target="#{categoryManagedBean.category}" value="#{category}" />
+
+						</p:commandButton>
+
+
+
+						<p:commandButton immediate="true" value="Delete"
+							update=":form:table growl" action="#{categoryManagedBean.delete}">
+							<p:confirm header="Confirmation" message="Are you sure?"
+								icon="pi pi-exclamation-triangle" />
+
+							<f:setPropertyActionListener
+								target="#{categoryManagedBean.category}" value="#{category}" />
+						</p:commandButton>
+
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Yes" type="button"
+								styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+						</p:confirmDialog>
+
+					</p:column>
+
+
+
+					<p:column>
+						<p:link outcome="details" value="View Details">
+							<f:param name="id" value="#{category.id}" />
+						</p:link>
+
+					</p:column>
+
+				</p:dataTable>
+
+
+
+
+			</h:form>
+
+			<h:form id="editForm">
+
+
+				<p:dialog header="Edit Category" id="updateDialog"
+					widgetVar="EditDialog" modal="true">
+
+
+					<h:panelGrid columns="3">
+						<h:outputLabel value="Name " for="updateName"></h:outputLabel>
+						<h:inputText id="updateName" required="true"
+							value="#{categoryManagedBean.category.name}"></h:inputText>
+
+
+
+						<p:commandButton process="updateDialog" update=":form:table growl"
+							value="Save" actionListener="#{categoryManagedBean.save}"
+							oncomplete="PF('EditDialog').hide();">
+
+						</p:commandButton>
+
+
+
+					</h:panelGrid>
+
+
+				</p:dialog>
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

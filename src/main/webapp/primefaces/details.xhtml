@@ -1,0 +1,75 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/template.xhtml">
+		<ui:define name="content">
+			<p:growl id="growl"></p:growl>
+
+
+			<p:dataTable styleClass="#{movie.rentalRate > 2 ? 'green': 'bluye'}"
+				id="table" value="#{moviesManagedBean.movies}" var="movie">
+
+				<p:column headerText="Title">
+					<p:outputLabel value="#{movie.title}"></p:outputLabel>
+				</p:column>
+
+				<p:column headerText="Year">
+					<p:outputLabel value="#{movie.releaseYear}"></p:outputLabel>
+				</p:column>
+
+				<p:column headerText="Language">
+					<p:outputLabel value="#{movie.language}"></p:outputLabel>
+				</p:column>
+
+
+				<p:column headerText="Rental Rate">
+					<p:outputLabel value="#{movie.rentalRate}"></p:outputLabel>
+				</p:column>
+
+				<p:column headerText="LastUpdated">
+					<p:outputLabel value="#{movie.lastUpdate}">
+						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+					</p:outputLabel>
+				</p:column>
+
+
+				<p:column headerText="Actions">
+
+
+					<p:commandButton value="View" update=":form:viewDialog"
+						process="@this" oncomplete="PF('ViewDialog').show();">
+
+						<f:setPropertyActionListener target="#{moviesManagedBean.movie}"
+							value="#{movie}" />
+
+					</p:commandButton>
+
+
+				</p:column>
+
+
+			</p:dataTable>
+
+
+
+
+
+			<h:form id="form">
+				<p:dialog header="Description" id="viewDialog"
+					widgetVar="ViewDialog" modal="true">
+					<h:outputLabel value="Description " for="desc"></h:outputLabel>
+					<h:outputLabel id="desc"
+						value="#{moviesManagedBean.movie.description}">
+					</h:outputLabel>
+				</p:dialog>
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

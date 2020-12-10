@@ -1,0 +1,115 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/template/template.xhtml">
+		<ui:define name="content">
+			<p:growl id="growl"></p:growl>
+			<h:form id="form">
+
+
+				<h:outputLabel for="continent" value="Kontinenti"></h:outputLabel>
+				<h:inputText id="continent" value="#{countryManagedBean.continent}"></h:inputText>
+
+				<h:outputLabel for="surface" value="Siperfaqja me e madhe se : "></h:outputLabel>
+				<p:inputNumber id="surface" value="#{countryManagedBean.surface}"></p:inputNumber>
+
+				<p:commandButton label="Search" value="Search"
+					action="#{countryManagedBean.getAll}" update="table"></p:commandButton>
+
+
+				<p:dataTable id="table" value="#{countryManagedBean.countries}"
+					var="country" sortBy="#{country.surfaceArea}">
+
+					<p:column headerText="Country Code">
+						<p:outputLabel value="#{country.countryCode}"></p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Name">
+						<p:outputLabel value="#{country.name}"></p:outputLabel>
+					</p:column>
+
+
+					<p:column headerText="Continent">
+						<p:outputLabel value="#{country.continent}"></p:outputLabel>
+					</p:column>
+
+
+					<p:column headerText="Surface Area">
+						<p:outputLabel value="#{country.surfaceArea} m2"></p:outputLabel>
+					</p:column>
+
+
+					<p:column headerText="Independence Year">
+						<p:outputLabel
+							value="#{country.indepencenceYear eq '0'? 'Unknown':country.indepencenceYear} "></p:outputLabel>
+					</p:column>
+
+
+					<p:column headerText="Actions">
+
+						<p:commandButton value="Edit" update=":form:dialogForm"
+							oncomplete="PF('dialog').show();">
+
+							<f:setPropertyActionListener
+								target="#{countryManagedBean.selectedCountry}"
+								value="#{country}" />
+
+						</p:commandButton>
+					</p:column>
+
+				</p:dataTable>
+
+
+
+				<p:dialog header="Country" id="dialogForm" widgetVar="dialog"
+					modal="true">
+
+					<h:panelGrid columns="2">
+						<h:outputLabel value="Country Code " for="inputCountryCode"></h:outputLabel>
+						<h:outputText id="inputCountryCode"
+							value="#{countryManagedBean.selectedCountry.countryCode}"></h:outputText>
+
+						<h:outputLabel for="inputName" value="Country Name "></h:outputLabel>
+						<h:inputText id="inputName"
+							value="#{countryManagedBean.selectedCountry.name}"></h:inputText>
+
+
+						<h:outputLabel for="continentInput" value="Continent"></h:outputLabel>
+						<h:inputText id="continentInput"
+							value="#{countryManagedBean.selectedCountry.continent}"></h:inputText>
+
+
+
+						<p:commandButton update=":form:table growl" value="Save"
+							actionListener="#{countryManagedBean.save}"
+							oncomplete="PF('dialog').hide();">
+
+
+
+
+						</p:commandButton>
+
+
+						<p:commandButton value="Close" oncomplete="PF('dialog').hide();">
+
+
+
+
+						</p:commandButton>
+
+					</h:panelGrid>
+
+
+				</p:dialog>
+
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>
