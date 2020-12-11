@@ -50,13 +50,15 @@ class MovieRepositoryImpl implements MovieRepository {
 
 				Booking movie = new Booking();
 
-				movie.setTitle(result.getString("title"));
+				/* movie.setTitle(result.getString("title"));
 				movie.setDescription(result.getString("description"));
 				movie.setRentalRate(result.getBigDecimal("rental_rate"));
 				movie.setLastUpdate(new Date(result.getTimestamp("last_update").getTime()));
 				movie.setReleaseYear(result.getInt("release_year"));
 				movie.setLanguage(result.getString("name"));
 
+
+				 */
 				toReturn.add(movie);
 
 			}

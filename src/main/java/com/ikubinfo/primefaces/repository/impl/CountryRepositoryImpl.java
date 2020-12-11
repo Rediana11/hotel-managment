@@ -54,8 +54,8 @@ class CountryRepositoryImpl implements CountryRepository {
 
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 
-		namedParameters.addValue("name", country.getName()).addValue("continent", country.getContinent())
-				.addValue("code", country.getCountryCode());
+		//namedParameters.addValue("name", country.getName()).addValue("continent", country.getContinent())
+		//		.addValue("code", country.getCountryCode());
 
 		int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_QUERY, namedParameters);
 

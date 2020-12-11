@@ -15,7 +15,7 @@ public class CategoryRowMapper implements RowMapper<Role> {
 		Role category = new Role();
 		category.setId(result.getInt("category_id"));
 		category.setName(result.getString("name"));
-		category.setLastUpdated(new Date(result.getTimestamp("last_update").getTime()));
+		//category.setLastUpdated(new Date(result.getTimestamp("last_update").getTime()));
 		return category;
 	}
 

@@ -77,7 +77,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
 
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("name", category.getName());
-		parameters.put("last_update", category.getLastUpdated());
+		//parameters.put("last_update", category.getLastUpdated());
 
 		return insertCategoryQuery.execute(parameters) > 0;
 

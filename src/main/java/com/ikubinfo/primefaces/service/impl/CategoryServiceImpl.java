@@ -26,14 +26,14 @@ import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 
 	@Override
 	public boolean save(Role category) {
-		category.setLastUpdated(new Date());
+		//category.setLastUpdated(new Date());
 		return categoryRepository.save(category);
 
 	}
 
 	@Override
 	public boolean create(Role category) {
-		category.setLastUpdated(new Date());
+		//category.setLastUpdated(new Date());
 		return categoryRepository.create(category);
 
 	}
