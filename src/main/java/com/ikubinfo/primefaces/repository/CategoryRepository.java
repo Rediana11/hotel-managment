@@ -2,18 +2,18 @@ package com.ikubinfo.primefaces.repository;
 
 import java.util.List;
 
-import com.ikubinfo.primefaces.model.Category;
+import com.ikubinfo.primefaces.model.Role;
 
 public interface CategoryRepository {
 
-	List<Category> getAll(String name);
+	List<Role> getAll(String name);
 
-	boolean save(Category category);
+	boolean save(Role category);
 
-	boolean create(Category category);
+	boolean create(Role category);
 
-	boolean isCategoryInUse(Category category);
+	boolean isCategoryInUse(Role category);
 
-	void delete(Category category);
+	void delete(Role category);
 
 }

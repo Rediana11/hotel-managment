@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.ikubinfo.primefaces.exception.ApfasException;
-import com.ikubinfo.primefaces.model.Movie;
+import com.ikubinfo.primefaces.model.Booking;
 import com.ikubinfo.primefaces.repository.MovieRepository;
 
 @Repository
@@ -35,9 +35,9 @@ class MovieRepositoryImpl implements MovieRepository {
 	}
 
 	@Override
-	public List<Movie> getMoivesByCategory(int categoryId) {
+	public List<Booking> getMoivesByCategory(int categoryId) {
 
-		List<Movie> toReturn = new ArrayList<Movie>();
+		List<Booking> toReturn = new ArrayList<Booking>();
 
 		try (Connection connection = dataSource.getConnection();
 				PreparedStatement statement = connection.prepareStatement(GET_MOVIES_BY_CATEGORY);) {
@@ -48,7 +48,7 @@ class MovieRepositoryImpl implements MovieRepository {
 
 			while (result.next()) {
 
-				Movie movie = new Movie();
+				Booking movie = new Booking();
 
 				movie.setTitle(result.getString("title"));
 				movie.setDescription(result.getString("description"));

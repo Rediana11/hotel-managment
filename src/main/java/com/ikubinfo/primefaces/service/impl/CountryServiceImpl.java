@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.ikubinfo.primefaces.model.Country;
+import com.ikubinfo.primefaces.model.User;
 import com.ikubinfo.primefaces.repository.CountryRepository;
 import com.ikubinfo.primefaces.service.CountryService;
 
@@ -20,14 +20,14 @@ class CountryServiceImpl implements CountryService {
 	}
 
 	@Override
-	public List<Country> getAll(String continent, BigDecimal surface) {
+	public List<User> getAll(String continent, BigDecimal surface) {
 
 		return countryRepository.getAll(continent, surface);
 
 	}
 
 	@Override
-	public boolean save(Country country) {
+	public boolean save(User country) {
 		return countryRepository.save(country);
 
 	}

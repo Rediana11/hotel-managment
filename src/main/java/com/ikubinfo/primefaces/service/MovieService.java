@@ -2,10 +2,10 @@ package com.ikubinfo.primefaces.service;
 
 import java.util.List;
 
-import com.ikubinfo.primefaces.model.Movie;
+import com.ikubinfo.primefaces.model.Booking;
 
 public interface MovieService {
 
-	List<Movie> getMovieById(int categoryId);
+	List<Booking> getMovieById(int categoryId);
 
 }

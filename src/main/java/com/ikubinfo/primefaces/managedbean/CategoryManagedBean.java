@@ -8,7 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 
-import com.ikubinfo.primefaces.model.Category;
+import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.service.CategoryService;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 import com.ikubinfo.primefaces.util.Messages;
@@ -17,9 +17,9 @@ import com.ikubinfo.primefaces.util.Messages;
 @ViewScoped
 public class CategoryManagedBean implements Serializable {
 	private static final long serialVersionUID = 3800933422824282320L;
-	private Category category;
+	private Role category;
 
-	private List<Category> categories;
+	private List<Role> categories;
 	private String name;
 
 	@ManagedProperty(value = "#{categoryService}")
@@ -32,7 +32,7 @@ public class CategoryManagedBean implements Serializable {
 	public void init() {
 
 		categories = categoryService.getAll(null);
-		category = new Category();
+		category = new Role();
 
 	}
 
@@ -42,12 +42,12 @@ public class CategoryManagedBean implements Serializable {
 			messages.showInfoMessage("Category updated successfully");
 
 		}
-		category = new Category();
+		category = new Role();
 
 	}
 
 	public void insert() {
-		Category toAdd = new Category();
+		Role toAdd = new Role();
 		toAdd.setName(name);
 
 		if (categoryService.create(toAdd)) {
@@ -82,19 +82,19 @@ public class CategoryManagedBean implements Serializable {
 		filter();
 	}
 
-	public Category getCategory() {
+	public Role getCategory() {
 		return category;
 	}
 
-	public void setCategory(Category category) {
+	public void setCategory(Role category) {
 		this.category = category;
 	}
 
-	public List<Category> getCategories() {
+	public List<Role> getCategories() {
 		return categories;
 	}
 
-	public void setCategories(List<Category> categories) {
+	public void setCategories(List<Role> categories) {
 		this.categories = categories;
 	}
 

@@ -2,10 +2,10 @@ package com.ikubinfo.primefaces.repository;
 
 import java.util.List;
 
-import com.ikubinfo.primefaces.model.Movie;
+import com.ikubinfo.primefaces.model.Booking;
 
 public interface MovieRepository {
 
-	List<Movie> getMoivesByCategory(int categoryId);
+	List<Booking> getMoivesByCategory(int categoryId);
 
 }

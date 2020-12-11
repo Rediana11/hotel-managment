@@ -8,7 +8,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import com.ikubinfo.primefaces.model.Movie;
+import com.ikubinfo.primefaces.model.Booking;
 import com.ikubinfo.primefaces.service.MovieService;
 
 @ManagedBean
@@ -18,8 +18,8 @@ public class MoviesManagedBean {
 	@ManagedProperty(value = "#{movieService}")
 	private MovieService movieService;
 
-	private List<Movie> movies;
-	private Movie movie;
+	private List<Booking> movies;
+	private Booking movie;
 
 	@PostConstruct
 	public void init() {
@@ -28,11 +28,11 @@ public class MoviesManagedBean {
 		movies = movieService.getMovieById(Integer.parseInt(value));
 	}
 
-	public List<Movie> getMovies() {
+	public List<Booking> getMovies() {
 		return movies;
 	}
 
-	public void setMovies(List<Movie> movies) {
+	public void setMovies(List<Booking> movies) {
 		this.movies = movies;
 	}
 
@@ -44,11 +44,11 @@ public class MoviesManagedBean {
 		this.movieService = movieService;
 	}
 
-	public Movie getMovie() {
+	public Booking getMovie() {
 		return movie;
 	}
 
-	public void setMovie(Movie movie) {
+	public void setMovie(Booking movie) {
 		this.movie = movie;
 	}
 

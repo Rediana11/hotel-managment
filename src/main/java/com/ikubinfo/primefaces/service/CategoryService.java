@@ -2,17 +2,17 @@ package com.ikubinfo.primefaces.service;
 
 import java.util.List;
 
-import com.ikubinfo.primefaces.model.Category;
+import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 
 public interface CategoryService {
 
-	List<Category> getAll(String name);
+	List<Role> getAll(String name);
 
-	boolean save(Category category);
+	boolean save(Role category);
 
-	boolean create(Category category);
+	boolean create(Role category);
 
-	void delete(Category category) throws CategoryInUseException;
+	void delete(Role category) throws CategoryInUseException;
 
 }

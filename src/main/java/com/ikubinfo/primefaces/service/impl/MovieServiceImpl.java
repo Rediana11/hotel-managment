@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.ikubinfo.primefaces.model.Movie;
+import com.ikubinfo.primefaces.model.Booking;
 import com.ikubinfo.primefaces.repository.MovieRepository;
 import com.ikubinfo.primefaces.service.MovieService;
 
@@ -19,7 +19,7 @@ class MovieServiceImpl implements MovieService {
 	}
 
 	@Override
-	public List<Movie> getMovieById(int categoryId) {
+	public List<Booking> getMovieById(int categoryId) {
 
 		return movieRepository.getMoivesByCategory(categoryId);
 

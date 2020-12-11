@@ -12,7 +12,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.ikubinfo.primefaces.model.Country;
+import com.ikubinfo.primefaces.model.User;
 import com.ikubinfo.primefaces.repository.CountryRepository;
 import com.ikubinfo.primefaces.repository.mapper.CountryRowMapper;
 
@@ -29,7 +29,7 @@ class CountryRepositoryImpl implements CountryRepository {
 	}
 
 	@Override
-	public List<Country> getAll(String continent, BigDecimal surface) {
+	public List<User> getAll(String continent, BigDecimal surface) {
 
 		String queryString = "Select country.code,country.name,country.continent,country.surfacearea,country.indepyear from public.country where 1=1 ";
 		Map<String, Object> params = new HashMap<>();
@@ -50,7 +50,7 @@ class CountryRepositoryImpl implements CountryRepository {
 	}
 
 	@Override
-	public boolean save(Country country) {
+	public boolean save(User country) {
 
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 

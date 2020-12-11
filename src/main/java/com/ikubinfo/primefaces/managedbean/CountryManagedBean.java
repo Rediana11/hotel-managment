@@ -11,7 +11,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import com.ikubinfo.primefaces.model.Country;
+import com.ikubinfo.primefaces.model.User;
 import com.ikubinfo.primefaces.service.CountryService;
 
 @ManagedBean
@@ -19,8 +19,8 @@ import com.ikubinfo.primefaces.service.CountryService;
 public class CountryManagedBean implements Serializable {
 
 	private static final long serialVersionUID = 5448895347701230045L;
-	private Country selectedCountry;
-	private List<Country> countries;
+	private User selectedCountry;
+	private List<User> countries;
 	private String continent;
 	private BigDecimal surface;
 
@@ -31,14 +31,14 @@ public class CountryManagedBean implements Serializable {
 	public void init() {
 
 		countries = countryService.getAll(continent, surface);
-		selectedCountry = new Country();
+		selectedCountry = new User();
 
 	}
 
 	public void save() {
 		countryService.save(selectedCountry);
 		countries = countryService.getAll(continent, surface);
-		selectedCountry = new Country();
+		selectedCountry = new User();
 		FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Updated"));
 	}
 
@@ -47,11 +47,11 @@ public class CountryManagedBean implements Serializable {
 
 	}
 
-	public List<Country> getCountries() {
+	public List<User> getCountries() {
 		return countries;
 	}
 
-	public void setCountries(List<Country> countries) {
+	public void setCountries(List<User> countries) {
 		this.countries = countries;
 	}
 
@@ -79,11 +79,11 @@ public class CountryManagedBean implements Serializable {
 		this.countryService = countryService;
 	}
 
-	public Country getSelectedCountry() {
+	public User getSelectedCountry() {
 		return selectedCountry;
 	}
 
-	public void setSelectedCountry(Country selectedCountry) {
+	public void setSelectedCountry(User selectedCountry) {
 		this.selectedCountry = selectedCountry;
 	}
 

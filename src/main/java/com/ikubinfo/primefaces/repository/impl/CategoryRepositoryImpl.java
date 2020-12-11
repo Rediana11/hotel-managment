@@ -16,7 +16,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import com.ikubinfo.primefaces.model.Category;
+import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.repository.CategoryRepository;
 import com.ikubinfo.primefaces.repository.mapper.CategoryRowMapper;
 
@@ -44,7 +44,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
 	}
 
 	@Override
-	public List<Category> getAll(String name) {
+	public List<Role> getAll(String name) {
 
 		Map<String, Object> params = new HashMap<>();
 		params.put("name", "%" + name + "%");
@@ -60,7 +60,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
 	}
 
 	@Override
-	public boolean save(Category category) {
+	public boolean save(Role category) {
 
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 
@@ -73,7 +73,7 @@ class CategoryRepositoryImpl implements CategoryRepository {
 	}
 
 	@Override
-	public boolean create(Category category) {
+	public boolean create(Role category) {
 
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		parameters.put("name", category.getName());
@@ -84,14 +84,14 @@ class CategoryRepositoryImpl implements CategoryRepository {
 	}
 
 	@Override
-	public boolean isCategoryInUse(Category category) {
+	public boolean isCategoryInUse(Role category) {
 
 		return jdbcTemplate.queryForObject(CATEGORY_IN_USE, Integer.class, category.getId()) > 0;
 
 	}
 
 	@Override
-	public void delete(Category category) {
+	public void delete(Role category) {
 
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 

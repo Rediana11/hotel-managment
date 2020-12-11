@@ -6,13 +6,13 @@ import java.util.Date;
 
 import org.springframework.jdbc.core.RowMapper;
 
-import com.ikubinfo.primefaces.model.Category;
+import com.ikubinfo.primefaces.model.Role;
 
-public class CategoryRowMapper implements RowMapper<Category> {
+public class CategoryRowMapper implements RowMapper<Role> {
 
 	@Override
-	public Category mapRow(ResultSet result, int rowNum) throws SQLException {
-		Category category = new Category();
+	public Role mapRow(ResultSet result, int rowNum) throws SQLException {
+		Role category = new Role();
 		category.setId(result.getInt("category_id"));
 		category.setName(result.getString("name"));
 		category.setLastUpdated(new Date(result.getTimestamp("last_update").getTime()));
