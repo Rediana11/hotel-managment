@@ -5,7 +5,7 @@ import java.util.Date;
 public class RoomCategory {
 
     private Integer id;
-    private RoomCategoryName name;
+    private String name;
     private String code;
     private User createdBy;
     private Date createdOn;
@@ -21,11 +21,11 @@ public class RoomCategory {
         this.id = id;
     }
 
-    public RoomCategoryName getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(RoomCategoryName name) {
+    public void setName(String name) {
         this.name = name;
     }
 

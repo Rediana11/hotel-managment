@@ -5,7 +5,7 @@ import java.util.Date;
 public class BookingStatus {
 
     private Integer id;
-    private BookingStatusName name;
+    private String name;
     private String code;
     private User createdBy;
     private Date createdOn;
@@ -21,11 +21,11 @@ public class BookingStatus {
         this.id = id;
     }
 
-    public BookingStatusName getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(BookingStatusName name) {
+    public void setName(String name) {
         this.name = name;
     }
 

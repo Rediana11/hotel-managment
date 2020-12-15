@@ -5,7 +5,7 @@ import java.util.Date;
 public class RoomAbility {
 
     private Integer id;
-    private RoomAbilityName name;
+    private String name;
     private String code;
     private User createdBy;
     private Date createdOn;
@@ -21,11 +21,11 @@ public class RoomAbility {
         this.id = id;
     }
 
-    public RoomAbilityName getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(RoomAbilityName name) {
+    public void setName(String name) {
         this.name = name;
     }
 
