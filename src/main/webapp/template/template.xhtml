@@ -1,38 +1,27 @@
-<?xml version = "1.0" encoding = "UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	  xmlns:p="http://primefaces.org/ui">
 
-<h:head>
+
+<ui:include name="header" src="/template/header.xhtml" />
 
 
-</h:head>
 <h:body>
-	<div
-		style="border-width: 2px; border-color: green; border-style: solid;">
-		<ui:insert name="header">
-			<ui:include src="header.xhtml" />
-		</ui:insert>
-	</div>
-	<br />
 
-	<div
-		style="border-width: 2px; border-color: black; border-style: solid;">
-		<ui:insert name="content">
+	<ui:include name="header" src="/template/sidebar.xhtml" />
+
+		<ui:include name="header" src="/template/rightPanel.xhtml" />
+		<!-- content-->
+
+		<div class="content">
 
 
-		</ui:insert>
-	</div>
-	<br />
-
-	<div style="border-width: 2px; border-color: red; border-style: solid;">
-		<ui:insert name="footer">
-			<ui:include src="footer.xhtml" />
-		</ui:insert>
-	</div>
+		</div>
+	<ui:include name="footer" src="/template/footer.xhtml" />
 
 </h:body>
 </html>

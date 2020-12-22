@@ -10,6 +10,7 @@ public class Room {
     private String description;
     private Integer bedsNumber;
     private Double price;
+    private String facilities;
     private RoomAbility roomAbility;
     private RoomCategory roomCategory;
     private List<Booking> bookings;
@@ -57,6 +58,14 @@ public class Room {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public String getFacilities() {
+        return facilities;
+    }
+
+    public void setFacilities(String facilities) {
+        this.facilities = facilities;
     }
 
     public RoomAbility getRoomAbility() {

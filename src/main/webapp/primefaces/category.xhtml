@@ -6,43 +6,47 @@
 <h:head>
 </h:head>
 <h:body>
-	<ui:composition template="/template/template.xhtml">
-		<ui:define name="content">
-			<p:growl id="growl"></p:growl>
+	<ui:include name="template" src="/template/template.xhtml" />
+	<p:growl id="growl"></p:growl>
 
+
+			<br/>
 
 			<h:form id="form">
-				<h:outputLabel for="name" value="Name"></h:outputLabel>
-				<h:inputText id="name" required="true"
-					value="#{categoryManagedBean.name}"></h:inputText>
 
 
 
-
-				<p:splitButton id="basic" value="Insert"
-					action="#{categoryManagedBean.insert}" update="table growl">
-					<p:menuitem value="Search" action="#{categoryManagedBean.filter}"
-						update="table" />
-					<p:menuitem value="Reset" immediate="true"
-						action="#{categoryManagedBean.reset}" update="table name">
-
-					</p:menuitem>
-
-				</p:splitButton>
-
-				<p:dataTable id="table" value="#{categoryManagedBean.categories}"
-					var="category" sortBy="#{category.lastUpdated}">
-
-					<p:column headerText="Name">
-						<p:outputLabel value="#{category.name}"></p:outputLabel>
+				<p:dataTable id="table" value="#{bookingManagedBean.bookings}"
+					var="booking" >
+					<p:column headerText="Check in">
+						<p:outputLabel value="#{booking.checkIn}"></p:outputLabel>
 					</p:column>
 
-					<p:column headerText="LastUpdated">
-						<p:outputLabel value="#{category.lastUpdated}">
-							<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
-						</p:outputLabel>
+					<p:column headerText="Check out">
+						<p:outputLabel value="#{booking.checkOut}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Price">
+						<p:outputLabel value="#{booking.price}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Persons number">
+						<p:outputLabel value="#{booking.personsNumber}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Booking Status">
+						<p:outputLabel value="#{booking.bookingStatus.name}"></p:outputLabel>
 					</p:column>
 
+					<p:column headerText="Created by">
+						<p:outputLabel value="#{booking.createdBy.username}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Created on">
+						<p:outputLabel value="#{booking.createdOn}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Updated by">
+						<p:outputLabel value="#{booking.updatedBy.username}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Updated on">
+						<p:outputLabel value="#{booking.updatedOn}"></p:outputLabel>
+					</p:column>
 
 					<p:column headerText="Actions">
 
@@ -50,19 +54,19 @@
 							process="@this" oncomplete="PF('EditDialog').show();">
 
 							<f:setPropertyActionListener
-								target="#{categoryManagedBean.category}" value="#{category}" />
+								target="#{bookingManagedBean.booking}" value="#{booking}" />
 
 						</p:commandButton>
 
 
 
 						<p:commandButton immediate="true" value="Delete"
-							update=":form:table growl" action="#{categoryManagedBean.delete}">
+							update=":form:table growl" action="#{bookingManagedBean.delete}">
 							<p:confirm header="Confirmation" message="Are you sure?"
 								icon="pi pi-exclamation-triangle" />
 
 							<f:setPropertyActionListener
-								target="#{categoryManagedBean.category}" value="#{category}" />
+								target="#{bookingManagedBean.booking}" value="#{booking}" />
 						</p:commandButton>
 
 						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
@@ -76,13 +80,6 @@
 
 
 
-					<p:column>
-						<p:link outcome="details" value="View Details">
-							<f:param name="id" value="#{category.id}" />
-						</p:link>
-
-					</p:column>
-
 				</p:dataTable>
 
 
@@ -90,23 +87,63 @@
 
 			</h:form>
 
+			<script type="text/javascript">
+				PrimeFaces.locales ['de'] = {
+					closeText: 'Schließen',
+					prevText: 'Zurück',
+					nextText: 'Weiter',
+					monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember' ],
+					monthNamesShort: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez' ],
+					dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+					dayNamesShort: ['Son', 'Mon', 'Die', 'Mit', 'Don', 'Fre', 'Sam'],
+					dayNamesMin: ['S', 'M', 'D', 'M ', 'D', 'F ', 'S'],
+					weekHeader: 'Woche',
+					firstDay: 1,
+					isRTL: false,
+					showMonthAfterYear: false,
+					yearSuffix:'',
+					timeOnlyTitle: 'Nur Zeit',
+					timeText: 'Zeit',
+					hourText: 'Stunde',
+					minuteText: 'Minute',
+					secondText: 'Sekunde',
+					currentText: 'Aktuelles Datum',
+					ampm: false,
+					month: 'Monat',
+					week: 'Woche',
+					day: 'Tag',
+					allDayText: 'Ganzer Tag'
+				};
+			</script>
 			<h:form id="editForm">
 
 
-				<p:dialog header="Edit Category" id="updateDialog"
-					widgetVar="EditDialog" modal="true">
+				<p:dialog header="Edit Booking" id="updateDialog"
+						  widgetVar="EditDialog" modal="true">
 
 
 					<h:panelGrid columns="3">
-						<h:outputLabel value="Name " for="updateName"></h:outputLabel>
-						<h:inputText id="updateName" required="true"
-							value="#{categoryManagedBean.category.name}"></h:inputText>
+						<p:outputLabel for="updateDate" value="Check out:" />
+						<p:calendar id="button" value="#{calendarView.date3}" showOn="button" />
 
+						<h:inputText id="updateDate" required="true"
+									 value="#{bookingManagedBean.booking.checkOut}"></h:inputText>
+
+						<p:outputLabel for="price" styleClass="p-col-fixed" style="width:100px" value="Price" />
+						<br/>
+
+						<p:inputNumber id="price" value="#{bookingManagedBean.booking.price}" symbol=" $" symbolPosition="s"
+									   decimalSeparator="," thousandSeparator=".">
+						</p:inputNumber>
+
+						<h:outputLabel for="personsNumber" value="Beds number " />
+						<br/>
+						<p:spinner id="personsNumber" value="#{bookingManagedBean.booking.personsNumber}" min="1" max="50" />
 
 
 						<p:commandButton process="updateDialog" update=":form:table growl"
-							value="Save" actionListener="#{categoryManagedBean.save}"
-							oncomplete="PF('EditDialog').hide();">
+										 value="Save" actionListener="#{bookingManagedBean.save}"
+										 oncomplete="PF('EditDialog').hide();">
 
 						</p:commandButton>
 
@@ -117,9 +154,11 @@
 
 				</p:dialog>
 
+
+
+
 			</h:form>
 
-		</ui:define>
-	</ui:composition>
+
 </h:body>
 </html>
