@@ -23,13 +23,13 @@ import java.util.Map;
 public class RoomCategoryRepositoryImpl implements RoomCategoryRepository {
     Logger logger = LoggerFactory.getLogger(RoomRepositoryImpl.class);
 
-    private static final String GET_CATEGORIES = "select category_id, code, category_name, ue.username as created_by, \n" +
+    private static final String GET_CATEGORIES = "select category_id, code, category_name,r.updated_on,r.created_on , ue.username as created_by, \n" +
             "u.username as updated_by from category r  \n" +
             "\t\t\tjoin user_ u on r.updated_by=u.user_id  join user_ ue on r.created_by=ue.user_id where r.is_valid=true";
     private static final String UPDATE_CATEGORY ="update category set category_name= :name, code= :code where category_id=:id";
     private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from film_category where category_id = ?";
     private static final String DELETE_CATEGORY = "update category set is_valid= false where category_id=:id";
-    private static final String GET_CATEGORY = "select category_id, code, category_name, ue.username as created_by, \n" +
+    private static final String GET_CATEGORY = "select category_id, code, category_name, r.updated_on,r.created_on , ue.username as created_by, \n" +
             "u.username as updated_by from category r  \n" +
             "\t\t\tjoin user_ u on r.updated_by=u.user_id  join user_ ue on r.created_by=ue.user_id where r.is_valid=true\n" +
             "\t\t\tand category_id=:id";
@@ -50,9 +50,7 @@ public class RoomCategoryRepositoryImpl implements RoomCategoryRepository {
     @Override
     public List<RoomCategory> getAllCategories() {
 
-        String queryString = GET_CATEGORIES;
-
-        return namedParameterJdbcTemplate.query(queryString, new RoomCategoryRowMapper());
+        return namedParameterJdbcTemplate.query(GET_CATEGORIES, new RoomCategoryRowMapper());
     }
 
     @Override
@@ -60,9 +58,8 @@ public class RoomCategoryRepositoryImpl implements RoomCategoryRepository {
 
         Map<String, Object> params = new HashMap<>();
         params.put("id", id );
-        String queryString = GET_CATEGORY;
 
-        return  namedParameterJdbcTemplate.queryForObject(queryString, params, new RoomCategoryRowMapper());
+        return  namedParameterJdbcTemplate.queryForObject(GET_CATEGORY, params, new RoomCategoryRowMapper());
     }
 
     @Override

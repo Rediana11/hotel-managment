@@ -7,8 +7,6 @@ import com.ikubinfo.primefaces.model.*;
 import org.springframework.jdbc.core.RowMapper;
 
 public class RoomRowMapper implements RowMapper<Room> {
-	RoomCategoryRowMapper roomCategoryRowMapper;
-
 
 	@Override
 	public Room mapRow(ResultSet result, int rowNum) throws SQLException {
