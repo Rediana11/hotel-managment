@@ -14,4 +14,6 @@ public interface BookingService {
 
 	boolean save(Booking booking);
 
+	boolean updateBookingStatus(Booking booking);
+
 }

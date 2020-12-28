@@ -20,6 +20,7 @@ public class RoomManagedBean implements Serializable {
 	private static final long serialVersionUID = 3800933422824282320L;
 	private Room room;
 
+	private List<Room>  vacantRooms;
 	private List<Room> rooms;
 	private String name;
 
@@ -33,6 +34,7 @@ public class RoomManagedBean implements Serializable {
 	public void init() {
 
 		rooms = roomService.getAll(null);
+		vacantRooms= roomService.getAllVacantRooms();
 		room = new Room();
 
 	}
@@ -69,6 +71,14 @@ public class RoomManagedBean implements Serializable {
 	public void reset() {
 		name = null;
 		filter();
+	}
+
+	public List<Room> getVacantRooms() {
+		return vacantRooms;
+	}
+
+	public void setVacantRooms(List<Room> vacantRooms) {
+		this.vacantRooms = vacantRooms;
 	}
 
 	public Room getRoom() {

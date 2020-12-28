@@ -5,7 +5,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 <f:metadata>
-	<f:viewParam name="id" value="#{roomManagedBean.room.id}" />
+	<f:viewParam name="id" value="#{roomDetailManagedBean.room.id}" />
+	<f:viewAction action="#{roomDetailManagedBean.loadRoom()}" />
 </f:metadata>
 <h:body>
 		<ui:include name="template" src="/template/template.xhtml" />
@@ -16,33 +17,25 @@
 
 			<h:form id="form">
 
-				<p:dataTable id="table"
-							 value="#{roomManagedBean.room}">
+				<p:dataList value="#{roomDetailManagedBean.room}" var="room" type="definition">
+					<f:facet name="header">
+						Room Info
+					</f:facet>
+					Created by: #{room.createdBy.username}
+					<br/>
+					Created on: #{room.createdOn}
+					<br/>
+					Updated by: #{room.updatedBy.username}
+					<br/>
 
-					<p:column headerText="Created by">
-						<p:outputLabel value="#{room.createdBy.username}"></p:outputLabel>
-					</p:column>
-					<p:column headerText="Created on">
-						<p:outputLabel value="#{room.createdOn}"></p:outputLabel>
-					</p:column>
-					<p:column headerText="Updated by">
-						<p:outputLabel value="#{room.updatedBy.username}"></p:outputLabel>
-					</p:column>
-					<p:column headerText="Updated on">
-						<p:outputLabel value="#{room.updatedOn}"></p:outputLabel>
-					</p:column>
-
-
-
-
-
-				</p:dataTable>
-
-
-
+					Updated on: #{room.updatedOn}
+				</p:dataList>
 
 			</h:form>
 
-
+	<p:contentFlow value="#{imagesManagedBean.images}" var="image">
+		<p:graphicImage name="demo/images/nature/#{image}" styleClass="content" />
+		<div class="caption">#{image}</div>
+	</p:contentFlow>
 </h:body>
 </html>

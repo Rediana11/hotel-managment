@@ -11,6 +11,8 @@ public interface RoomRepository {
 
 	List<Room> getAll(String name);
 
+	List<Room> getAllVacantRooms();
+
 	Room getRoom(int id);
 
 	boolean save(Room room);

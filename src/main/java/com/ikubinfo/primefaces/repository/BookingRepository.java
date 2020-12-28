@@ -12,6 +12,8 @@ public interface BookingRepository {
 
 	boolean save(Booking booking);
 
+	boolean updateBookingStatus(Booking booking);
+
 	void delete(Booking booking);
 
 }

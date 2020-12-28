@@ -27,6 +27,11 @@ import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 	}
 
 	@Override
+	public List<Room> getAllVacantRooms() {
+		return roomRepository.getAllVacantRooms();
+	}
+
+	@Override
 	public Room getRoom(int id) {
 		return roomRepository.getRoom(id);
 	}

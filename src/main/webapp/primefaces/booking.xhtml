@@ -8,10 +8,13 @@
 	<ui:include name="home" src="/template/template.xhtml" />
 		<p:growl id="growl"></p:growl>
 
-			<p:commandButton icon="fa fa-plus" value="Make a reservation" styleClass="ui-priority-primary"
-							 id="add" action="#{bookingManagedBean.insert}"/>
+
+
+			<p:button outcome="reservation" icon="fa fa-plus" value="Make a reservation" styleClass="ui-priority-primary">
+			</p:button>
 
 			<br/>
+	<br/>
 
 			<h:form id="form">
 

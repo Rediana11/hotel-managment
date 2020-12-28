@@ -34,6 +34,7 @@ class BookingRepositoryImpl implements BookingRepository {
     private static final String UPDATE_BOOKING = "update booking set check_out=:date, persons_number=:personsNumber, price=:price where booking_id=:id";
     private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from film_category where category_id = ?";
     private static final String DELETE_BOOKING = "update booking set is_valid= false where booking_id=:id";
+    private static final String UPDATE_STATUS ="update booking set booking_status_id=:statusId where booking_id=:id";
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private SimpleJdbcInsert insertRoomQuery;
@@ -104,6 +105,19 @@ class BookingRepositoryImpl implements BookingRepository {
 	}
 
 	 */
+
+    @Override
+    public boolean updateBookingStatus(Booking booking) {
+
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+
+        namedParameters.addValue("statusId", booking.getBookingStatus());
+        namedParameters.addValue("id", booking.getId());
+
+        int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_STATUS, namedParameters);
+
+        return updatedCount > 0;
+    }
 
     @Override
     public void delete(Booking booking) {

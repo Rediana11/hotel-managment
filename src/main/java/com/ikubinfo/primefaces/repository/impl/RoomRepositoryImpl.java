@@ -12,6 +12,7 @@ import com.ikubinfo.primefaces.model.RoomAbility;
 import com.ikubinfo.primefaces.model.RoomCategory;
 import com.ikubinfo.primefaces.repository.mapper.RoomAbilityRowMapper;
 import com.ikubinfo.primefaces.repository.mapper.RoomCategoryRowMapper;
+import com.ikubinfo.primefaces.repository.mapper.VacantRoomRowMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,10 @@ class RoomRepositoryImpl implements RoomRepository {
 	private static final String UPDATE_ROOM ="update room set room_name= :name, description= :description, price= :price, " +
 			"beds_number= :bedsNumber, category_id=:category, room_ability_id=:ability where room_id=:id";
 	private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from film_category where category_id = ?";
+	private static final String GET_VACANT_ROOMS = "select room_id,description, facilities,beds_number, price, category_name from \n" +
+			"room join room_ability ra on room.room_ability_id= ra.room_ability_id\n" +
+			"join category on room.category_id=category.category_id\n" +
+			"where ra.ability_name='Vacant'";
 	private static final String DELETE_ROOM = "update room set is_valid= false where room_id=:id";
 	private static final String GET_CATEGORIES = "select category_id, category_name from category";
 	private static final String GET_ABILITIES = "select room_ability_id, ability_name from room_ability";
@@ -76,6 +81,14 @@ class RoomRepositoryImpl implements RoomRepository {
 		return namedParameterJdbcTemplate.query(queryString, params, new RoomRowMapper());
 
 	}
+
+	@Override
+	public List<Room> getAllVacantRooms() {
+
+		return namedParameterJdbcTemplate.query(GET_VACANT_ROOMS, new VacantRoomRowMapper());
+
+	}
+
 
 	@Override
 	public boolean save(Room room) {
