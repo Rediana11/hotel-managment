@@ -121,6 +121,9 @@
 								 paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
 								 rowsPerPageTemplate="5,10,15" rowIndexVar="index">
 
+						<p:column headerText="Name">
+							<p:outputLabel value="#{room.name}"></p:outputLabel>
+						</p:column>
 					<p:column headerText="Description">
 						<p:outputLabel value="#{room.description}"></p:outputLabel>
 					</p:column>

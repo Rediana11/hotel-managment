@@ -16,6 +16,7 @@ public class VacantRoomRowMapper implements RowMapper<Room> {
         Room room = new Room();
         RoomCategory category = new RoomCategory();
         room.setId(result.getInt("room_id"));
+        room.setName(result.getString("room_name"));
         room.setDescription(result.getString("description"));
         room.setPrice(result.getDouble("price"));
         room.setFacilities(result.getString("facilities"));

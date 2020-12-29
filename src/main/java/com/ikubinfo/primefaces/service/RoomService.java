@@ -14,6 +14,8 @@ public interface RoomService {
 
 	List<Room> getAllVacantRooms();
 
+	List<Room> getReservedRoomsForBooking(int id);
+
 	Room getRoom(int id);
 
 	boolean save(Room room);

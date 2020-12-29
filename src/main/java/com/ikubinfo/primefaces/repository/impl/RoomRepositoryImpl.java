@@ -39,7 +39,7 @@ class RoomRepositoryImpl implements RoomRepository {
 	private static final String UPDATE_ROOM ="update room set room_name= :name, description= :description, price= :price, " +
 			"beds_number= :bedsNumber, category_id=:category, room_ability_id=:ability where room_id=:id";
 	private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from film_category where category_id = ?";
-	private static final String GET_VACANT_ROOMS = "select room_id,description, facilities,beds_number, price, category_name from \n" +
+	private static final String GET_VACANT_ROOMS = "select room_id,room_name,description, facilities,beds_number, price, category_name from \n" +
 			"room join room_ability ra on room.room_ability_id= ra.room_ability_id\n" +
 			"join category on room.category_id=category.category_id\n" +
 			"where ra.ability_name='Vacant'";
@@ -52,6 +52,11 @@ class RoomRepositoryImpl implements RoomRepository {
 			"\t\t\tjoin room_ability ra on r.room_ability_id=ra.room_ability_id \n" +
 			"\t\t\tjoin user_ u on r.updated_by=u.user_id  join user_ ue on r.created_by=ue.user_id where r.is_valid=true\n" +
 			"\t\t\tand room_id=1";
+	private static final String RESERVED_ROOMS_FOR_BOOKING ="select room.room_id,room_name,description, facilities,beds_number, room.price, category_name from \n" +
+			"room join room_booking rb on room.room_id = rb.room_id\n" +
+			"join booking on booking.booking_id=rb.booking_id\n" +
+			"join category on room.category_id=category.category_id\n" +
+			"where rb.booking_id=:id";
 
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -87,6 +92,14 @@ class RoomRepositoryImpl implements RoomRepository {
 
 		return namedParameterJdbcTemplate.query(GET_VACANT_ROOMS, new VacantRoomRowMapper());
 
+	}
+
+	@Override
+	public List<Room> getReservedRoomsForBooking(int id) {
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("id", id );
+		return namedParameterJdbcTemplate.query(RESERVED_ROOMS_FOR_BOOKING,params, new VacantRoomRowMapper());
 	}
 
 

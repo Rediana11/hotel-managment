@@ -25,6 +25,7 @@ public class BookingRowMapper implements RowMapper<Booking> {
 		booking.setCheckIn(rs.getDate("check_in"));
 		booking.setCheckOut(rs.getDate("check_out"));
 		booking.setPersonsNumber(rs.getInt("persons_number"));
+		bookingStatus.setId(rs.getInt("booking_status_id"));
 		bookingStatus.setName(rs.getString("status_name"));
 		booking.setBookingStatus(bookingStatus);
 		booking.setPrice(rs.getDouble("price"));

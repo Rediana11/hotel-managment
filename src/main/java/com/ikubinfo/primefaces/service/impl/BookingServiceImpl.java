@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import com.ikubinfo.primefaces.model.Booking;
+import com.ikubinfo.primefaces.model.BookingStatus;
 import org.springframework.stereotype.Service;
 
 import com.ikubinfo.primefaces.model.User;
@@ -28,9 +29,19 @@ class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
+	public List<BookingStatus> getBookingStatuses() {
+		return bookingRepository.getBookingStatuses();
+	}
+
+	@Override
 	public void delete(Booking booking) {
 		bookingRepository.delete(booking);
 
+	}
+
+	@Override
+	public Booking getBooking(int id) {
+		return bookingRepository.getBooking(id);
 	}
 
 	@Override

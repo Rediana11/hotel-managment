@@ -20,6 +20,7 @@ public class RoomManagedBean implements Serializable {
 	private static final long serialVersionUID = 3800933422824282320L;
 	private Room room;
 
+	private List<Room>  reservedRoomsForBooking;
 	private List<Room>  vacantRooms;
 	private List<Room> rooms;
 	private String name;
@@ -30,6 +31,9 @@ public class RoomManagedBean implements Serializable {
 	@ManagedProperty(value = "#{messages}")
 	private Messages messages;
 
+	@ManagedProperty(value="#{bookingManagedBean}")
+	private BookingManagedBean bookingManagedBean;
+
 	@PostConstruct
 	public void init() {
 
@@ -39,6 +43,10 @@ public class RoomManagedBean implements Serializable {
 
 	}
 
+	public void loadReservedRooms(){
+		reservedRoomsForBooking=roomService.getReservedRoomsForBooking(bookingManagedBean.getBooking().getId());
+
+	}
 	public void save() {
 		if (roomService.save(room)) {
 			getAll();
@@ -119,5 +127,21 @@ public class RoomManagedBean implements Serializable {
 
 	public void setMessages(Messages messages) {
 		this.messages = messages;
+	}
+
+	public List<Room> getReservedRoomsForBooking() {
+		return reservedRoomsForBooking;
+	}
+
+	public void setReservedRoomsForBooking(List<Room> reservedRoomsForBooking) {
+		this.reservedRoomsForBooking = reservedRoomsForBooking;
+	}
+
+	public BookingManagedBean getBookingManagedBean() {
+		return bookingManagedBean;
+	}
+
+	public void setBookingManagedBean(BookingManagedBean bookingManagedBean) {
+		this.bookingManagedBean = bookingManagedBean;
 	}
 }

@@ -20,7 +20,12 @@
 
 
 				<p:dataTable id="table" value="#{bookingManagedBean.bookings}"
-					var="booking" >
+					var="booking"
+							 class="table table-striped table-bordered dataTable no-footer"
+							 style="text-align:center" widgetVar="DTWVar" rows="5"
+							 paginator="true"
+							 paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
+							 rowsPerPageTemplate="5,10,15" rowIndexVar="index">
 					<p:column headerText="Check in">
 						<p:outputLabel value="#{booking.checkIn}"></p:outputLabel>
 					</p:column>
@@ -36,19 +41,6 @@
 					</p:column>
 					<p:column headerText="Booking Status">
 						<p:outputLabel value="#{booking.bookingStatus.name}"></p:outputLabel>
-					</p:column>
-
-					<p:column headerText="Created by">
-						<p:outputLabel value="#{booking.createdBy.username}"></p:outputLabel>
-					</p:column>
-					<p:column headerText="Created on">
-						<p:outputLabel value="#{booking.createdOn}"></p:outputLabel>
-					</p:column>
-					<p:column headerText="Updated by">
-						<p:outputLabel value="#{booking.updatedBy.username}"></p:outputLabel>
-					</p:column>
-					<p:column headerText="Updated on">
-						<p:outputLabel value="#{booking.updatedOn}"></p:outputLabel>
 					</p:column>
 
 					<p:column headerText="Actions">
@@ -81,6 +73,32 @@
 
 					</p:column>
 
+					<p:column headerText="Change status">
+						<p:commandButton value="Change" update="bookingStatus"
+										 process="@this" oncomplete="PF('BookingStatusDialog').show();">
+
+							<f:setPropertyActionListener
+									target="#{bookingManagedBean.booking.bookingStatus}" value="#{bookingStatus}" />
+
+						</p:commandButton>
+					</p:column>
+
+
+					<p:column headerText="Booking detail">
+						<p:commandLink value="Detail" update="bookingDetail"
+										 process="@this" oncomplete="PF('BookingDetailDialog').show();">
+
+							<f:setPropertyActionListener
+									target="#{bookingManagedBean.booking}" value="#{booking}" />
+
+						</p:commandLink>
+					</p:column>
+
+					<p:column headerText="Reserved room/rooms">
+						<p:link outcome="reservedRooms" value="View">
+							<f:param name="id" value="#{booking.id}" />
+						</p:link>
+					</p:column>
 
 
 				</p:dataTable>
@@ -144,7 +162,7 @@
 						<p:spinner id="personsNumber" value="#{bookingManagedBean.booking.personsNumber}" min="1" max="50" />
 
 
-						<p:commandButton process="updateDialog" update=":form:table growl"
+						<p:commandButton process="updateDialog" update=":form:table growl" immediate="true"
 										 value="Save" actionListener="#{bookingManagedBean.save}"
 										 oncomplete="PF('EditDialog').hide();">
 
@@ -158,9 +176,77 @@
 				</p:dialog>
 
 
-
-
 			</h:form>
 
+
+	<h:form id="bookingStatus">
+
+
+		<p:dialog header="Change Booking Status" id="updateDialog"
+				  widgetVar="BookingStatusDialog" modal="true">
+
+
+			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+
+				<h:selectOneMenu id="bookingStatus" value="#{bookingManagedBean.bookingStatus.id}" style="width:125px" >
+					<f:selectItems value="#{bookingManagedBean.statusItems}"/>
+				</h:selectOneMenu>
+
+
+				<p:commandButton process="updateDialog" update=":form:table growl" immediate="true"
+								 value="Save" actionListener="#{bookingManagedBean.changeStatus}"
+								 oncomplete="PF('EditDialog').hide();">
+
+				</p:commandButton>
+
+
+
+			</h:panelGrid>
+
+
+		</p:dialog>
+
+
+
+
+	</h:form>
+
+	<h:form id="bookingDetail">
+
+
+		<p:dialog header="View Booking Detail" id="updateDialog"
+				  widgetVar="BookingDetailDialog" modal="true">
+
+
+			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+
+				<h:form id="form">
+
+					<p:dataList value="#{bookingManagedBean.booking}" var="booking" type="definition">
+						<f:facet name="header">
+							Booking Info
+						</f:facet>
+						Created by: #{booking.createdBy.username}
+						<br/>
+						Created on: #{booking.createdOn}
+						<br/>
+						Updated by: #{booking.updatedBy.username}
+						<br/>
+						Updated on: #{booking.updatedOn}
+					</p:dataList>
+
+				</h:form>
+
+
+
+			</h:panelGrid>
+
+
+		</p:dialog>
+
+
+
+
+	</h:form>
 	</h:body>
 	</html>

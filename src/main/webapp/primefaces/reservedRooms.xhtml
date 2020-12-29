@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<f:metadata>
+	<f:viewParam name="id" value="#{bookingManagedBean.booking.id}" />
+	<f:viewAction action="#{roomManagedBean.loadReservedRooms()}" />
+</f:metadata>
+<h:body>
+		<ui:include name="template" src="/template/template.xhtml" />
+		<p:growl id="growl"></p:growl>
+
+
+			<p:button outcome="booking" value="Back">
+			</p:button>
+			<br/>
+
+				<p:dataTable id="table"
+							 var="room"
+							 value="#{roomManagedBean.reservedRoomsForBooking}"
+							 class="table table-striped table-bordered dataTable no-footer"
+							 style="text-align:center" widgetVar="DTWVar" rows="5"
+							 paginator="true"
+							 paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
+							 rowsPerPageTemplate="5,10,15" rowIndexVar="index">
+
+					<p:column headerText="Name">
+						<p:outputLabel value="#{room.name}"></p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Description">
+						<p:outputLabel value="#{room.description}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Facilities">
+						<p:outputLabel value="#{room.facilities}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Price">
+						<p:outputLabel value="#{room.price}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Beds number">
+						<p:outputLabel value="#{room.bedsNumber}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Category">
+						<p:outputLabel value="#{room.roomCategory.name}"></p:outputLabel>
+					</p:column>
+
+
+
+				</p:dataTable>
+
+</h:body>
+</html>

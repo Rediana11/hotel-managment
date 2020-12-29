@@ -13,6 +13,8 @@ public interface RoomRepository {
 
 	List<Room> getAllVacantRooms();
 
+	List<Room> getReservedRoomsForBooking(int id);
+
 	Room getRoom(int id);
 
 	boolean save(Room room);

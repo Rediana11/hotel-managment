@@ -32,6 +32,11 @@ import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 	}
 
 	@Override
+	public List<Room> getReservedRoomsForBooking(int id) {
+		return roomRepository.getReservedRoomsForBooking(id);
+	}
+
+	@Override
 	public Room getRoom(int id) {
 		return roomRepository.getRoom(id);
 	}

@@ -1,7 +1,9 @@
 package com.ikubinfo.primefaces.managedbean;
 
 import com.ikubinfo.primefaces.model.Booking;
+import com.ikubinfo.primefaces.model.BookingStatus;
 import com.ikubinfo.primefaces.model.Room;
+import com.ikubinfo.primefaces.model.RoomAbility;
 import com.ikubinfo.primefaces.service.BookingService;
 import com.ikubinfo.primefaces.service.RoomService;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
@@ -12,6 +14,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -24,18 +27,17 @@ public class BookingManagedBean implements Serializable {
 
     private Booking booking;
 
+    private BookingStatus bookingStatus;
     private List<Booking> bookings;
+    private List<BookingStatus> bookingStatuses;
+    private List<SelectItem> statusItems;
+
     private Date checkIn;
     private Date checkOut;
-    private List<Date> multi;
-    private List<Date> range;
-    private List<Date> invalidDates;
-    private List<Integer> invalidDays;
     private Date minDate;
     private Date today;
     private Date maxDate;
-    private Date minDateTime;
-    private Date maxDateTime;
+
     private boolean quietRoom;
 
     @ManagedProperty(value = "#{bookingService}")
@@ -46,20 +48,17 @@ public class BookingManagedBean implements Serializable {
 
     @PostConstruct
     public void init() {
-
-        bookings = bookingService.getAll();
         booking = new Booking();
-
-        invalidDates = new ArrayList<>();
-        today = new Date();
-        invalidDates.add(today);
-        long oneDay = 24 * 60 * 60 * 1000;
-        for (int i = 0; i < 5; i++) {
-            invalidDates.add(new Date(invalidDates.get(i).getTime() + oneDay));
+        bookingStatus = new BookingStatus();
+        bookings = bookingService.getAll();
+        statusItems = new ArrayList<SelectItem>();
+        bookingStatuses = bookingService.getBookingStatuses();
+        for (BookingStatus status: bookingStatuses){
+            statusItems.add(new SelectItem(status.getId(),status.getName()));
         }
-        invalidDays = new ArrayList<>();
-        invalidDays.add(0); /* the first day of week is disabled */
-        invalidDays.add(3);
+
+        today = new Date();
+        long oneDay = 24 * 60 * 60 * 1000;
 
         minDate =new Date(today.getTime() + ( oneDay));
     }
@@ -71,16 +70,22 @@ public class BookingManagedBean implements Serializable {
 
     }
 
+    public Booking loadBooking(){
+        return booking=bookingService.getBooking(booking.getId());
+    }
+
     public void save(){
         if (bookingService.save(booking)) {
             getAll();
             messages.showInfoMessage("Booking updated successfully");
 
         }
-        booking = new Booking();    }
+        booking = new Booking();
+    }
+
 
         public void changeStatus(){
-            bookingService.updateBookingStatus(booking);
+            if (bookingService.updateBookingStatus(booking))
             messages.showInfoMessage("Booking status changed successfully");
 
         }
@@ -109,6 +114,22 @@ public class BookingManagedBean implements Serializable {
 
     public BookingService getBookingService() {
         return bookingService;
+    }
+
+    public BookingStatus getBookingStatus() {
+        return bookingStatus;
+    }
+
+    public void setBookingStatus(BookingStatus bookingStatus) {
+        this.bookingStatus = bookingStatus;
+    }
+
+    public List<BookingStatus> getBookingStatuses() {
+        return bookingStatuses;
+    }
+
+    public void setBookingStatuses(List<BookingStatus> bookingStatuses) {
+        this.bookingStatuses = bookingStatuses;
     }
 
     public void setBookingService(BookingService bookingService) {
@@ -147,38 +168,6 @@ public class BookingManagedBean implements Serializable {
         this.checkOut = checkOut;
     }
 
-    public List<Date> getMulti() {
-        return multi;
-    }
-
-    public void setMulti(List<Date> multi) {
-        this.multi = multi;
-    }
-
-    public List<Date> getRange() {
-        return range;
-    }
-
-    public void setRange(List<Date> range) {
-        this.range = range;
-    }
-
-    public List<Date> getInvalidDates() {
-        return invalidDates;
-    }
-
-    public void setInvalidDates(List<Date> invalidDates) {
-        this.invalidDates = invalidDates;
-    }
-
-    public List<Integer> getInvalidDays() {
-        return invalidDays;
-    }
-
-    public void setInvalidDays(List<Integer> invalidDays) {
-        this.invalidDays = invalidDays;
-    }
-
     public Date getMinDate() {
         return minDate;
     }
@@ -195,17 +184,6 @@ public class BookingManagedBean implements Serializable {
         this.maxDate = maxDate;
     }
 
-    public Date getMinDateTime() {
-        return minDateTime;
-    }
-
-    public void setMinDateTime(Date minDateTime) {
-        this.minDateTime = minDateTime;
-    }
-
-    public Date getMaxDateTime() {
-        return maxDateTime;
-    }
 
     public boolean isQuietRoom() {
         return quietRoom;
@@ -215,7 +193,12 @@ public class BookingManagedBean implements Serializable {
         this.quietRoom = quietRoom;
     }
 
-    public void setMaxDateTime(Date maxDateTime) {
-        this.maxDateTime = maxDateTime;
+
+    public List<SelectItem> getStatusItems() {
+        return statusItems;
+    }
+
+    public void setStatusItems(List<SelectItem> statusItems) {
+        this.statusItems = statusItems;
     }
 }
