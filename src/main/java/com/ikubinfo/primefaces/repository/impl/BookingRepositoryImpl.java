@@ -92,27 +92,25 @@ class BookingRepositoryImpl implements BookingRepository {
 		return updatedCount > 0;
 	}
 
-	/*
-	@Override
-	public boolean create(Room room) {
+    @Override
+    public boolean reserve(Booking booking) {
+        String insertBooking = "insert into booking  values (default, :checkIn, :checkOut, :personsNumber, 1, 2, current_timestamp, null, null, true, :price );";
+        String insertRoomBooking = "insert into room_booking  values (default, (select max(booking_id) from booking),  :roomId)";
 
-		Map<String, Object> parameters = new HashMap<String, Object>();
-		parameters.put("room_id", room.getId());
-		parameters.put("room_name", room.getName());
-		parameters.put("description", room.getDescription());
-		parameters.put("price", room.getPrice());
-		parameters.put("beds_number", room.getBedsNumber());
-		parameters.put("category_id", room.getRoomCategory().getId());
-		parameters.put("room_ability_id", room.getRoomAbility().getId());
-		parameters.put("created_by", room.getCreatedBy());
-		parameters.put("created_on", room.getCreatedOn());
-		parameters.put("updated_by", room.getUpdatedBy());
-		parameters.put("updated_on", room.getUpdatedOn());
-		parameters.put("is_valid", room.isValid());
+        MapSqlParameterSource namedParameters1 = new MapSqlParameterSource();
+        MapSqlParameterSource namedParameters2 = new MapSqlParameterSource();
 
-		return insertRoomQuery.execute(parameters) > 0;
+        namedParameters1.addValue("checkIn", booking.getCheckIn());
+        namedParameters1.addValue("checkOut", booking.getCheckOut());
+        namedParameters1.addValue("personsNumber", booking.getPersonsNumber());
+        namedParameters1.addValue("personsNumber", booking.getPrice());
+        namedParameters2.addValue("roomId", booking.getRooms());
+        int insertedCount = this.namedParameterJdbcTemplate.update(insertBooking, namedParameters1);
+        int insertedCount2 = this.namedParameterJdbcTemplate.update(insertRoomBooking, namedParameters2);
 
-	}
+        return insertedCount + insertedCount2 >1;
+
+    }
 
 	/* @Override
 	public boolean isCategoryInUse(Role category) {

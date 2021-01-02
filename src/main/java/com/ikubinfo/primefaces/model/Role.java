@@ -2,6 +2,7 @@ package com.ikubinfo.primefaces.model;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class Role {
 
@@ -100,5 +101,26 @@ public class Role {
 				", updatedOn=" + updatedOn +
 				", isValid=" + isValid +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Role)) return false;
+		Role role = (Role) o;
+		return isValid() == role.isValid() &&
+				Objects.equals(getId(), role.getId()) &&
+				Objects.equals(getName(), role.getName()) &&
+				Objects.equals(getDescription(), role.getDescription()) &&
+				Objects.equals(getUsers(), role.getUsers()) &&
+				Objects.equals(getCreatedBy(), role.getCreatedBy()) &&
+				Objects.equals(getCreatedOn(), role.getCreatedOn()) &&
+				Objects.equals(getUpdatedBy(), role.getUpdatedBy()) &&
+				Objects.equals(getUpdatedOn(), role.getUpdatedOn());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId(), getName(), getDescription(), getUsers(), getCreatedBy(), getCreatedOn(), getUpdatedBy(), getUpdatedOn(), isValid());
 	}
 }

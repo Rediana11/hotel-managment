@@ -3,6 +3,7 @@ package com.ikubinfo.primefaces.model;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class User {
 
@@ -12,6 +13,7 @@ public class User {
 	private String username;
 	private String email;
 	private String password;
+	private Integer age;
 	private List<Role> roles;
 	private User createdBy;
 	private Date createdOn;
@@ -115,6 +117,14 @@ public class User {
 		isValid = valid;
 	}
 
+	public Integer getAge() {
+		return age;
+	}
+
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
 	@Override
 	public String toString() {
 		return "User{" +
@@ -124,6 +134,7 @@ public class User {
 				", username='" + username + '\'' +
 				", email='" + email + '\'' +
 				", password='" + password + '\'' +
+				", age=" + age +
 				", roles=" + roles +
 				", createdBy=" + createdBy +
 				", createdOn=" + createdOn +
@@ -131,5 +142,30 @@ public class User {
 				", updatedOn=" + updatedOn +
 				", isValid=" + isValid +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof User)) return false;
+		User user = (User) o;
+		return isValid() == user.isValid() &&
+				Objects.equals(getId(), user.getId()) &&
+				Objects.equals(getFirstName(), user.getFirstName()) &&
+				Objects.equals(getLastName(), user.getLastName()) &&
+				Objects.equals(getUsername(), user.getUsername()) &&
+				Objects.equals(getEmail(), user.getEmail()) &&
+				Objects.equals(getPassword(), user.getPassword()) &&
+				Objects.equals(getAge(), user.getAge()) &&
+				Objects.equals(getRoles(), user.getRoles()) &&
+				Objects.equals(getCreatedBy(), user.getCreatedBy()) &&
+				Objects.equals(getCreatedOn(), user.getCreatedOn()) &&
+				Objects.equals(getUpdatedBy(), user.getUpdatedBy()) &&
+				Objects.equals(getUpdatedOn(), user.getUpdatedOn());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId(), getFirstName(), getLastName(), getUsername(), getEmail(), getPassword(), getAge(), getRoles(), getCreatedBy(), getCreatedOn(), getUpdatedBy(), getUpdatedOn(), isValid());
 	}
 }

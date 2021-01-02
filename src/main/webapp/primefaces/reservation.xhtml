@@ -90,6 +90,7 @@
 					<p:calendar id="checkOut" value="#{bookingManagedBean.checkOut}" mindate="#{bookingManagedBean.minDate}" effect="fold" />
 					<h:outputLabel for="personsNumber" value="Persons number: " />
 					<p:selectOneMenu id="personsNumber" style="width:125px">
+						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItem itemLabel="1 person" itemValue="1" />
 						<f:selectItem itemLabel="2 persons" itemValue="2" />
 						<f:selectItem itemLabel="3 persons" itemValue="3" />
@@ -167,39 +168,26 @@
 						<p:growl id="growl" sticky="true" showDetail="true"/>
 
 						<p:wizard >
-							<p:tab id="personal" title="Personal">
-								<p:panel header="Personal Details">
+							<p:tab id="personal" title="Personal" style="width: auto;">
+								<p:panel header="Personal Details" style="width: auto;">
 									<p:messages />
 									<h:panelGrid columns="4" columnClasses="label, value">
 										<h:outputText value="Firstname: " />
-										<p:inputText required="true" label="Firstname" />
+										<p:inputText required="true" value="#{roomManagedBean.user.firstName}" label="Firstname" />
 
 										<h:outputText value="Lastname: " />
-										<p:inputText  required="true" label="Lastname"/>
+										<p:inputText value="#{roomManagedBean.user.lastName}" required="true" label="Lastname"/>
 
 										<h:outputText value="Age: " />
-										<p:inputText  />
+										<p:inputText value="#{roomManagedBean.user.age}" />
 
-									</h:panelGrid>
-								</p:panel>
-							</p:tab>
-
-
-							<p:tab id="contact" title="Contact">
-								<p:panel header="Contact Information">
-									<p:messages />
-									<h:panelGrid columns="4" columnClasses="label, value">
 										<h:outputText value="Email: *" />
-										<p:inputText  required="true" label="Email"/>
+										<p:inputText  required="true" value="#{roomManagedBean.user.email}" label="Email"/>
 
-										<h:outputText value="Phone: " />
-										<p:inputText />
-
-										<h:outputText value="Additional Info: " />
-										<p:inputText />
 									</h:panelGrid>
 								</p:panel>
 							</p:tab>
+
 							<p:tab id="ask" title="Ask a question">
 								<p:panel header="Special requests">
 									<p:messages />
@@ -210,9 +198,25 @@
 										<p:inputTextarea rows="10" cols="33" />
 										<br/>
 										<h:outputText value="I would like a quiet room  "/>
-										<p:triStateCheckbox value="#{selectBooleanView.quietRoom}}"/>
-
 									</h:panelGrid>
+								</p:panel>
+							</p:tab>
+							<p:tab id="confirm" title="Confirmation">
+								<p:panel header="Confirmation">
+										<h:panelGrid columns="2" columnClasses="label, value">
+											<h:outputText value="Firstname: " />
+											<h:outputText value="#{roomManagedBean.user.firstName}" styleClass="outputLabel"/>
+
+											<h:outputText value="Lastname: " />
+											<h:outputText value="#{roomManagedBean.user.lastName}" styleClass="outputLabel"/>
+
+											<h:outputText value="Age: " />
+											<h:outputText value="#{roomManagedBean.user.age}" styleClass="outputLabel"/>
+											<h:outputText value="Email: " />
+											<h:outputText value="#{roomManagedBean.user.email}" styleClass="outputLabel"/>
+											<small id="email">You will recieve a confirmation by email.</small>
+										</h:panelGrid>
+									<p:commandButton value="Submit" action="#{bookingManagedBean.reserve}" update="growl" process="@this"/>
 								</p:panel>
 							</p:tab>
 

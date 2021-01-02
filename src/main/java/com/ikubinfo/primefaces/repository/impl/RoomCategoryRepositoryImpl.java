@@ -15,6 +15,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,16 +24,20 @@ import java.util.Map;
 public class RoomCategoryRepositoryImpl implements RoomCategoryRepository {
     Logger logger = LoggerFactory.getLogger(RoomRepositoryImpl.class);
 
-    private static final String GET_CATEGORIES = "select category_id, code, category_name,r.updated_on,r.created_on , ue.username as created_by, \n" +
-            "u.username as updated_by from category r  \n" +
-            "\t\t\tjoin user_ u on r.updated_by=u.user_id  join user_ ue on r.created_by=ue.user_id where r.is_valid=true";
-    private static final String UPDATE_CATEGORY ="update category set category_name= :name, code= :code where category_id=:id";
+    private static final String GET_CATEGORIES = "select category_id,  code, category_name, c.updated_on, \n" +
+            "\t\tc.created_on,  (ue.first_name || ' ' || ue.last_name) as created_by,  CASE WHEN c.updated_by is not null \n" +
+            "\t\t \t\tthen (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=c.updated_by) else '' end as UpdatedBy\n" +
+            "from category c\n" +
+            "join user_ ue on c.created_by=ue.user_id where c.is_valid=true";
+    private static final String UPDATE_CATEGORY ="update category set category_name= :name, code= :code, updated_on=:updatedOn, updated_by=:updatedBy where category_id=:id";
     private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from film_category where category_id = ?";
     private static final String DELETE_CATEGORY = "update category set is_valid= false where category_id=:id";
-    private static final String GET_CATEGORY = "select category_id, code, category_name, r.updated_on,r.created_on , ue.username as created_by, \n" +
-            "u.username as updated_by from category r  \n" +
-            "\t\t\tjoin user_ u on r.updated_by=u.user_id  join user_ ue on r.created_by=ue.user_id where r.is_valid=true\n" +
-            "\t\t\tand category_id=:id";
+    private static final String GET_CATEGORY = "select category_id,  code,  category_name, c.updated_on,\n" +
+            "\t\tc.created_on, (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
+            "\t\t CASE WHEN c.updated_by is not null \n" +
+            "\t\t \t\tthen (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=c.updated_by) else '' end as UpdatedBy\n" +
+            "from category c\n" +
+            "join user_ ue on c.created_by=ue.user_id where c.is_valid=true and c.category_id=:id";
 
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -43,8 +48,8 @@ public class RoomCategoryRepositoryImpl implements RoomCategoryRepository {
     public RoomCategoryRepositoryImpl(DataSource datasource) {
         super();
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(datasource);
-        this.insertRoomQuery = new SimpleJdbcInsert(datasource).withTableName("room")
-                .usingGeneratedKeyColumns("room_id");
+        this.insertRoomQuery = new SimpleJdbcInsert(datasource).withTableName("category")
+                .usingGeneratedKeyColumns("category_id");
         this.jdbcTemplate = new JdbcTemplate(datasource);
     }
     @Override
@@ -58,17 +63,22 @@ public class RoomCategoryRepositoryImpl implements RoomCategoryRepository {
 
         Map<String, Object> params = new HashMap<>();
         params.put("id", id );
-
-        return  namedParameterJdbcTemplate.queryForObject(GET_CATEGORY, params, new RoomCategoryRowMapper());
+        RoomCategory roomCategory = namedParameterJdbcTemplate.queryForObject(GET_CATEGORY, params, new RoomCategoryRowMapper());
+        System.out.println(roomCategory);
+        return roomCategory ;
     }
 
     @Override
-    public boolean saveCategory(RoomCategory roomCategory) {
+    public boolean updateCategory(RoomCategory roomCategory) {
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 
         namedParameters.addValue("name", roomCategory.getName());
         namedParameters.addValue("code", roomCategory.getCode());
         namedParameters.addValue("id", roomCategory.getId());
+        namedParameters.addValue("updatedOn",new Date());
+        namedParameters.addValue("updatedBy", 2); //TODO Replace with current user
+
+
 
         int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_CATEGORY, namedParameters);
 
@@ -80,11 +90,10 @@ public class RoomCategoryRepositoryImpl implements RoomCategoryRepository {
         parameters.put("category_id", roomCategory.getId());
         parameters.put("code", roomCategory.getCode());
         parameters.put("category_name", roomCategory.getName());
-        parameters.put("created_by", roomCategory.getCreatedBy());
-        parameters.put("created_on", roomCategory.getCreatedOn());
-        parameters.put("updated_by", roomCategory.getUpdatedBy());
-        parameters.put("updated_on", roomCategory.getUpdatedOn());
-        parameters.put("is_valid", roomCategory.isValid());
+       // parameters.put("created_by", roomCategory.getCreatedBy());
+        parameters.put("created_by", 2); //TODO replace this with line 83
+        parameters.put("created_on",new Date());
+        parameters.put("is_valid","true");
 
         return insertRoomQuery.execute(parameters) > 0;    }
 

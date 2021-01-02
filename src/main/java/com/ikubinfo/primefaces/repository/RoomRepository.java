@@ -17,6 +17,8 @@ public interface RoomRepository {
 
 	Room getRoom(int id);
 
+	RoomAbility getAbility(int id);
+
 	boolean save(Room room);
 
 	boolean create(Room room);

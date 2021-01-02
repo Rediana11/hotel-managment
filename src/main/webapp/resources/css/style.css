@@ -599,5 +599,14 @@ header .form-inline {
 .message-show + .dropdown-menu,
 .language-show + .dropdown-menu {
   display: block; }
+.footer{
+  position: fixed;
+  height: 70px;
+  bottom: 0;
+  width: 100%;
+  background-color: #272c33;
+  color:#9496a1;
+  padding: 10px;
+}
 
 /*# sourceMappingURL=style.css.map */

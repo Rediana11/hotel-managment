@@ -13,7 +13,7 @@ public interface RoomCategoryService {
 
     RoomCategory getCategory(int id);
 
-    boolean save(RoomCategory roomCategory);
+    boolean updateCategory(RoomCategory roomCategory);
 
     boolean create(RoomCategory roomCategory);
 

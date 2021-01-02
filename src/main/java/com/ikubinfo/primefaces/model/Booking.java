@@ -3,6 +3,7 @@ package com.ikubinfo.primefaces.model;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class Booking {
 
@@ -141,5 +142,30 @@ public class Booking {
 				", updatedOn=" + updatedOn +
 				", isValid=" + isValid +
 				'}';
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (!(o instanceof Booking)) return false;
+		Booking booking = (Booking) o;
+		return Double.compare(booking.getPrice(), getPrice()) == 0 &&
+				isValid() == booking.isValid() &&
+				Objects.equals(getId(), booking.getId()) &&
+				Objects.equals(getCheckIn(), booking.getCheckIn()) &&
+				Objects.equals(getCheckOut(), booking.getCheckOut()) &&
+				Objects.equals(getPersonsNumber(), booking.getPersonsNumber()) &&
+				Objects.equals(getBookingStatus(), booking.getBookingStatus()) &&
+				Objects.equals(getUsers(), booking.getUsers()) &&
+				Objects.equals(getRooms(), booking.getRooms()) &&
+				Objects.equals(getCreatedBy(), booking.getCreatedBy()) &&
+				Objects.equals(getCreatedOn(), booking.getCreatedOn()) &&
+				Objects.equals(getUpdatedBy(), booking.getUpdatedBy()) &&
+				Objects.equals(getUpdatedOn(), booking.getUpdatedOn());
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId(), getCheckIn(), getCheckOut(), getPersonsNumber(), getPrice(), getBookingStatus(), getUsers(), getRooms(), getCreatedBy(), getCreatedOn(), getUpdatedBy(), getUpdatedOn(), isValid());
 	}
 }

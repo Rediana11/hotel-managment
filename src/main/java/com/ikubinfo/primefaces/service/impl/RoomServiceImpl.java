@@ -37,6 +37,11 @@ import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 	}
 
 	@Override
+	public RoomAbility getAbility(int id) {
+		return roomRepository.getAbility(id);
+	}
+
+	@Override
 	public Room getRoom(int id) {
 		return roomRepository.getRoom(id);
 	}
@@ -50,7 +55,6 @@ import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 
 	@Override
 	public boolean create(Room room) {
-		//category.setLastUpdated(new Date());
 		return roomRepository.create(room);
 
 	}

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.ikubinfo.primefaces.model.User;
 import com.ikubinfo.primefaces.repository.BookingRepository;
 import com.ikubinfo.primefaces.service.BookingService;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("bookingService")
 class BookingServiceImpl implements BookingService {
@@ -42,6 +43,12 @@ class BookingServiceImpl implements BookingService {
 	@Override
 	public Booking getBooking(int id) {
 		return bookingRepository.getBooking(id);
+	}
+
+	@Override
+	@Transactional
+	public boolean reserve(Booking booking) {
+		return bookingRepository.reserve(booking);
 	}
 
 	@Override

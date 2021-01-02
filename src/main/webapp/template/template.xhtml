@@ -6,13 +6,15 @@
 	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	  xmlns:p="http://primefaces.org/ui">
 
-
+<h:outputStylesheet library="css" name="bootstrap.css"/>
+<h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+<h:outputScript name="bootstrap/js/bootstrap.js" />
 <ui:include name="header" src="/template/header.xhtml" />
 
 
 <h:body>
 
-	<ui:include name="header" src="/template/sidebar.xhtml" />
+	<ui:include name="header" src="/template/leftPanel.xhtml" />
 
 		<ui:include name="header" src="/template/rightPanel.xhtml" />
 		<!-- content-->

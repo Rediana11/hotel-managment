@@ -1,18 +1,13 @@
 package com.ikubinfo.primefaces.repository.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import javax.sql.DataSource;
 
 import com.ikubinfo.primefaces.model.Room;
 import com.ikubinfo.primefaces.model.RoomAbility;
 import com.ikubinfo.primefaces.model.RoomCategory;
-import com.ikubinfo.primefaces.repository.mapper.RoomAbilityRowMapper;
-import com.ikubinfo.primefaces.repository.mapper.RoomCategoryRowMapper;
-import com.ikubinfo.primefaces.repository.mapper.VacantRoomRowMapper;
+import com.ikubinfo.primefaces.repository.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,18 +19,21 @@ import org.springframework.stereotype.Repository;
 
 import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.repository.RoomRepository;
-import com.ikubinfo.primefaces.repository.mapper.RoomRowMapper;
 
 @Repository
 class RoomRepositoryImpl implements RoomRepository {
 
 	Logger logger = LoggerFactory.getLogger(RoomRepositoryImpl.class);
 
-	private static final String GET_ROOMS = "select room_id,ue.username as created_by, u.username as updated_by, room_name, description, price, beds_number, facilities,category_name,\n" +
-			"ability_name, r.created_on, r.updated_on\n" +
-			"from room r  join category ct on r.category_id=ct.category_id \n" +
-			"join room_ability ra on r.room_ability_id=ra.room_ability_id \n" +
-			"join user_ u on r.updated_by=u.user_id  join user_ ue on r.created_by=ue.user_id where r.is_valid=true";
+	private static final String GET_ROOMS = "select room_id,  r.room_ability_id, r.category_id,  room_name,  description,beds_number, price, facilities, category_name,ability_name, r.updated_on,\n" +
+			"            r.created_on, (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
+			"            CASE WHEN r.updated_by is not null \n" +
+			"            then (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=r.updated_by) else '' end as UpdatedBy\n" +
+			"            from room r\n" +
+			"            join user_ ue on r.created_by=ue.user_id \n" +
+			"\t\t\tjoin category on r.category_id=category.category_id \n" +
+			"\t\t\tjoin room_ability ra on ra.room_ability_id=r.room_ability_id\n" +
+			"\t\t\twhere r.is_valid=true ";
 	private static final String UPDATE_ROOM ="update room set room_name= :name, description= :description, price= :price, " +
 			"beds_number= :bedsNumber, category_id=:category, room_ability_id=:ability where room_id=:id";
 	private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from film_category where category_id = ?";
@@ -46,12 +44,18 @@ class RoomRepositoryImpl implements RoomRepository {
 	private static final String DELETE_ROOM = "update room set is_valid= false where room_id=:id";
 	private static final String GET_CATEGORIES = "select category_id, category_name from category";
 	private static final String GET_ABILITIES = "select room_ability_id, ability_name from room_ability";
-	private static final String GET_ROOM = "select room_id,ue.username as created_by, u.username as updated_by, room_name, description, price, \n" +
-			"beds_number, facilities,category_name,ability_name, r.created_on, r.updated_on\n" +
-			"\t\t\tfrom room r  join category ct on r.category_id=ct.category_id \n" +
-			"\t\t\tjoin room_ability ra on r.room_ability_id=ra.room_ability_id \n" +
-			"\t\t\tjoin user_ u on r.updated_by=u.user_id  join user_ ue on r.created_by=ue.user_id where r.is_valid=true\n" +
-			"\t\t\tand room_id=1";
+	private static final String GET_ABILITY = "select room_ability_id, ability_name from room_ability where room_ability_id=:id";
+
+	private static final String GET_ROOM = "select room_id, r.room_ability_id, r.category_id,  room_name,  description,beds_number, price, facilities, category_name,ability_name, r.updated_on,\n" +
+			"            r.created_on, (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
+			"            CASE WHEN r.updated_by is not null \n" +
+			"            then (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=r.updated_by) else '' end as UpdatedBy\n" +
+			"            from room r\n" +
+			"            join user_ ue on r.created_by=ue.user_id \n" +
+			"\t\t\tjoin category on r.category_id=category.category_id \n" +
+			"\t\t\tjoin room_ability ra on ra.room_ability_id=r.room_ability_id\n" +
+			"\t\t\twhere r.is_valid=true and room_id=:id";
+
 	private static final String RESERVED_ROOMS_FOR_BOOKING ="select room.room_id,room_name,description, facilities,beds_number, room.price, category_name from \n" +
 			"room join room_booking rb on room.room_id = rb.room_id\n" +
 			"join booking on booking.booking_id=rb.booking_id\n" +
@@ -132,11 +136,10 @@ class RoomRepositoryImpl implements RoomRepository {
 		parameters.put("beds_number", room.getBedsNumber());
 		parameters.put("category_id", room.getRoomCategory().getId());
 		parameters.put("room_ability_id", room.getRoomAbility().getId());
-		parameters.put("created_by", room.getCreatedBy());
-		parameters.put("created_on", room.getCreatedOn());
-		parameters.put("updated_by", room.getUpdatedBy());
-		parameters.put("updated_on", room.getUpdatedOn());
-		parameters.put("is_valid", room.isValid());
+		//parameters.put("created_by", room.getCreatedBy());
+		parameters.put("created_by", 2); //TODO replace this with line 129
+		parameters.put("created_on", new Date());
+		parameters.put("is_valid", "true");
 
 		return insertRoomQuery.execute(parameters) > 0;
 
@@ -166,18 +169,14 @@ class RoomRepositoryImpl implements RoomRepository {
 	public List<RoomCategory> getCategories(){
 
 
-		String queryString = GET_CATEGORIES;
-
-		return namedParameterJdbcTemplate.query(queryString, new RoomCategoryRowMapper());
+		return namedParameterJdbcTemplate.query(GET_CATEGORIES, new RoomCategoryBaseRowMapper());
 	}
 
 	@Override
 	public List<RoomAbility> getRoomAbilities(){
 
 
-		String queryString = GET_ABILITIES;
-
-		return namedParameterJdbcTemplate.query(queryString, new RoomAbilityRowMapper());
+		return namedParameterJdbcTemplate.query(GET_ABILITIES, new RoomAbilityRowMapper());
 	}
 
 	@Override
@@ -188,6 +187,17 @@ class RoomRepositoryImpl implements RoomRepository {
 		String queryString = GET_ROOM;
 
 		return  namedParameterJdbcTemplate.queryForObject(queryString, params, new RoomRowMapper());
+
+	}
+
+	@Override
+	public RoomAbility getAbility(int id) {
+
+		Map<String, Object> params = new HashMap<>();
+		params.put("id", id );
+		String queryString = GET_ABILITY;
+
+		return  namedParameterJdbcTemplate.queryForObject(queryString, params, new RoomAbilityRowMapper());
 
 	}
 

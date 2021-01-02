@@ -11,7 +11,7 @@ public interface RoomCategoryRepository {
 
     RoomCategory getRoomCategory(int id);
 
-    boolean saveCategory(RoomCategory roomCategory);
+    boolean updateCategory(RoomCategory roomCategory);
 
     boolean createCategory(RoomCategory roomCategory);
 

@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 
 import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.model.Room;
+import com.ikubinfo.primefaces.model.User;
 import com.ikubinfo.primefaces.service.RoomService;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 import com.ikubinfo.primefaces.util.Messages;
@@ -24,6 +25,7 @@ public class RoomManagedBean implements Serializable {
 	private List<Room>  vacantRooms;
 	private List<Room> rooms;
 	private String name;
+	private User user = new User();
 
 	@ManagedProperty(value = "#{roomService}")
 	private RoomService roomService;
@@ -143,5 +145,13 @@ public class RoomManagedBean implements Serializable {
 
 	public void setBookingManagedBean(BookingManagedBean bookingManagedBean) {
 		this.bookingManagedBean = bookingManagedBean;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 }

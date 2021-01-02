@@ -17,6 +17,8 @@ public interface BookingService {
 
 	Booking getBooking (int id);
 
+	boolean reserve(Booking booking);
+
 	boolean save(Booking booking);
 
 	boolean updateBookingStatus(Booking booking);

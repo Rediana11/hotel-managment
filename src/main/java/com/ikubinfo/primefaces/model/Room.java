@@ -1,7 +1,9 @@
 package com.ikubinfo.primefaces.model;
 
+
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class Room {
 
@@ -149,5 +151,31 @@ public class Room {
                 ", updatedOn=" + updatedOn +
                 ", isValid=" + isValid +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Room)) return false;
+        Room room = (Room) o;
+        return isValid() == room.isValid() &&
+                Objects.equals(getId(), room.getId()) &&
+                Objects.equals(getName(), room.getName()) &&
+                Objects.equals(getDescription(), room.getDescription()) &&
+                Objects.equals(getBedsNumber(), room.getBedsNumber()) &&
+                Objects.equals(getPrice(), room.getPrice()) &&
+                Objects.equals(getFacilities(), room.getFacilities()) &&
+                Objects.equals(getRoomAbility(), room.getRoomAbility()) &&
+                Objects.equals(getRoomCategory(), room.getRoomCategory()) &&
+                Objects.equals(getBookings(), room.getBookings()) &&
+                Objects.equals(getCreatedBy(), room.getCreatedBy()) &&
+                Objects.equals(getCreatedOn(), room.getCreatedOn()) &&
+                Objects.equals(getUpdatedBy(), room.getUpdatedBy()) &&
+                Objects.equals(getUpdatedOn(), room.getUpdatedOn());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getName(), getDescription(), getBedsNumber(), getPrice(), getFacilities(), getRoomAbility(), getRoomCategory(), getBookings(), getCreatedBy(), getCreatedOn(), getUpdatedBy(), getUpdatedOn(), isValid());
     }
 }

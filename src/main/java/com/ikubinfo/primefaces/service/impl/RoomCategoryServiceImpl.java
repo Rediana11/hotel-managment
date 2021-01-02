@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service("categoryService")
@@ -33,8 +34,9 @@ public class RoomCategoryServiceImpl implements RoomCategoryService {
     }
 
     @Override
-    public boolean save(RoomCategory roomCategory) {
-        return categoryRepository.saveCategory(roomCategory);
+    public boolean updateCategory(RoomCategory roomCategory) {
+        roomCategory.setUpdatedOn(new Date());
+        return categoryRepository.updateCategory(roomCategory);
     }
 
     @Override

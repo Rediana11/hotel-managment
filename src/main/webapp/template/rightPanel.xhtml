@@ -8,15 +8,13 @@
 <!-- Header-->
 <header id="header" class="header">
 
-<div class="header-menu">
+<div class="header-menu" style="height: 90px;">
 
-	<div class="col-sm-7">
-		<a id="menuToggle" class="menutoggle pull-left"><i
-			class="fa fa fa-tasks"></i></a>
+	<div class="col-md-12" style="background-color:#272c33;height: 70px;">
+		<a id="menuToggle" class="menutoggle pull-left">
+			<i class="fa fa fa-tasks"></i></a>
 		<div class="header-left"></div>
-	</div>
 
-	<div class="col-sm-5">
 		<div class="user-area dropdown float-right">
 			<a href="#" class="dropdown-toggle" data-toggle="dropdown"
 				aria-haspopup="true" aria-expanded="false"> <h:graphicImage
@@ -25,14 +23,14 @@
 
 			</a>
 
-			<div class="user-menu dropdown-menu">
+			<div class="user-menu dropdown-menu" style="padding-top:20px !important;" >
 				<h:form>
-					<h:commandLink action="/profile.xhtml?faces-redirect=true">
-						<i class="menu-icon fa fa-user"></i> My Profile
+					<h:commandLink action="/profile.xhtml?faces-redirect=true" >
+						<i class="menu-icon fa fa-user" ></i> My Profile
 					</h:commandLink>
 					<br />
-					<h:commandLink action="#{loginBean.logOut()}">
-						<i class="menu-icon fa fa-sign-out"></i> Log out</h:commandLink>
+					<h:commandLink action="#{loginBean.logOut()}" >
+						<i class="menu-icon fa fa-sign-out" ></i> Log out</h:commandLink>
 				</h:form>
 			</div>
 

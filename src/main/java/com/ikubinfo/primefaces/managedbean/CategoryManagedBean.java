@@ -17,6 +17,7 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 @ManagedBean
@@ -29,7 +30,6 @@ public class CategoryManagedBean implements Serializable {
     private RoomCategory roomCategory;
 
     private List<RoomCategory> categories;
-    private String name;
 
     @ManagedProperty(value = "#{categoryService}")
     private RoomCategoryService categoryService;
@@ -47,10 +47,10 @@ public class CategoryManagedBean implements Serializable {
 
     }
 
-    public void save() {
-        if (categoryService.save(roomCategory)) {
+    public void updateCategory() {
+        if (categoryService.updateCategory(roomCategory)) {
             getAll();
-            messages.showInfoMessage("Room updated successfully");
+            messages.showInfoMessage("Category updated successfully");
         }
         roomCategory = new RoomCategory();
 
@@ -58,8 +58,11 @@ public class CategoryManagedBean implements Serializable {
 
     public void add() {
 
-            categoryService.create(roomCategory);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successful Added"));
+        if (categoryService.create(roomCategory)) {
+            messages.showInfoMessage("Category was added successfully");
+            getAll();
+        }
+        roomCategory = new RoomCategory();
 
     }
     public void filter() {
@@ -93,14 +96,6 @@ public class CategoryManagedBean implements Serializable {
 
     public void setCategories(List<RoomCategory> categories) {
         this.categories = categories;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public RoomCategoryService getCategoryService() {

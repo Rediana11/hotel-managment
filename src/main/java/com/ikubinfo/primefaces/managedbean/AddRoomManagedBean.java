@@ -5,6 +5,7 @@ import com.ikubinfo.primefaces.model.RoomAbility;
 import com.ikubinfo.primefaces.model.RoomCategory;
 import com.ikubinfo.primefaces.repository.RoomRepository;
 import com.ikubinfo.primefaces.service.RoomService;
+import com.ikubinfo.primefaces.util.Messages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +26,8 @@ public class AddRoomManagedBean {
     private static final Logger LOG = LoggerFactory.getLogger(RoomRepository.class);
 
     private Room room;
+    private double price;
+    private int bedsNumber;
     private List<RoomCategory> categories;
     private List<RoomAbility> roomAbilities;
 
@@ -33,6 +36,9 @@ public class AddRoomManagedBean {
     private List<SelectItem> categoryItems;
     private List<SelectItem> abilityItems;
 
+    @ManagedProperty(value = "#{messages}")
+    private Messages messages;
+
 
     @ManagedProperty(value = "#{roomService}")
     private RoomService roomService;
@@ -40,44 +46,42 @@ public class AddRoomManagedBean {
     @PostConstruct
     public void init() {
         room = new Room();
-        categoryItems = new ArrayList<SelectItem>();
-        abilityItems = new ArrayList<SelectItem>();
         categories = roomService.getCategories();
-        for(RoomCategory category: categories){
-            categoryItems.add(new SelectItem(category.getId(), category.getName()));
-        }
         roomAbilities= roomService.getRoomAbilities();
-        for (RoomAbility ability: roomAbilities){
-            abilityItems.add(new SelectItem(ability.getId(),ability.getName()));
-        }
+        roomCategory = new RoomCategory();
+        roomAbility = new RoomAbility();
     }
 
     public String save() {
-
+        room.setPrice(price);
+        room.setBedsNumber(bedsNumber);
+        room.setRoomCategory(roomCategory);
+        room.setRoomAbility(roomAbility);
         if(room.getId()==null) {
-            roomService.create(room);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successful Added"));
+            if(roomService.create(room)){
+                messages.showInfoMessage("Added Successfully!");
+            }
+            else{
+                messages.showErrorMessage("There was a problem adding the room!");
+            }
         }
         else{
             roomService.save(room);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Successful Updated!"));
+            messages.showInfoMessage("Room Updated Successfully!");
         }
-        return "/room?faces-redirect=true";
+        return "room";
 
     }
-    public List<SelectItem> getCategories(){
-        List<SelectItem> items = new ArrayList<SelectItem>();
-         categories = roomService.getCategories();
 
-        for(RoomCategory category: categories){
-            items.add(new SelectItem(category.getId(), category.getName()));
-        }
-        return items;
-    }
 
     public void loadRoom(){
-        if (room.getId()!=null)
+        if (room.getId()!=null){
         room = roomService.getRoom(room.getId());
+        roomCategory=room.getRoomCategory();
+        roomAbility=room.getRoomAbility();
+        }
+        roomCategory=new RoomCategory();
+        roomAbility=new RoomAbility();
     }
 
 
@@ -87,6 +91,10 @@ public class AddRoomManagedBean {
 
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    public List<RoomCategory> getCategories() {
+        return categories;
     }
 
     public RoomService getRoomService() {
@@ -140,5 +148,29 @@ public class AddRoomManagedBean {
 
     public void setAbilityItems(List<SelectItem> abilityItems) {
         this.abilityItems = abilityItems;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public int getBedsNumber() {
+        return bedsNumber;
+    }
+
+    public void setBedsNumber(int bedsNumber) {
+        this.bedsNumber = bedsNumber;
+    }
+
+    public Messages getMessages() {
+        return messages;
+    }
+
+    public void setMessages(Messages messages) {
+        this.messages = messages;
     }
 }

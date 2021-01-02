@@ -16,6 +16,8 @@ public interface BookingRepository {
 
 	boolean save(Booking booking);
 
+	boolean reserve(Booking booking);
+
 	boolean updateBookingStatus(Booking booking);
 
 	List<BookingStatus> getBookingStatuses();

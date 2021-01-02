@@ -57,6 +57,7 @@ public class BookingManagedBean implements Serializable {
             statusItems.add(new SelectItem(status.getId(),status.getName()));
         }
 
+
         today = new Date();
         long oneDay = 24 * 60 * 60 * 1000;
 
@@ -83,11 +84,15 @@ public class BookingManagedBean implements Serializable {
         booking = new Booking();
     }
 
+    public void reserve (){
+        if(bookingService.reserve(booking)){
+            messages.showInfoMessage("Successful reservation!");
+        }
+    }
 
-        public void changeStatus(){
+    public void changeStatus(){
             if (bookingService.updateBookingStatus(booking))
             messages.showInfoMessage("Booking status changed successfully");
-
         }
 
     public void getAll() {
