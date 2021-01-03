@@ -13,28 +13,29 @@
 
 
 		<p:growl id="growl"></p:growl>
+	<h:form id="form">
+
+		<p:dataList value="#{roomDetailManagedBean.room}" var="room" type="definition">
+			<f:facet name="header">
+				<b>Room Info Detail</b>
+			</f:facet>
+			<b>Name :</b> #{room.name}
+			<br/>
+			<b> Description : </b> #{room.description}
+			<br/>
+			<b>Facilities : </b> #{room.facilities}
+			<br/>
+			<b> Price : </b> #{room.price}
+			<br/>
+			<b> Beds number: </b> #{room.bedsNumber}
+			<br/>
+		</p:dataList>
+
+	</h:form>
+		<p:button outcome="reservation" value="Back">
+		</p:button>
 
 
-
-			<h:form id="form">
-
-				<p:dataList value="#{roomDetailManagedBean.room}" var="room" type="definition">
-					<f:facet name="header">
-						Room Info
-					</f:facet>
-					Created by: #{room.createdBy.username}
-					<br/>
-					Created on: #{room.createdOn}
-					<br/>
-					Updated by: #{room.updatedBy.username}
-					<br/>
-
-					Updated on: #{room.updatedOn}
-				</p:dataList>
-
-			</h:form>
-	<p:button outcome="room" value="Back">
-	</p:button>
 
 	<p:contentFlow value="#{imagesManagedBean.images}" var="image">
 		<p:graphicImage name="demo/images/nature/#{image}" styleClass="content" />

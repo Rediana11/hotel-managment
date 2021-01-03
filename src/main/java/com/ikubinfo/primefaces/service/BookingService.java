@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ikubinfo.primefaces.model.Booking;
 import com.ikubinfo.primefaces.model.BookingStatus;
+import com.ikubinfo.primefaces.model.Room;
 import com.ikubinfo.primefaces.model.User;
 
 public interface BookingService {
@@ -17,10 +18,10 @@ public interface BookingService {
 
 	Booking getBooking (int id);
 
-	boolean reserve(Booking booking);
+	boolean reserve(Booking booking, List<Room> rooms);
 
 	boolean save(Booking booking);
 
-	boolean updateBookingStatus(Booking booking);
+	boolean updateBookingStatusToCheckedIn(Booking booking);
 
 }

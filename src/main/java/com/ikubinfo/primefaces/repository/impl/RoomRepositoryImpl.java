@@ -40,7 +40,7 @@ class RoomRepositoryImpl implements RoomRepository {
 	private static final String GET_VACANT_ROOMS = "select room_id,room_name,description, facilities,beds_number, price, category_name from \n" +
 			"room join room_ability ra on room.room_ability_id= ra.room_ability_id\n" +
 			"join category on room.category_id=category.category_id\n" +
-			"where ra.ability_name='Vacant'";
+			"where ra.code='V'" ;
 	private static final String DELETE_ROOM = "update room set is_valid= false where room_id=:id";
 	private static final String GET_CATEGORIES = "select category_id, category_name from category";
 	private static final String GET_ABILITIES = "select room_ability_id, ability_name from room_ability";

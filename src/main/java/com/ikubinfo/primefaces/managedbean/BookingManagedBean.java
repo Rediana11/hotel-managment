@@ -7,6 +7,7 @@ import com.ikubinfo.primefaces.model.RoomAbility;
 import com.ikubinfo.primefaces.service.BookingService;
 import com.ikubinfo.primefaces.service.RoomService;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
+import com.ikubinfo.primefaces.service.helpers.SelectRoom;
 import com.ikubinfo.primefaces.util.Messages;
 import org.primefaces.event.FlowEvent;
 
@@ -26,19 +27,21 @@ import java.util.List;
 public class BookingManagedBean implements Serializable {
 
     private Booking booking;
-
+    private List<SelectRoom> selectedRooms;
+    private SelectRoom selectedRoom;
     private BookingStatus bookingStatus;
     private List<Booking> bookings;
     private List<BookingStatus> bookingStatuses;
     private List<SelectItem> statusItems;
 
+    private List<Room> rooms;
     private Date checkIn;
     private Date checkOut;
     private Date minDate;
     private Date today;
     private Date maxDate;
 
-    private boolean quietRoom;
+
 
     @ManagedProperty(value = "#{bookingService}")
     private BookingService bookingService;
@@ -48,20 +51,23 @@ public class BookingManagedBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        // TODO bej kontrollin per rolin per personal information
+        // beji fushat readonly if client otherwise joreadonlu fushat+ nqs nuk ekziston klient me ate email
+        //shtoje ne db si Client ne shto tabele Client 1 me shume
         booking = new Booking();
         bookingStatus = new BookingStatus();
         bookings = bookingService.getAll();
+        rooms=new ArrayList<Room>();
         statusItems = new ArrayList<SelectItem>();
         bookingStatuses = bookingService.getBookingStatuses();
         for (BookingStatus status: bookingStatuses){
             statusItems.add(new SelectItem(status.getId(),status.getName()));
         }
-
-
         today = new Date();
         long oneDay = 24 * 60 * 60 * 1000;
-
         minDate =new Date(today.getTime() + ( oneDay));
+        selectedRooms = new ArrayList<SelectRoom>();
+        selectedRoom=new SelectRoom();
     }
 
     public void delete() {
@@ -69,6 +75,19 @@ public class BookingManagedBean implements Serializable {
             bookings = bookingService.getAll();
             messages.showInfoMessage("Deleted");
 
+    }
+
+    public void selectRoom(Room room){
+        selectedRoom.setRoom(room);
+        SelectRoom tempRoom=new SelectRoom();
+        tempRoom.setRoom(room);
+        if(selectedRoom.isSelected()) {
+            tempRoom.setSelected(selectedRoom.isSelected());
+            selectedRooms.add(tempRoom);
+        }else{
+            tempRoom.setSelected(!selectedRoom.isSelected());
+              selectedRooms.remove(tempRoom);
+       }
     }
 
     public Booking loadBooking(){
@@ -83,15 +102,26 @@ public class BookingManagedBean implements Serializable {
         }
         booking = new Booking();
     }
-
+    private List<Room>  mappSelectRoomToRoom(List<SelectRoom> selRooms){
+        List<Room> rooms=new ArrayList<Room>();
+        for (SelectRoom el: selRooms){
+            rooms.add(el.getRoom());
+        }
+        return rooms;
+    }
     public void reserve (){
-        if(bookingService.reserve(booking)){
+        if(bookingService.reserve(booking,mappSelectRoomToRoom(selectedRooms))){
             messages.showInfoMessage("Successful reservation!");
         }
     }
 
-    public void changeStatus(){
-            if (bookingService.updateBookingStatus(booking))
+    public void loadBookingStatus(){
+        booking=bookingService.getBooking(booking.getId());
+    }
+
+    public void changeStatusToCheckedIn(){
+
+            if (bookingService.updateBookingStatusToCheckedIn(booking))
             messages.showInfoMessage("Booking status changed successfully");
         }
 
@@ -189,15 +219,29 @@ public class BookingManagedBean implements Serializable {
         this.maxDate = maxDate;
     }
 
-
-    public boolean isQuietRoom() {
-        return quietRoom;
+    public List<SelectRoom> getSelectedRooms() {
+        return selectedRooms;
     }
 
-    public void setQuietRoom(boolean quietRoom) {
-        this.quietRoom = quietRoom;
+    public void setSelectedRooms(List<SelectRoom> selectedRooms) {
+        this.selectedRooms = selectedRooms;
     }
 
+    public List<Room> getRooms() {
+        return rooms;
+    }
+
+    public void setRooms(List<Room> rooms) {
+        this.rooms = rooms;
+    }
+
+    public SelectRoom getSelectedRoom() {
+        return selectedRoom;
+    }
+
+    public void setSelectedRoom(SelectRoom selectedRoom) {
+        this.selectedRoom = selectedRoom;
+    }
 
     public List<SelectItem> getStatusItems() {
         return statusItems;

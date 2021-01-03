@@ -1,18 +1,16 @@
 package com.ikubinfo.primefaces.repository.impl;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import javax.sql.DataSource;
+import javax.swing.*;
+import javax.xml.transform.Result;
 
 import com.ikubinfo.primefaces.model.Booking;
 import com.ikubinfo.primefaces.model.BookingStatus;
 import com.ikubinfo.primefaces.model.Room;
-import com.ikubinfo.primefaces.repository.mapper.BookingStatusRowMapper;
-import com.ikubinfo.primefaces.repository.mapper.RoomRowMapper;
+import com.ikubinfo.primefaces.repository.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Repository;
 
 import com.ikubinfo.primefaces.model.User;
 import com.ikubinfo.primefaces.repository.BookingRepository;
-import com.ikubinfo.primefaces.repository.mapper.BookingRowMapper;
 
 @Repository
 class BookingRepositoryImpl implements BookingRepository {
@@ -32,10 +29,10 @@ class BookingRepositoryImpl implements BookingRepository {
 
     Logger logger = LoggerFactory.getLogger(BookingRepositoryImpl.class);
 
-    private static final String GET_BOOKINGS = "select booking_id,bs.booking_status_id,check_in,check_out,persons_number, status_name,ue.username as created_by, u.username as updated_by, price, \n" +
+    private static final String GET_BOOKINGS = "select booking_id,bs.booking_status_id,check_in,check_out,persons_number, remarks,status_name,ue.username as created_by, u.username as updated_by, price, \n" +
             "b.created_on, b.updated_on from booking b  join booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
             "join user_ u on b.updated_by=u.user_id  join user_ ue on b.created_by=ue.user_id where b.is_valid=true";
-    private static final String GET_BOOKING = "select booking_id,check_in,check_out,persons_number, status_name,ue.username as created_by, u.username as updated_by, price, \n" +
+    private static final String GET_BOOKING = "select booking_id,check_in,check_out,persons_number,remarks, status_name,ue.username as created_by, u.username as updated_by, price, \n" +
             "b.created_on, b.updated_on from booking b  join booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
             "join user_ u on b.updated_by=u.user_id  join user_ ue on b.created_by=ue.user_id where b.is_valid=true and booking_id=:id";
     private static final String UPDATE_BOOKING = "update booking set check_out=:date, persons_number=:personsNumber, price=:price where booking_id=:id";
@@ -43,18 +40,25 @@ class BookingRepositoryImpl implements BookingRepository {
     private static final String DELETE_BOOKING = "update booking set is_valid= false where booking_id=:id";
     private static final String UPDATE_STATUS ="update booking set booking_status_id=:statusId where booking_id=:id";
     private static final String GET_BOOKING_STATUSES = "select booking_status_id, status_name from booking_status";
+    private static  String GET_ROOM_ABILITY_ID ="select room_ability_id from room_ability where code= ";
+    private static String UPDATE_ROOM_ABILITY = "update room \n" +
+            "set  room_ability_id =:abilityId from  room_booking rb  join booking b on b.booking_id=rb.booking_id where  b.booking_id=:bookingId";
+    private static final String GET_MAX_BOOKING_ID = "select max(booking_id) as booking_id from booking";
 
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private SimpleJdbcInsert insertRoomQuery;
+    private SimpleJdbcInsert insertBookingQuery;
+    private SimpleJdbcInsert insertRoomBookingQuery;
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
     public BookingRepositoryImpl(DataSource datasource) {
         super();
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(datasource);
-        this.insertRoomQuery = new SimpleJdbcInsert(datasource).withTableName("booking")
+        this.insertBookingQuery = new SimpleJdbcInsert(datasource).withTableName("booking")
                 .usingGeneratedKeyColumns("booking_id");
+        this.insertRoomBookingQuery = new SimpleJdbcInsert(datasource).withTableName("room_booking")
+                .usingGeneratedKeyColumns("room_booking_id");
         this.jdbcTemplate = new JdbcTemplate(datasource);
     }
 
@@ -93,23 +97,29 @@ class BookingRepositoryImpl implements BookingRepository {
 	}
 
     @Override
-    public boolean reserve(Booking booking) {
-        String insertBooking = "insert into booking  values (default, :checkIn, :checkOut, :personsNumber, 1, 2, current_timestamp, null, null, true, :price );";
-        String insertRoomBooking = "insert into room_booking  values (default, (select max(booking_id) from booking),  :roomId)";
+    public boolean reserve(Booking booking,List<Room> rooms) {
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        Map<String, Object> parameters1 = new HashMap<String, Object>();
 
-        MapSqlParameterSource namedParameters1 = new MapSqlParameterSource();
-        MapSqlParameterSource namedParameters2 = new MapSqlParameterSource();
+        parameters.put("check_in", booking.getCheckIn());
+        parameters.put("check_out", booking.getCheckOut());
+        parameters.put("persons_number", booking.getPersonsNumber());
+        parameters.put("booking_status_id",1);
+        parameters.put("created_by", 2); //TODO replace this with current user
+        parameters.put("created_on", new Date());
+        parameters.put("price", booking.getPrice());
+        insertBookingQuery.execute(parameters);
+        for (int i=0;i<rooms.size();i++){
+            int roomId=rooms.get(i).getId();
+            parameters1.put("room_id", roomId);
+            parameters1.put("booking_id", getMaxBookingId());
+        }
+        return insertRoomBookingQuery.execute(parameters1)>0;
 
-        namedParameters1.addValue("checkIn", booking.getCheckIn());
-        namedParameters1.addValue("checkOut", booking.getCheckOut());
-        namedParameters1.addValue("personsNumber", booking.getPersonsNumber());
-        namedParameters1.addValue("personsNumber", booking.getPrice());
-        namedParameters2.addValue("roomId", booking.getRooms());
-        int insertedCount = this.namedParameterJdbcTemplate.update(insertBooking, namedParameters1);
-        int insertedCount2 = this.namedParameterJdbcTemplate.update(insertRoomBooking, namedParameters2);
+    }
 
-        return insertedCount + insertedCount2 >1;
-
+    private int getMaxBookingId() {
+         return jdbcTemplate.queryForObject(GET_MAX_BOOKING_ID,new BookingIdRowMaper()).getId();
     }
 
 	/* @Override
@@ -122,18 +132,26 @@ class BookingRepositoryImpl implements BookingRepository {
 	 */
 
     @Override
-    public boolean updateBookingStatus(Booking booking) {
+    public boolean updateBookingStatusToCheckedIn(Booking booking) {
 
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 
         namedParameters.addValue("id", booking.getId());
 
-        namedParameters.addValue("statusId", booking.getBookingStatus().getId());
+        namedParameters.addValue("statusId", 3);
+
 
         int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_STATUS, namedParameters);
 
+        //int updatedCount1 = this.namedParameterJdbcTemplate.update(UPDATE_ROOM_ABILITY, namedParameters1);
+
         return updatedCount > 0;
     }
+
+   // private int getRoomAbilityId(boolean vacant){
+     //   GET_ROOM_ABILITY_ID = vacant?GET_ROOM_ABILITY_ID.concat(" 'V' "): GET_ROOM_ABILITY_ID.concat(" 'NV' ");
+       // return jdbcTemplate.queryForObject(GET_ROOM_ABILITY_ID,new RoomAbilityRowMapper()).getId();
+    //}
 
     @Override
     public List<BookingStatus> getBookingStatuses() {

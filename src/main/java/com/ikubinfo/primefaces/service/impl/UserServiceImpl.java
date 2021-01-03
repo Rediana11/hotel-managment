@@ -1,0 +1,22 @@
+package com.ikubinfo.primefaces.service.impl;
+
+import com.ikubinfo.primefaces.model.User;
+import com.ikubinfo.primefaces.repository.RoomRepository;
+import com.ikubinfo.primefaces.repository.UserRepository;
+import com.ikubinfo.primefaces.service.UserService;
+import org.springframework.stereotype.Service;
+
+@Service("userService")
+public class UserServiceImpl implements UserService {
+
+    private UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public User getUser(int id) {
+        return userRepository.getUser(id);
+    }
+}

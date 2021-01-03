@@ -12,8 +12,6 @@ import com.ikubinfo.primefaces.model.User;
 
 public class BookingRowMapper implements RowMapper<Booking> {
 
-	RoomRowMapper roomRowMapper = new RoomRowMapper();
-
 	@Override
 	public Booking mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Booking booking = new Booking();
@@ -27,6 +25,7 @@ public class BookingRowMapper implements RowMapper<Booking> {
 		booking.setPersonsNumber(rs.getInt("persons_number"));
 		bookingStatus.setId(rs.getInt("booking_status_id"));
 		bookingStatus.setName(rs.getString("status_name"));
+		booking.setRemarks(rs.getString("remarks"));
 		booking.setBookingStatus(bookingStatus);
 		booking.setPrice(rs.getDouble("price"));
 		user.setUsername(rs.getString("created_by"));

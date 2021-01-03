@@ -45,17 +45,8 @@
 
 					<p:column headerText="Actions">
 
-						<p:commandButton value="Edit" update="editForm"
-							process="@this" oncomplete="PF('EditDialog').show();">
 
-							<f:setPropertyActionListener
-								target="#{bookingManagedBean.booking}" value="#{booking}" />
-
-						</p:commandButton>
-
-
-
-						<p:commandButton immediate="true" value="Delete"
+						<p:commandButton immediate="true" title="Delete" icon="pi pi-trash"
 							update=":form:table growl" action="#{bookingManagedBean.delete}">
 							<p:confirm header="Confirmation" message="Are you sure?"
 								icon="pi pi-exclamation-triangle" />
@@ -71,18 +62,25 @@
 								styleClass="ui-confirmdialog-no" icon="pi pi-times" />
 						</p:confirmDialog>
 
-					</p:column>
 
-					<p:column headerText="Change status">
-						<p:commandButton value="Change" update="bookingStatus"
-										 process="@this" oncomplete="PF('BookingStatusDialog').show();">
 
-							<f:setPropertyActionListener
-									target="#{bookingManagedBean.booking.bookingStatus}" value="#{bookingStatus}" />
 
-						</p:commandButton>
-					</p:column>
+					<p:commandButton immediate="true"  title="Check in"
+									 icon="pi pi-check"
+									 update="table" action="#{bookingManagedBean.changeStatusToCheckedIn}">
+						<p:confirm header="Confirmation" message="Are you sure to make booking status checked In?"
+								   icon="pi pi-exclamation-triangle" />
 
+						<f:setPropertyActionListener
+								target="#{bookingManagedBean.booking}" value="#{booking}" />
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Yes" type="button"
+											 styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							<p:commandButton value="No" type="button"
+											 styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+						</p:confirmDialog>
+					</p:commandButton>
+				</p:column>
 
 					<p:column headerText="Booking detail">
 						<p:commandLink value="Detail" update="bookingDetail"
@@ -138,42 +136,6 @@
 			</script>
 			<h:form id="editForm">
 
-
-				<p:dialog header="Edit Booking" id="updateDialog"
-						  widgetVar="EditDialog" modal="true">
-
-
-					<h:panelGrid columns="3">
-						<p:outputLabel for="updateDate" value="Check out:" />
-						<p:calendar id="button" value="#{calendarView.date3}" showOn="button" />
-
-						<h:inputText id="updateDate" required="true"
-									 value="#{bookingManagedBean.booking.checkOut}"></h:inputText>
-
-						<p:outputLabel for="price" styleClass="p-col-fixed" style="width:100px" value="Price" />
-						<br/>
-
-						<p:inputNumber id="price" value="#{bookingManagedBean.booking.price}" symbol=" $" symbolPosition="s"
-									   decimalSeparator="," thousandSeparator=".">
-						</p:inputNumber>
-
-						<h:outputLabel for="personsNumber" value="Beds number " />
-						<br/>
-						<p:spinner id="personsNumber" value="#{bookingManagedBean.booking.personsNumber}" min="1" max="50" />
-
-
-						<p:commandButton process="updateDialog" update=":form:table growl" immediate="true"
-										 value="Save" actionListener="#{bookingManagedBean.save}"
-										 oncomplete="PF('EditDialog').hide();">
-
-						</p:commandButton>
-
-
-
-					</h:panelGrid>
-
-
-				</p:dialog>
 
 
 			</h:form>

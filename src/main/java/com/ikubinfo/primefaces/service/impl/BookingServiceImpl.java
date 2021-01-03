@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.ikubinfo.primefaces.model.Booking;
 import com.ikubinfo.primefaces.model.BookingStatus;
+import com.ikubinfo.primefaces.model.Room;
 import org.springframework.stereotype.Service;
 
 import com.ikubinfo.primefaces.model.User;
@@ -47,8 +48,8 @@ class BookingServiceImpl implements BookingService {
 
 	@Override
 	@Transactional
-	public boolean reserve(Booking booking) {
-		return bookingRepository.reserve(booking);
+	public boolean reserve(Booking booking,List<Room> rooms) {
+		return bookingRepository.reserve(booking,rooms);
 	}
 
 	@Override
@@ -57,7 +58,7 @@ class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public boolean updateBookingStatus(Booking booking) {
-		return bookingRepository.updateBookingStatus(booking);
+	public boolean updateBookingStatusToCheckedIn(Booking booking) {
+		return bookingRepository.updateBookingStatusToCheckedIn(booking);
 	}
 }

@@ -13,6 +13,7 @@ public class Booking {
 	private Integer personsNumber;
 	private double price;
 	private BookingStatus bookingStatus;
+	private String remarks;
 	private List<User> users;
 	private List<Room> rooms;
 	private User createdBy;
@@ -125,6 +126,14 @@ public class Booking {
 		isValid = valid;
 	}
 
+	public String getRemarks() {
+		return remarks;
+	}
+
+	public void setRemarks(String remarks) {
+		this.remarks = remarks;
+	}
+
 	@Override
 	public String toString() {
 		return "Booking{" +
@@ -134,6 +143,7 @@ public class Booking {
 				", personsNumber=" + personsNumber +
 				", price=" + price +
 				", bookingStatus=" + bookingStatus +
+				", remarks='" + remarks + '\'' +
 				", users=" + users +
 				", rooms=" + rooms +
 				", createdBy=" + createdBy +
@@ -156,6 +166,7 @@ public class Booking {
 				Objects.equals(getCheckOut(), booking.getCheckOut()) &&
 				Objects.equals(getPersonsNumber(), booking.getPersonsNumber()) &&
 				Objects.equals(getBookingStatus(), booking.getBookingStatus()) &&
+				Objects.equals(getRemarks(), booking.getRemarks()) &&
 				Objects.equals(getUsers(), booking.getUsers()) &&
 				Objects.equals(getRooms(), booking.getRooms()) &&
 				Objects.equals(getCreatedBy(), booking.getCreatedBy()) &&
@@ -166,6 +177,6 @@ public class Booking {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getId(), getCheckIn(), getCheckOut(), getPersonsNumber(), getPrice(), getBookingStatus(), getUsers(), getRooms(), getCreatedBy(), getCreatedOn(), getUpdatedBy(), getUpdatedOn(), isValid());
+		return Objects.hash(getId(), getCheckIn(), getCheckOut(), getPersonsNumber(), getPrice(), getBookingStatus(), getRemarks(), getUsers(), getRooms(), getCreatedBy(), getCreatedOn(), getUpdatedBy(), getUpdatedOn(), isValid());
 	}
 }

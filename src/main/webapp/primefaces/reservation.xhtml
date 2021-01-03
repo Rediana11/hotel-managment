@@ -66,30 +66,19 @@
 			padding:4px;
 		}
 	</style>
+
 	<h:form id="form">
-		<p:growl id="msgs" showDetail="true" skipDetailIfEqualsSummary="true" />
-		<p:panel header="Make a reservation" styleClass="middlePanelClass"
-				 style="background-color: gainsboro" >
-			<h:messages id="messages"></h:messages>
-			<fieldset>
-
-				<p:button outcome="booking" value="Back">
-				</p:button>
-
-				<br />
-				<br />
-
-
-			</fieldset>
-		<p:accordionPanel multiple="true">
-			<p:tab title="Basic information">
-				<h:panelGrid columns="2" cellpadding="10">
+	<p:wizard >
+		<p:tab id="basic" title="Basic information" style="width: auto;">
+			<p:panel header="Dates" style="width: auto;">
+				<p:messages />
+				<h:panelGrid columns="4" cellpadding="10">
 					<p:outputLabel for="checkIn" value="Check in:" />
-					<p:calendar id="checkIn" value="#{bookingManagedBean.checkIn}" mindate="#{bookingManagedBean.today}"  effect="fold" />
+					<p:calendar id="checkIn" required="true" requiredMessage="Choose check in date!"  value="#{bookingManagedBean.booking.checkIn}" mindate="#{bookingManagedBean.today}"  />
 					<p:outputLabel for="checkOut" value="Check out:" />
-					<p:calendar id="checkOut" value="#{bookingManagedBean.checkOut}" mindate="#{bookingManagedBean.minDate}" effect="fold" />
+					<p:calendar id="checkOut"  required="true"  requiredMessage="Choose check out date!" value="#{bookingManagedBean.booking.checkOut}" mindate="#{bookingManagedBean.minDate}" />
 					<h:outputLabel for="personsNumber" value="Persons number: " />
-					<p:selectOneMenu id="personsNumber" style="width:125px">
+					<p:selectOneMenu id="personsNumber" required="true" requiredMessage="Choose persons number!" value="#{bookingManagedBean.booking.personsNumber}" style="width:125px">
 						<f:selectItem itemLabel="Select One" itemValue="" />
 						<f:selectItem itemLabel="1 person" itemValue="1" />
 						<f:selectItem itemLabel="2 persons" itemValue="2" />
@@ -106,12 +95,12 @@
 						</f:facet>
 					</p:selectOneMenu>
 				</h:panelGrid>
-			</p:tab>
-			<br />
-
-			<p:tab title="Room information">
-				<h:panelGrid columns="2" cellpadding="10">
-
+			</p:panel>
+		</p:tab>
+		<p:tab id="rooms" title="Rooms" style="width: auto;">
+			<p:panel header="Room details" style="width: auto;">
+				<p:messages />
+				<h:panelGrid columns="8" columnClasses="label, value">
 					<p:dataTable id="table"
 								 var="room"
 
@@ -125,110 +114,112 @@
 						<p:column headerText="Name">
 							<p:outputLabel value="#{room.name}"></p:outputLabel>
 						</p:column>
-					<p:column headerText="Description">
-						<p:outputLabel value="#{room.description}"></p:outputLabel>
-					</p:column>
+						<p:column headerText="Description">
+							<p:outputLabel value="#{room.description}"></p:outputLabel>
+						</p:column>
 						<p:column headerText="Facilities">
 							<p:outputLabel value="#{room.facilities}"></p:outputLabel>
 						</p:column>
-					<p:column headerText="Price">
-						<p:outputLabel value="#{room.price}$ &lt;br /&gt;
+						<p:column headerText="Price">
+							<p:outputLabel value="#{room.price}$ &lt;br /&gt;
 						   ✅No prepayment needed"  escape="false" ></p:outputLabel>
-					</p:column>
-					<p:column headerText="Beds number">
-						<p:outputLabel value="#{room.bedsNumber}"></p:outputLabel>
-					</p:column>
-					<p:column headerText="Category">
-						<p:outputLabel value="#{room.roomCategory.name}"></p:outputLabel>
-					</p:column>
-						<p:column headerText="Quantity">
-							<p:selectOneMenu id="console" style="width:125px">
-								<f:selectItem itemLabel="0 " itemValue="0" />
-								<f:selectItem itemLabel="1  (#{room.price} $)" itemValue="1" />
-								<f:selectItem itemLabel="2  (#{room.price *2} $)" itemValue="2" />
-								<f:selectItem itemLabel="3  (#{room.price *3} $)" itemValue="3" />
-								<f:selectItem itemLabel="4  (#{room.price *4} $)" itemValue="4" />
-								<f:selectItem itemLabel="5  (#{room.price *5} $)" itemValue="5" />
-								<f:selectItem itemLabel="6  (#{room.price *6} $)" itemValue="6" />
-								<f:facet name="footer">
-									<p:separator />
-									<h:outputText value="6 rooms" style="font-weight:bold;"/>
-								</f:facet>
-							</p:selectOneMenu>
 						</p:column>
+						<p:column headerText="Beds number">
+							<p:outputLabel value="#{room.bedsNumber}"></p:outputLabel>
+						</p:column>
+						<p:column headerText="Category">
+							<p:outputLabel value="#{room.roomCategory.name}"></p:outputLabel>
+						</p:column>
+						<p:column headerText="Choose room" >
+							<p:selectBooleanButton id="value2" value="#{bookingManagedBean.selectedRoom.selected}" onLabel="Yes" offLabel="No" onIcon="pi pi-check" offIcon="pi pi-times" style="width:60px">
+								<p:ajax update="growl" listener="#{bookingManagedBean.selectRoom(room)}" />
+							</p:selectBooleanButton>
+						</p:column>
+						<p:column >
+
+							<f:facet name="header">Room Details</f:facet>
+							<div class="container">
+
+									<div class="col-sm-2">
+										<p:button outcome="roomClientDetail"
+												  title="Details"
+												  icon="pi pi-info">
+											<f:param name="id" value="#{room.id}" />
+										</p:button>
+									</div>
+
+							</div>
+						</p:column>
+
 
 					</p:dataTable>
 				</h:panelGrid>
-			</p:tab>
-			<br />
-			<p:tab title="Client information">
-				<h:panelGrid columns="10" cellpadding="20">
-					<h:form>
-
-						<p:growl id="growl" sticky="true" showDetail="true"/>
-
-						<p:wizard >
-							<p:tab id="personal" title="Personal" style="width: auto;">
-								<p:panel header="Personal Details" style="width: auto;">
-									<p:messages />
-									<h:panelGrid columns="4" columnClasses="label, value">
-										<h:outputText value="Firstname: " />
-										<p:inputText required="true" value="#{roomManagedBean.user.firstName}" label="Firstname" />
-
-										<h:outputText value="Lastname: " />
-										<p:inputText value="#{roomManagedBean.user.lastName}" required="true" label="Lastname"/>
-
-										<h:outputText value="Age: " />
-										<p:inputText value="#{roomManagedBean.user.age}" />
-
-										<h:outputText value="Email: *" />
-										<p:inputText  required="true" value="#{roomManagedBean.user.email}" label="Email"/>
-
-									</h:panelGrid>
-								</p:panel>
-							</p:tab>
-
-							<p:tab id="ask" title="Ask a question">
-								<p:panel header="Special requests">
-									<p:messages />
-									<h:panelGrid columns="4" columnClasses="label, value">
-										Please write your requests in English - we will share it with the property.
-											Special requests cannot be guaranteed–but the property will do its best to meet your needs.
-											You can always make a special request after your booking is complete!
-										<p:inputTextarea rows="10" cols="33" />
-										<br/>
-										<h:outputText value="I would like a quiet room  "/>
-									</h:panelGrid>
-								</p:panel>
-							</p:tab>
-							<p:tab id="confirm" title="Confirmation">
-								<p:panel header="Confirmation">
-										<h:panelGrid columns="2" columnClasses="label, value">
-											<h:outputText value="Firstname: " />
-											<h:outputText value="#{roomManagedBean.user.firstName}" styleClass="outputLabel"/>
-
-											<h:outputText value="Lastname: " />
-											<h:outputText value="#{roomManagedBean.user.lastName}" styleClass="outputLabel"/>
-
-											<h:outputText value="Age: " />
-											<h:outputText value="#{roomManagedBean.user.age}" styleClass="outputLabel"/>
-											<h:outputText value="Email: " />
-											<h:outputText value="#{roomManagedBean.user.email}" styleClass="outputLabel"/>
-											<small id="email">You will recieve a confirmation by email.</small>
-										</h:panelGrid>
-									<p:commandButton value="Submit" action="#{bookingManagedBean.reserve}" update="growl" process="@this"/>
-								</p:panel>
-							</p:tab>
-
-						</p:wizard>
-
-					</h:form>
+			</p:panel>
+		</p:tab>
+		<p:tab id="ask" title="Ask a question">
+			<p:panel header="Special requests">
+				<p:messages />
+				<h:panelGrid columns="4" columnClasses="label, value">
+					Please write your requests in English - we will share it with the property.
+					Special requests cannot be guaranteed–but the property will do its best to meet your needs.
+					You can always make a special request after your booking is complete!
+					<p:inputTextarea rows="10" value="#{bookingManagedBean.booking.remarks}" cols="33" />
+					<br/>
 				</h:panelGrid>
-			</p:tab>
-		</p:accordionPanel>
+			</p:panel>
+		</p:tab>
+		<p:tab id="personal" title="Personal" style="width: auto;">
+			<p:panel header="Personal Details" style="width: auto;">
+				<p:messages />
+				<h:panelGrid columns="4" columnClasses="label, value">
+					<h:outputText value="Firstname: " />
+					<p:inputText required="true" readonly="true" value="#{userManagedBean.user.firstName}" label="Firstname" />
 
-				</p:panel>
-			</h:form>
+					<h:outputText value="Lastname: " />
+					<p:inputText value="#{userManagedBean.user.lastName}" readonly="true" required="true" label="Lastname"/>
+
+					<h:outputText value="Age: " />
+					<p:inputText  readonly="true" value="#{userManagedBean.user.age}" />
+
+					<h:outputText value="Email: *" />
+					<p:inputText  readonly="true" required="true" value="#{userManagedBean.user.email}" label="Email"/>
+
+				</h:panelGrid>
+			</p:panel>
+		</p:tab>
+
+
+		<p:tab id="confirm" title="Confirmation">
+			<p:panel header="Confirmation">
+				<h:panelGrid columns="2" columnClasses="label, value">
+					<h:outputText value="Firstname: " />
+					<h:outputText value="#{userManagedBean.user.firstName}" styleClass="outputLabel"/>
+
+					<h:outputText value="Lastname: " />
+					<h:outputText value="#{userManagedBean.user.firstName}" styleClass="outputLabel"/>
+
+					<h:outputText value="Age: " />
+					<h:outputText value="#{userManagedBean.user.age}" styleClass="outputLabel"/>
+					<h:outputText value="Email: " />
+					<h:outputText value="#{userManagedBean.user.email}" styleClass="outputLabel"/>
+
+					<h:outputText value="Check in date: " />
+					<h:outputText value="#{bookingManagedBean.booking.checkIn}" styleClass="outputLabel"/>
+
+					<h:outputText value="Check out date: " />
+					<h:outputText value="#{bookingManagedBean.booking.checkOut}" styleClass="outputLabel"/>
+
+					<h:outputText value="Number of persons: " />
+					<h:outputText value="#{bookingManagedBean.booking.personsNumber}" styleClass="outputLabel"/>
+
+
+				</h:panelGrid>
+				<p:commandButton value="Submit" action="#{bookingManagedBean.reserve}" update="growl" process="@this"/>
+			</p:panel>
+		</p:tab>
+
+	</p:wizard>
+	</h:form>
 
 </h:body>
 </html>

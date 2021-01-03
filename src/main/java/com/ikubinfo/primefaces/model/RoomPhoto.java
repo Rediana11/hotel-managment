@@ -9,6 +9,7 @@ public class RoomPhoto {
     private String name;
     private String type;
     private String size;
+    private String path;
     private Room room;
     private User createdBy;
     private Date createdOn;
@@ -78,6 +79,14 @@ public class RoomPhoto {
         isValid = valid;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
     @Override
     public String toString() {
         return "RoomPhoto{" +
@@ -85,6 +94,7 @@ public class RoomPhoto {
                 ", name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", size='" + size + '\'' +
+                ", path='" + path + '\'' +
                 ", room=" + room +
                 ", createdBy=" + createdBy +
                 ", createdOn=" + createdOn +
@@ -96,19 +106,21 @@ public class RoomPhoto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof RoomPhoto)) return false;
-        RoomPhoto roomPhoto = (RoomPhoto) o;
-        return isValid() == roomPhoto.isValid() &&
-                Objects.equals(getId(), roomPhoto.getId()) &&
-                Objects.equals(getName(), roomPhoto.getName()) &&
-                Objects.equals(getType(), roomPhoto.getType()) &&
-                Objects.equals(getSize(), roomPhoto.getSize()) &&
-                Objects.equals(getRoom(), roomPhoto.getRoom()) &&
-                Objects.equals(getCreatedBy(), roomPhoto.getCreatedBy()) &&
-                Objects.equals(getCreatedOn(), roomPhoto.getCreatedOn());
+        RoomPhoto photo = (RoomPhoto) o;
+        return isValid() == photo.isValid() &&
+                Objects.equals(getId(), photo.getId()) &&
+                Objects.equals(getName(), photo.getName()) &&
+                Objects.equals(getType(), photo.getType()) &&
+                Objects.equals(getSize(), photo.getSize()) &&
+                Objects.equals(getPath(), photo.getPath()) &&
+                Objects.equals(getRoom(), photo.getRoom()) &&
+                Objects.equals(getCreatedBy(), photo.getCreatedBy()) &&
+                Objects.equals(getCreatedOn(), photo.getCreatedOn());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getType(), getSize(), getRoom(), getCreatedBy(), getCreatedOn(), isValid());
+        return Objects.hash(getId(), getName(), getType(), getSize(), getPath(), getRoom(), getCreatedBy(), getCreatedOn(), isValid());
     }
+
 }

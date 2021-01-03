@@ -1,6 +1,7 @@
 package com.ikubinfo.primefaces.managedbean;
 
 import com.ikubinfo.primefaces.model.Room;
+import com.ikubinfo.primefaces.model.RoomCategory;
 import com.ikubinfo.primefaces.service.RoomService;
 import com.ikubinfo.primefaces.util.Messages;
 
@@ -17,6 +18,8 @@ public class RoomDetailManagedBean implements Serializable {
 
     private Room room;
 
+    private RoomCategory category;
+
     @ManagedProperty(value = "#{roomService}")
     private RoomService roomService;
 
@@ -26,6 +29,7 @@ public class RoomDetailManagedBean implements Serializable {
     @PostConstruct
     public void init() {
         room= new Room();
+        category = new RoomCategory();
     }
 
     public void loadRoom(){
@@ -47,6 +51,14 @@ public class RoomDetailManagedBean implements Serializable {
 
     public void setRoomService(RoomService roomService) {
         this.roomService = roomService;
+    }
+
+    public RoomCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(RoomCategory category) {
+        this.category = category;
     }
 
     public Messages getMessages() {
