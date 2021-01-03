@@ -9,6 +9,11 @@
 <h:body>
 	<ui:include name="template" src="/template/template.xhtml" />
 	<p:growl id="growl"></p:growl>
+	<p:breadCrumb>
+		<p:menuitem value="Categories" url="#" />
+		<p:menuitem value="Bookings" url="booking.xhtml" />
+		<p:menuitem value="Booking" url="#" />
+	</p:breadCrumb>
 	<script type="text/javascript">
 		PrimeFaces.locales ['de'] = {
 			closeText: 'Schließen',

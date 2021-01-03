@@ -2,12 +2,9 @@ package com.ikubinfo.primefaces.service.impl;
 
 import java.util.List;
 
-import com.ikubinfo.primefaces.model.Room;
-import com.ikubinfo.primefaces.model.RoomAbility;
-import com.ikubinfo.primefaces.model.RoomCategory;
+import com.ikubinfo.primefaces.model.*;
 import org.springframework.stereotype.Service;
 
-import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.repository.RoomRepository;
 import com.ikubinfo.primefaces.service.RoomService;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
@@ -27,8 +24,8 @@ import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 	}
 
 	@Override
-	public List<Room> getAllVacantRooms() {
-		return roomRepository.getAllVacantRooms();
+	public List<Room> getAllVacantRooms(Booking booking) {
+		return roomRepository.getAllVacantRooms(booking);
 	}
 
 	@Override

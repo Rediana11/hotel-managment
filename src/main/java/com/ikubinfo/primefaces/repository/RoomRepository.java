@@ -2,16 +2,13 @@ package com.ikubinfo.primefaces.repository;
 
 import java.util.List;
 
-import com.ikubinfo.primefaces.model.Role;
-import com.ikubinfo.primefaces.model.Room;
-import com.ikubinfo.primefaces.model.RoomAbility;
-import com.ikubinfo.primefaces.model.RoomCategory;
+import com.ikubinfo.primefaces.model.*;
 
 public interface RoomRepository {
 
 	List<Room> getAll(String name);
 
-	List<Room> getAllVacantRooms();
+	List<Room> getAllVacantRooms(Booking booking);
 
 	List<Room> getReservedRoomsForBooking(int id);
 
@@ -22,8 +19,6 @@ public interface RoomRepository {
 	boolean save(Room room);
 
 	boolean create(Room room);
-
-	//boolean isCategoryInUse(Room room);
 
 	void delete(Room room);
 

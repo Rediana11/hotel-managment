@@ -4,10 +4,15 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
 
+<h:head>
+</h:head>
 <h:body>
 	<ui:include name="home" src="/template/template.xhtml" />
 		<p:growl id="growl"></p:growl>
-
+	<p:breadCrumb>
+		<p:menuitem value="Categories" url="#" />
+		<p:menuitem value="Bookings" url="#" />
+	</p:breadCrumb>
 
 
 			<p:button outcome="reservation" icon="fa fa-plus" value="Make a reservation" styleClass="ui-priority-primary">

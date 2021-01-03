@@ -2,17 +2,14 @@ package com.ikubinfo.primefaces.service;
 
 import java.util.List;
 
-import com.ikubinfo.primefaces.model.Role;
-import com.ikubinfo.primefaces.model.Room;
-import com.ikubinfo.primefaces.model.RoomAbility;
-import com.ikubinfo.primefaces.model.RoomCategory;
+import com.ikubinfo.primefaces.model.*;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 
 public interface RoomService {
 
 	List<Room> getAll(String name);
 
-	List<Room> getAllVacantRooms();
+	List<Room> getAllVacantRooms(Booking booking);
 
 	List<Room> getReservedRoomsForBooking(int id);
 

@@ -53,7 +53,7 @@ public class BookingManagedBean implements Serializable {
     public void init() {
         // TODO bej kontrollin per rolin per personal information
         // beji fushat readonly if client otherwise joreadonlu fushat+ nqs nuk ekziston klient me ate email
-        //shtoje ne db si Client ne shto tabele Client 1 me shume
+        // shtoje ne db si Client ne shto tabele Client 1 me shume
         booking = new Booking();
         bookingStatus = new BookingStatus();
         bookings = bookingService.getAll();

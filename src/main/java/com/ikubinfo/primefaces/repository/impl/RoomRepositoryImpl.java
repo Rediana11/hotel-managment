@@ -4,9 +4,7 @@ import java.util.*;
 
 import javax.sql.DataSource;
 
-import com.ikubinfo.primefaces.model.Room;
-import com.ikubinfo.primefaces.model.RoomAbility;
-import com.ikubinfo.primefaces.model.RoomCategory;
+import com.ikubinfo.primefaces.model.*;
 import com.ikubinfo.primefaces.repository.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +15,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.repository.RoomRepository;
 
 @Repository
@@ -40,7 +37,10 @@ class RoomRepositoryImpl implements RoomRepository {
 	private static final String GET_VACANT_ROOMS = "select room_id,room_name,description, facilities,beds_number, price, category_name from \n" +
 			"room join room_ability ra on room.room_ability_id= ra.room_ability_id\n" +
 			"join category on room.category_id=category.category_id\n" +
-			"where ra.code='V'" ;
+			"where ra.code='V' and room_id not in (select r.room_id from room r\n" +
+			"\t\t\t\tinner join room_booking br on br.room_id=r.room_id\n" +
+			"\t\t\t\tinner join booking b on b.booking_id=br.booking_id\n" +
+			"\t\t\t\twhere b.check_in >= :firstDate and b.check_in< :secondDate) " ;
 	private static final String DELETE_ROOM = "update room set is_valid= false where room_id=:id";
 	private static final String GET_CATEGORIES = "select category_id, category_name from category";
 	private static final String GET_ABILITIES = "select room_ability_id, ability_name from room_ability";
@@ -92,9 +92,12 @@ class RoomRepositoryImpl implements RoomRepository {
 	}
 
 	@Override
-	public List<Room> getAllVacantRooms() {
+	public List<Room> getAllVacantRooms(Booking booking) {
 
-		return namedParameterJdbcTemplate.query(GET_VACANT_ROOMS, new VacantRoomRowMapper());
+		Map<String, Object> params = new HashMap<>();
+		params.put("firstDate", booking.getCheckIn() );
+		params.put("secondDate", booking.getCheckOut() );
+		return namedParameterJdbcTemplate.query(GET_VACANT_ROOMS,params, new VacantRoomRowMapper());
 
 	}
 

@@ -40,7 +40,7 @@ public class RoomManagedBean implements Serializable {
 	public void init() {
 
 		rooms = roomService.getAll(null);
-		vacantRooms= roomService.getAllVacantRooms();
+		vacantRooms= roomService.getAllVacantRooms(bookingManagedBean.getBooking());
 		room = new Room();
 
 	}
