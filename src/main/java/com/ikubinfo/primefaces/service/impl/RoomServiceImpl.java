@@ -34,6 +34,11 @@ import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 	}
 
 	@Override
+	public List<RoomFacility> getRoomFacilities() {
+		return roomRepository.getRoomFacilities();
+	}
+
+	@Override
 	public RoomAbility getAbility(int id) {
 		return roomRepository.getAbility(id);
 	}

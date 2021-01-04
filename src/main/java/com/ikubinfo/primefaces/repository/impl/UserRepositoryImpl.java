@@ -1,9 +1,11 @@
 package com.ikubinfo.primefaces.repository.impl;
 
+import com.ikubinfo.primefaces.model.Client;
 import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.model.RoomPhoto;
 import com.ikubinfo.primefaces.model.User;
 import com.ikubinfo.primefaces.repository.UserRepository;
+import com.ikubinfo.primefaces.repository.mapper.ClientRowMapper;
 import com.ikubinfo.primefaces.repository.mapper.PhotoRowMapper;
 import com.ikubinfo.primefaces.repository.mapper.RoleUserRowMapper;
 import com.ikubinfo.primefaces.repository.mapper.UserRowMapper;
@@ -27,6 +29,7 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String GET_USER_ROLE = "select role_.role_id, role_name \n" +
             "from user_ join role_user rl on rl.user_id=user_.user_id join role_ on rl.role_id = role_.role_id\n" +
             "where user_.user_id=:id";
+    private static final String GET_CLIENT_BY_EMAIL= "select * from client where email=: email";
 
 
 
@@ -61,8 +64,13 @@ public class UserRepositoryImpl implements UserRepository {
 
     }
 
+    @Override
+    public Client getClientByEmail(String email) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email );
 
-
+        return  namedParameterJdbcTemplate.queryForObject(GET_USER_ROLE, params, new ClientRowMapper());
+    }
 
 
 }

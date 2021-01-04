@@ -11,7 +11,7 @@
 		<p:growl id="growl"></p:growl>
 	<p:breadCrumb>
 		<p:menuitem value="Categories" url="#" />
-		<p:menuitem value="Bookings" url="booking" />
+		<p:menuitem value="Bookings" url="booking.xhtml" />
 		<p:menuitem value="Canceled Bookings" url="#" />
 
 	</p:breadCrumb>
@@ -45,21 +45,13 @@
 						<p:outputLabel value="#{booking.bookingStatus.name}"></p:outputLabel>
 					</p:column>
 
+					<p:column headerText="Actions">
 
-					<p:column headerText="Booking detail">
-						<p:commandLink value="Detail" update="bookingDetail"
-										 process="@this" oncomplete="PF('BookingDetailDialog').show();">
-
-							<f:setPropertyActionListener
-									target="#{bookingManagedBean.booking}" value="#{booking}" />
-
-						</p:commandLink>
-					</p:column>
-
-					<p:column headerText="Reserved room/rooms">
-						<p:link outcome="reservedRooms" value="View">
-							<f:param name="id" value="#{booking.id}" />
-						</p:link>
+					<p:button outcome="reservedRooms"
+							  title="Details"
+							  icon="pi pi-info">
+						<f:param name="id" value="#{booking.id}" />
+					</p:button>
 					</p:column>
 
 

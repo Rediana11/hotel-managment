@@ -8,13 +8,21 @@ import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 import com.ikubinfo.primefaces.service.helpers.SelectRoom;
 import com.ikubinfo.primefaces.util.Messages;
 import org.primefaces.event.FlowEvent;
+import sun.security.validator.ValidatorException;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -53,9 +61,6 @@ public class BookingManagedBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        // TODO bej kontrollin per rolin per personal information
-        // beji fushat readonly if client otherwise joreadonlu fushat+ nqs nuk ekziston klient me ate email
-        // shtoje ne db si Client ne shto tabele Client 1 me shume
         booking = new Booking();
         bookingStatus = new BookingStatus();
         bookings = bookingService.getReservedBookings();
@@ -70,6 +75,23 @@ public class BookingManagedBean implements Serializable {
         addStatusItems();
     }
 
+
+    public void onCheckInDateChange(ValueChangeEvent e){
+        Date currentChekcedInDate= (Date) e.getNewValue();
+        setCheckIn(currentChekcedInDate);
+        checkIn=(Date) e.getNewValue();
+        long oneDay = 24 * 60 * 60 * 1000;
+        minDate =new Date(currentChekcedInDate.getTime() + ( oneDay));
+    }
+
+    public void checkOutDateValidate(FacesContext context, UIComponent component, Object value) throws ValidatorException{
+        LocalDate localDate= (LocalDate)value;
+        System.out.println(getCheckIn());
+        Date currentChekcedOutDate=Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());;
+        if ((currentChekcedOutDate.getDate()>today.getDate())|| getCheckIn().equals(null)){
+            //messages.showErrorMessage("Dataa");
+        }
+    }
     private void addStatusItems(){
         statusItems = new ArrayList<SelectItem>();
         bookingStatuses = bookingService.getBookingStatuses();
@@ -111,10 +133,11 @@ public class BookingManagedBean implements Serializable {
         }
         return rooms;
     }
-    public void reserve (){
+    public String reserve (){
         if(bookingService.reserve(booking,mappSelectRoomToRoom(selectedRooms))){
             messages.showInfoMessage("Successful reservation!");
         }
+        return "booking";
     }
 
     public void loadBookingStatus(){

@@ -95,9 +95,24 @@
 						<div class="row">
 						<div class="col-sm-12">
 						<div class="form-group">
-						<p:fileUpload value="#{fileUploadView.files}" mode="simple" skinSimple="true" multiple="true" />
+							<p:outputLabel for="@next" value="Photo:"/>
+							<br/>
+							<p:fileUpload value="#{fileUploadView.files}" mode="simple" skinSimple="true" multiple="true" />
 						</div></div></div>
-						<p:outputLabel for="@next" value="Photo:"/>
+
+					<div class="col-sm-4">
+						<div class="form-group">
+							<p:outputLabel for="@next" value="Facilities:"/>
+							<p:selectManyCheckbox id="grid" value="#{addRoomManagedBean.selectedFacilities}" layout="grid" columns="3">
+							<f:selectItems value="#{addRoomManagedBean.roomFacilities}" var="facility" itemLabel="#{facility.name}" itemValue="#{facility}" />
+							</p:selectManyCheckbox>
+						</div>
+					</div>
+						<div>
+							<br>
+
+							</br>
+						</div>
 						<p:button outcome="room" style="height:30px;" icon="pi pi-arrow-left" value="Back">
 						</p:button>
 

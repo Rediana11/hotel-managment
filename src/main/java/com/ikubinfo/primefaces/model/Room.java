@@ -16,6 +16,7 @@ public class Room {
     private RoomAbility roomAbility;
     private RoomCategory roomCategory;
     private List<Booking> bookings;
+    private List<RoomFacility> roomFacilities;
     private User createdBy;
     private Date createdOn;
     private User updatedBy;
@@ -132,6 +133,15 @@ public class Room {
 
     public void setValid(boolean valid) {
         isValid = valid;
+    }
+
+
+    public List<RoomFacility> getRoomFacilities() {
+        return roomFacilities;
+    }
+
+    public void setRoomFacilities(List<RoomFacility> roomFacilities) {
+        this.roomFacilities = roomFacilities;
     }
 
     @Override

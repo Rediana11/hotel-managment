@@ -3,6 +3,7 @@ package com.ikubinfo.primefaces.managedbean;
 import com.ikubinfo.primefaces.model.Room;
 import com.ikubinfo.primefaces.model.RoomAbility;
 import com.ikubinfo.primefaces.model.RoomCategory;
+import com.ikubinfo.primefaces.model.RoomFacility;
 import com.ikubinfo.primefaces.repository.RoomRepository;
 import com.ikubinfo.primefaces.service.RoomService;
 import com.ikubinfo.primefaces.util.Messages;
@@ -30,7 +31,9 @@ public class AddRoomManagedBean {
     private int bedsNumber;
     private List<RoomCategory> categories;
     private List<RoomAbility> roomAbilities;
-
+    private List<RoomFacility> roomFacilities;
+    private RoomFacility facility ;
+    private String[] selectedFacilities;
     private RoomCategory roomCategory;
     private RoomAbility  roomAbility;
     private List<SelectItem> categoryItems;
@@ -50,6 +53,9 @@ public class AddRoomManagedBean {
         roomAbilities= roomService.getRoomAbilities();
         roomCategory = new RoomCategory();
         roomAbility = new RoomAbility();
+        roomFacilities = roomService.getRoomFacilities();
+        facility = new RoomFacility();
+
     }
 
     public String save() {
@@ -172,5 +178,29 @@ public class AddRoomManagedBean {
 
     public void setMessages(Messages messages) {
         this.messages = messages;
+    }
+
+    public List<RoomFacility> getRoomFacilities() {
+        return roomFacilities;
+    }
+
+    public void setRoomFacilities(List<RoomFacility> roomFacilities) {
+        this.roomFacilities = roomFacilities;
+    }
+
+    public String[] getSelectedFacilities() {
+        return selectedFacilities;
+    }
+
+    public void setSelectedFacilities(String[] selectedFacilities) {
+        this.selectedFacilities = selectedFacilities;
+    }
+
+    public RoomFacility getFacility() {
+        return facility;
+    }
+
+    public void setFacility(RoomFacility facility) {
+        this.facility = facility;
     }
 }

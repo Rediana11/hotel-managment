@@ -13,6 +13,8 @@ public interface RoomService {
 
 	List<Room> getReservedRoomsForBooking(int id);
 
+	List<RoomFacility> getRoomFacilities();
+
 	RoomAbility getAbility (int id);
 
 	Room getRoom(int id);

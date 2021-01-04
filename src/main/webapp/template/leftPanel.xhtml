@@ -26,15 +26,21 @@
 		<li ><h:link outcome="/primefaces/room">
 				<i class="menu-icon fa fa-bed"></i>Room</h:link>
 		</li>
-		<li><h:link outcome="/primefaces/booking">
-				<i class="menu-icon fa fa-ticket"></i>Booking</h:link>
+		<li>
+			<ul class="nav navbar-nav">
+				<li>
+				<h:link outcome="/primefaces/booking">
+					<i class="menu-icon fa fa-ticket"></i>Active Booking</h:link>
+				</li>
+				<li><h:link outcome="/primefaces/checkedInBooking">
+					<i class="menu-icon fa fa-check"></i>Check-in Bookings</h:link>
+				</li>
+				<li><h:link outcome="/primefaces/canceledBooking">
+					<i class="menu-icon fa fa-times"></i>Canceled Bookings</h:link>
+				</li>
+			</ul>
 		</li>
-		<li><h:link outcome="/primefaces/activeBooking">
-			<i class="menu-icon fa fa-ticket"></i>Active Bookings</h:link>
-		</li>
-		<li><h:link outcome="/primefaces/canceledBooking">
-			<i class="menu-icon fa fa-ticket"></i>Canceled Bookings</h:link>
-		</li>
+
 	</ul>
 
 </div>

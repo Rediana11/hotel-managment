@@ -51,11 +51,12 @@ class BookingRepositoryImpl implements BookingRepository {
             "                  join booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
             "               where  b.is_valid=false and b.booking_status_id=2";
 
-    private static final String GET_BOOKING = "select  booking_id,bs.booking_status_id,check_in,check_out,persons_number,status_name remarks,status_name, \n" +
+    private static final String GET_BOOKING = "select  booking_id,bs.booking_status_id,check_in,check_out,price,b.created_on,b.updated_on," +
+            "persons_number,status_name remarks,status_name, \n" +
             "\t\t (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
             "\t\t\t            CASE WHEN b.updated_by is not null \n" +
             "\t\t\t            then (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=b.updated_by) else '' end as updated_by\n" +
-            "\t\t\t           from booking  join user_ ue on b.created_by=ue.user_id \n" +
+            "\t\t\t           from booking b join user_ ue on b.created_by=ue.user_id \n" +
             "\t\t\tjoin booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
             "\t\t\twhere b.is_valid=true and booking_id=:id";
     private static final String UPDATE_BOOKING = "update booking set check_out=:date, persons_number=:personsNumber, price=:price where booking_id=:id";

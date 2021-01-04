@@ -85,22 +85,11 @@
 											 styleClass="ui-confirmdialog-no" icon="pi pi-times" />
 						</p:confirmDialog>
 					</p:commandButton>
-				</p:column>
-
-					<p:column headerText="Booking detail">
-						<p:commandLink value="Detail" update="bookingDetail"
-										 process="@this" oncomplete="PF('BookingDetailDialog').show();">
-
-							<f:setPropertyActionListener
-									target="#{bookingManagedBean.booking}" value="#{booking}" />
-
-						</p:commandLink>
-					</p:column>
-
-					<p:column headerText="Reserved room/rooms">
-						<p:link outcome="reservedRooms" value="View">
+						<p:button outcome="reservedRooms"
+								  title="Details"
+								  icon="pi pi-info">
 							<f:param name="id" value="#{booking.id}" />
-						</p:link>
+						</p:button>
 					</p:column>
 
 

@@ -4,19 +4,31 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
 <f:metadata>
 	<f:viewParam name="id" value="#{bookingManagedBean.booking.id}" />
-	<f:viewAction action="#{roomManagedBean.loadReservedRooms()}" />
+	<f:viewAction action="#{roomManagedBean.loadReservedRooms}" />
+	<f:viewAction action="#{bookingManagedBean.loadBooking}" />
 </f:metadata>
+
 <h:body>
 		<ui:include name="template" src="/template/template.xhtml" />
 		<p:growl id="growl"></p:growl>
+	<p:breadCrumb>
+		<p:menuitem value="Categories" url="#" />
+		<p:menuitem value="Bookings" url="booking.xhtml" />
+		<p:menuitem value="Details" url="#" />
+
+	</p:breadCrumb>
 
 
-			<p:button outcome="booking" value="Back">
+	<p:button outcome="booking" value="Back">
 			</p:button>
 			<br/>
 
+	<p:accordionPanel multiple="true">
+	<p:tab title="Reserved rooms">
+	<h:panelGrid columns="2" cellpadding="10">
 				<p:dataTable id="table"
 							 var="room"
 							 value="#{roomManagedBean.reservedRoomsForBooking}"
@@ -47,8 +59,47 @@
 					</p:column>
 
 
-
 				</p:dataTable>
+	</h:panelGrid>
+	</p:tab>
+	<p:tab title="Booking detail">
+		<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+
+			<h:form id="form">
+
+				<p:dataList value="#{bookingManagedBean.booking}" var="booking" type="definition">
+					<f:facet name="header">
+						<b> Booking Info </b>
+					</f:facet>
+					<b> Check in :</b> #{booking.checkIn}
+					<br/>
+					<br/>
+					<b> Check out :</b> #{booking.checkOut}
+					<br/>
+					<br/>
+					<b>Price :</b> #{booking.price}
+					<br/>
+					<br/>
+					<b> Persons number:</b> #{booking.personsNumber}
+					<br/>
+					<br/>
+					<b> Created by:</b> #{booking.createdBy.username}
+					<br/>
+					<br/>
+					<b> Created on: </b> #{booking.createdOn}
+					<br/>
+					<br/>
+					<b> Updated by:</b> #{booking.updatedBy.username}
+					<br/>
+					<br/>
+					<b> Updated on: </b> #{booking.updatedOn}
+				</p:dataList>
+
+			</h:form>
+
+		</h:panelGrid>
+	</p:tab>
+	</p:accordionPanel>
 
 </h:body>
 </html>

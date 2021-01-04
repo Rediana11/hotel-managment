@@ -55,12 +55,17 @@ class RoomRepositoryImpl implements RoomRepository {
 			"\t\t\tjoin category on r.category_id=category.category_id \n" +
 			"\t\t\tjoin room_ability ra on ra.room_ability_id=r.room_ability_id\n" +
 			"\t\t\twhere r.is_valid=true and room_id=:id";
+	private static final String GET_FACILITIES= "select facility_id, name from facility";
+
+	private static final String FACILITIES_FOR_EACH_ROOM = "join facility_room fr on fr.facility_id= f.facility_id\n" +
+			"\t\t\tjoin room on room.room_id=fr.room_id";
 
 	private static final String RESERVED_ROOMS_FOR_BOOKING ="select room.room_id,room_name,description, facilities,beds_number, room.price, category_name from \n" +
 			"room join room_booking rb on room.room_id = rb.room_id\n" +
 			"join booking on booking.booking_id=rb.booking_id\n" +
 			"join category on room.category_id=category.category_id\n" +
 			"where rb.booking_id=:id";
+
 
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -181,6 +186,15 @@ class RoomRepositoryImpl implements RoomRepository {
 
 		return namedParameterJdbcTemplate.query(GET_ABILITIES, new RoomAbilityRowMapper());
 	}
+
+
+	@Override
+	public List<RoomFacility> getRoomFacilities(){
+
+
+		return namedParameterJdbcTemplate.query(GET_FACILITIES, new RoomFacilityRowMapper());
+	}
+
 
 	@Override
 	public Room getRoom(int id) {

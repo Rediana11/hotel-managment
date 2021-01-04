@@ -12,6 +12,8 @@ public interface RoomRepository {
 
 	List<Room> getReservedRoomsForBooking(int id);
 
+	List<RoomFacility> getRoomFacilities();
+
 	Room getRoom(int id);
 
 	RoomAbility getAbility(int id);

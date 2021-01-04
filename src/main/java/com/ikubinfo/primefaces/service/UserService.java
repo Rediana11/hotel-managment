@@ -1,5 +1,6 @@
 package com.ikubinfo.primefaces.service;
 
+import com.ikubinfo.primefaces.model.Client;
 import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.model.User;
 
@@ -8,4 +9,7 @@ public interface UserService {
     User getUser(int id);
 
     Role getUserRole(int id);
+
+    Client getClientByEmail(String email);
+
 }

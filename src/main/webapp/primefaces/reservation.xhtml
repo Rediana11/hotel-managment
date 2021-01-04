@@ -79,9 +79,12 @@
 				<p:messages />
 				<h:panelGrid columns="4" cellpadding="10">
 					<p:outputLabel for="checkIn" value="Check in:" />
-					<p:calendar id="checkIn" required="true" requiredMessage="Choose check in date!"  value="#{bookingManagedBean.booking.checkIn}" mindate="#{bookingManagedBean.today}"  />
+					<p:calendar id="checkIn" required="true" requiredMessage="Choose check in date!" valueChangeListener="#{bookingManagedBean.onCheckInDateChange}" value="#{bookingManagedBean.booking.checkIn}" mindate="#{bookingManagedBean.today}"  />
 					<p:outputLabel for="checkOut" value="Check out:" />
-					<p:calendar id="checkOut"  required="true"  requiredMessage="Choose check out date!" value="#{bookingManagedBean.booking.checkOut}" mindate="#{bookingManagedBean.minDate}" />
+					<p:calendar id="checkOut"   required="true"  requiredMessage="Choose check out date!" value="#{bookingManagedBean.booking.checkOut}" validarMessage="Data gabim" mindate="#{bookingManagedBean.minDate}" >
+
+						<p:clientValidator  event="onChange"/>
+					</p:calendar>
 					<h:outputLabel for="personsNumber" value="Persons number: " />
 					<p:selectOneMenu id="personsNumber" required="true" requiredMessage="Choose persons number!" value="#{bookingManagedBean.booking.personsNumber}" style="width:125px">
 						<f:selectItem itemLabel="Select One" itemValue="" />
@@ -176,18 +179,30 @@
 		<p:tab id="personal" title="Personal" style="width: auto;">
 			<p:panel header="Personal Details" style="width: auto;">
 				<p:messages />
+
+				<h:outputText for="email" value="Search client by email: "/>
+				<p:inputText id="email"
+							 value="#{userManagedBean.email}"/>
+				<p:commandButton  value="Search"
+								  action="#{userManagedBean.getUserByEmail}" update="form">
+				</p:commandButton>
+				<div>
+
+				</div>
 				<h:panelGrid columns="4" columnClasses="label, value">
+
+
 					<h:outputText value="Firstname: " />
-					<p:inputText required="true" readonly="{userManagedBean.role.name eq 'Client'}" value="#{userManagedBean.user.firstName}" label="Firstname" />
+					<p:inputText required="true"  value="#{userManagedBean.client.firstName}" label="Firstname" />
 
 					<h:outputText value="Lastname: " />
-					<p:inputText value="#{userManagedBean.user.lastName}"  required="true" label="Lastname"/>
+					<p:inputText value="#{userManagedBean.client.lastName}"  required="true" label="Lastname"/>
 
 					<h:outputText value="Age: " />
-					<p:inputText   value="#{userManagedBean.user.age}" />
+					<p:inputText   value="#{userManagedBean.client.age}" />
 
 					<h:outputText value="Email: *" />
-					<p:inputText   required="true" value="#{userManagedBean.user.email}" label="Email"/>
+					<p:inputText   required="true" value="#{userManagedBean.client.email}" label="Email"/>
 
 				</h:panelGrid>
 			</p:panel>

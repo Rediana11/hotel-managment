@@ -31,8 +31,6 @@ public class CategoryDetailManagedBean implements Serializable {
 
     public void loadCategory(){
         roomCategory = categoryService.getCategory(roomCategory.getId());
-        System.out.println(roomCategory);
-
     }
 
 
