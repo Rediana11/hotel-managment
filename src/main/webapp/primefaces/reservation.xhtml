@@ -178,16 +178,16 @@
 				<p:messages />
 				<h:panelGrid columns="4" columnClasses="label, value">
 					<h:outputText value="Firstname: " />
-					<p:inputText required="true" readonly="true" value="#{userManagedBean.user.firstName}" label="Firstname" />
+					<p:inputText required="true" readonly="{userManagedBean.role.name eq 'Client'}" value="#{userManagedBean.user.firstName}" label="Firstname" />
 
 					<h:outputText value="Lastname: " />
-					<p:inputText value="#{userManagedBean.user.lastName}" readonly="true" required="true" label="Lastname"/>
+					<p:inputText value="#{userManagedBean.user.lastName}"  required="true" label="Lastname"/>
 
 					<h:outputText value="Age: " />
-					<p:inputText  readonly="true" value="#{userManagedBean.user.age}" />
+					<p:inputText   value="#{userManagedBean.user.age}" />
 
 					<h:outputText value="Email: *" />
-					<p:inputText  readonly="true" required="true" value="#{userManagedBean.user.email}" label="Email"/>
+					<p:inputText   required="true" value="#{userManagedBean.user.email}" label="Email"/>
 
 				</h:panelGrid>
 			</p:panel>
@@ -216,6 +216,9 @@
 
 					<h:outputText value="Number of persons: " />
 					<h:outputText value="#{bookingManagedBean.booking.personsNumber}" styleClass="outputLabel"/>
+
+					<h:outputText value="Choosen room: " />
+					<h:outputText value="#{bookingManagedBean.selectedRoom.room.name}" styleClass="outputLabel"/>
 
 
 				</h:panelGrid>

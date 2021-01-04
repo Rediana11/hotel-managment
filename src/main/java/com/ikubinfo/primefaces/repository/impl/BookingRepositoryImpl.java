@@ -29,13 +29,28 @@ class BookingRepositoryImpl implements BookingRepository {
 
     Logger logger = LoggerFactory.getLogger(BookingRepositoryImpl.class);
 
-    private static final String GET_BOOKINGS = "select  booking_id,bs.booking_status_id,check_in,check_out,price,b.updated_on,b.created_on,persons_number,status_name remarks,status_name, \n" +
+    private static final String GET_RESERVED_BOOKINGS = "select  booking_id,bs.booking_status_id,check_in,b.is_valid,check_out,price,b.updated_on,b.created_on,persons_number,status_name remarks,status_name, \n" +
             "\t\t (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
             "\t\t\t            CASE WHEN b.updated_by is not null \n" +
             "\t\t\t            then (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=b.updated_by) else '' end as updated_by\n" +
             "\t\t\t           from booking b join user_ ue on b.created_by=ue.user_id \n" +
             "\t\t\tjoin booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
             "\t\t\twhere b.is_valid=true and b.booking_status_id=1 \n";
+    private static final String GET_ACTIVE_BOOKINGS = "select  booking_id,b.is_valid,bs.booking_status_id,check_in,check_out,price,b.updated_on,b.created_on,persons_number,status_name remarks,status_name, \n" +
+            "\t\t (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
+            "\t\t\t            CASE WHEN b.updated_by is not null \n" +
+            "\t\t\t            then (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=b.updated_by) else '' end as updated_by\n" +
+            "\t\t\t           from booking b join user_ ue on b.created_by=ue.user_id \n" +
+            "\t\t\tjoin booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
+            "\t\t\twhere b.is_valid=true and b.booking_status_id=3";
+    private static final String GET_CANCELED_BOOKINGS="select  booking_id,bs.booking_status_id,check_in,check_out,price,b.updated_on,b.created_on,b.is_valid,persons_number,status_name remarks,status_name,\n" +
+            "                    (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
+            "                       CASE WHEN b.updated_by is not null\n" +
+            "               then (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=b.updated_by) else '' end as updated_by\n" +
+            "                        from booking b join user_ ue on b.created_by=ue.user_id\n" +
+            "                  join booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
+            "               where  b.is_valid=false and b.booking_status_id=2";
+
     private static final String GET_BOOKING = "select  booking_id,bs.booking_status_id,check_in,check_out,persons_number,status_name remarks,status_name, \n" +
             "\t\t (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
             "\t\t\t            CASE WHEN b.updated_by is not null \n" +
@@ -46,7 +61,8 @@ class BookingRepositoryImpl implements BookingRepository {
     private static final String UPDATE_BOOKING = "update booking set check_out=:date, persons_number=:personsNumber, price=:price where booking_id=:id";
     private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from film_category where category_id = ?";
     private static final String DELETE_BOOKING = "update booking set is_valid= false where booking_id=:id";
-    private static final String UPDATE_STATUS ="update booking set booking_status_id=:statusId where booking_id=:id";
+    private static final String UPDATE_STATUS_CHECK_IN ="update booking set booking_status_id=:statusId where booking_id=:id";
+    private static final String UPDATE_STATUS_CHECK_OUT ="update booking set booking_status_id=:statusId where booking_id=:id";
     private static final String GET_BOOKING_STATUSES = "select booking_status_id, status_name from booking_status";
     private static  String GET_ROOM_ABILITY_ID ="select room_ability_id from room_ability where code= ";
     private static String UPDATE_ROOM_ABILITY = "update room \n" +
@@ -71,10 +87,26 @@ class BookingRepositoryImpl implements BookingRepository {
     }
 
     @Override
-    public List<Booking> getAll() {
+    public List<Booking> getReservedBookings() {
 
 
-        return namedParameterJdbcTemplate.query(GET_BOOKINGS, new BookingRowMapper());
+        return namedParameterJdbcTemplate.query(GET_RESERVED_BOOKINGS, new BookingRowMapper());
+
+    }
+
+    @Override
+    public List<Booking> getActiveBookings() {
+
+
+        return namedParameterJdbcTemplate.query(GET_ACTIVE_BOOKINGS, new BookingRowMapper());
+
+    }
+
+    @Override
+    public List<Booking> getCanceledBookings() {
+
+
+        return namedParameterJdbcTemplate.query(GET_CANCELED_BOOKINGS, new BookingRowMapper());
 
     }
 
@@ -142,17 +174,27 @@ class BookingRepositoryImpl implements BookingRepository {
         namedParameters.addValue("statusId", 3);
 
 
-        int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_STATUS, namedParameters);
-
-        //int updatedCount1 = this.namedParameterJdbcTemplate.update(UPDATE_ROOM_ABILITY, namedParameters1);
+        int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_STATUS_CHECK_IN, namedParameters);
 
         return updatedCount > 0;
     }
 
-   // private int getRoomAbilityId(boolean vacant){
-     //   GET_ROOM_ABILITY_ID = vacant?GET_ROOM_ABILITY_ID.concat(" 'V' "): GET_ROOM_ABILITY_ID.concat(" 'NV' ");
-       // return jdbcTemplate.queryForObject(GET_ROOM_ABILITY_ID,new RoomAbilityRowMapper()).getId();
-    //}
+    @Override
+    public boolean updateBookingStatusToCheckedOut(Booking booking) {
+
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+
+        namedParameters.addValue("id", booking.getId());
+
+        namedParameters.addValue("statusId", 5);
+
+
+        int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_STATUS_CHECK_OUT, namedParameters);
+
+        return updatedCount > 0;
+    }
+
+
 
     @Override
     public List<BookingStatus> getBookingStatuses() {

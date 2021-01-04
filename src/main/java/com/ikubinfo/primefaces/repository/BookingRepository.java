@@ -7,7 +7,11 @@ import com.ikubinfo.primefaces.model.*;
 
 public interface BookingRepository {
 
-	List<Booking> getAll();
+	List<Booking> getReservedBookings();
+
+	List<Booking> getActiveBookings();
+
+	List<Booking> getCanceledBookings();
 
 	Booking getBooking(int id);
 
@@ -16,6 +20,8 @@ public interface BookingRepository {
 	boolean reserve(Booking booking, List<Room> rooms);
 
 	boolean updateBookingStatusToCheckedIn(Booking booking);
+
+	boolean updateBookingStatusToCheckedOut(Booking booking);
 
 	List<BookingStatus> getBookingStatuses();
 

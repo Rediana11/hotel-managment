@@ -11,20 +11,17 @@
 		<p:growl id="growl"></p:growl>
 	<p:breadCrumb>
 		<p:menuitem value="Categories" url="#" />
-		<p:menuitem value="Bookings" url="#" />
+		<p:menuitem value="Bookings" url="booking" />
+		<p:menuitem value="Canceled Bookings" url="#" />
+
 	</p:breadCrumb>
 
-
-			<p:button outcome="reservation" icon="fa fa-plus" value="Make a reservation" styleClass="ui-priority-primary">
-			</p:button>
-
-			<br/>
 	<br/>
 
 			<h:form id="form">
 
 
-				<p:dataTable id="table" value="#{bookingManagedBean.bookings}"
+				<p:dataTable id="table" value="#{bookingManagedBean.canceledBookings}"
 					var="booking"
 							 class="table table-striped table-bordered dataTable no-footer"
 							 style="text-align:center" widgetVar="DTWVar" rows="5"
@@ -48,44 +45,6 @@
 						<p:outputLabel value="#{booking.bookingStatus.name}"></p:outputLabel>
 					</p:column>
 
-					<p:column headerText="Actions">
-
-
-						<p:commandButton immediate="true" title="Delete" icon="pi pi-trash"
-							update=":form:table growl" action="#{bookingManagedBean.delete}">
-							<p:confirm header="Confirmation" message="Are you sure?"
-								icon="pi pi-exclamation-triangle" />
-
-							<f:setPropertyActionListener
-								target="#{bookingManagedBean.booking}" value="#{booking}" />
-						</p:commandButton>
-
-						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-							<p:commandButton value="Yes" type="button"
-								styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
-							<p:commandButton value="No" type="button"
-								styleClass="ui-confirmdialog-no" icon="pi pi-times" />
-						</p:confirmDialog>
-
-
-
-
-					<p:commandButton immediate="true"  title="Check in"
-									 icon="pi pi-check"
-									 update="table" action="#{bookingManagedBean.changeStatusToCheckedIn}">
-						<p:confirm header="Confirmation" message="Are you sure to make booking status checked In?"
-								   icon="pi pi-exclamation-triangle" />
-
-						<f:setPropertyActionListener
-								target="#{bookingManagedBean.booking}" value="#{booking}" />
-						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
-							<p:commandButton value="Yes" type="button"
-											 styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
-							<p:commandButton value="No" type="button"
-											 styleClass="ui-confirmdialog-no" icon="pi pi-times" />
-						</p:confirmDialog>
-					</p:commandButton>
-				</p:column>
 
 					<p:column headerText="Booking detail">
 						<p:commandLink value="Detail" update="bookingDetail"
@@ -144,8 +103,6 @@
 
 
 			</h:form>
-
-
 
 
 	<h:form id="bookingDetail">

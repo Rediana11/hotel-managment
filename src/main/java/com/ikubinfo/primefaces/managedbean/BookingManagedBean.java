@@ -1,11 +1,9 @@
 package com.ikubinfo.primefaces.managedbean;
 
-import com.ikubinfo.primefaces.model.Booking;
-import com.ikubinfo.primefaces.model.BookingStatus;
-import com.ikubinfo.primefaces.model.Room;
-import com.ikubinfo.primefaces.model.RoomAbility;
+import com.ikubinfo.primefaces.model.*;
 import com.ikubinfo.primefaces.service.BookingService;
 import com.ikubinfo.primefaces.service.RoomService;
+import com.ikubinfo.primefaces.service.UserService;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 import com.ikubinfo.primefaces.service.helpers.SelectRoom;
 import com.ikubinfo.primefaces.util.Messages;
@@ -31,10 +29,13 @@ public class BookingManagedBean implements Serializable {
     private SelectRoom selectedRoom;
     private BookingStatus bookingStatus;
     private List<Booking> bookings;
-    private List<BookingStatus> bookingStatuses;
-    private List<SelectItem> statusItems;
+    private List<Booking> activeBookings;
+    private List<Booking> canceledBookings;
 
+    private List<BookingStatus> bookingStatuses;
     private List<Room> rooms;
+
+    private List<SelectItem> statusItems;
     private Date checkIn;
     private Date checkOut;
     private Date minDate;
@@ -46,6 +47,7 @@ public class BookingManagedBean implements Serializable {
     @ManagedProperty(value = "#{bookingService}")
     private BookingService bookingService;
 
+
     @ManagedProperty(value = "#{messages}")
     private Messages messages;
 
@@ -56,23 +58,30 @@ public class BookingManagedBean implements Serializable {
         // shtoje ne db si Client ne shto tabele Client 1 me shume
         booking = new Booking();
         bookingStatus = new BookingStatus();
-        bookings = bookingService.getAll();
+        bookings = bookingService.getReservedBookings();
+        activeBookings= bookingService.getActiveBookings();
+        canceledBookings=bookingService.getCanceledBookings();
         rooms=new ArrayList<Room>();
-        statusItems = new ArrayList<SelectItem>();
-        bookingStatuses = bookingService.getBookingStatuses();
-        for (BookingStatus status: bookingStatuses){
-            statusItems.add(new SelectItem(status.getId(),status.getName()));
-        }
         today = new Date();
         long oneDay = 24 * 60 * 60 * 1000;
         minDate =new Date(today.getTime() + ( oneDay));
         selectedRooms = new ArrayList<SelectRoom>();
         selectedRoom=new SelectRoom();
+        addStatusItems();
     }
+
+    private void addStatusItems(){
+        statusItems = new ArrayList<SelectItem>();
+        bookingStatuses = bookingService.getBookingStatuses();
+        for (BookingStatus status: bookingStatuses){
+            statusItems.add(new SelectItem(status.getId(),status.getName()));
+        }
+    }
+
 
     public void delete() {
             bookingService.delete(booking);
-            bookings = bookingService.getAll();
+            bookings = bookingService.getReservedBookings();
             messages.showInfoMessage("Deleted");
 
     }
@@ -94,14 +103,7 @@ public class BookingManagedBean implements Serializable {
         return booking=bookingService.getBooking(booking.getId());
     }
 
-    public void save(){
-        if (bookingService.save(booking)) {
-            getAll();
-            messages.showInfoMessage("Booking updated successfully");
 
-        }
-        booking = new Booking();
-    }
     private List<Room>  mappSelectRoomToRoom(List<SelectRoom> selRooms){
         List<Room> rooms=new ArrayList<Room>();
         for (SelectRoom el: selRooms){
@@ -124,9 +126,14 @@ public class BookingManagedBean implements Serializable {
             if (bookingService.updateBookingStatusToCheckedIn(booking))
             messages.showInfoMessage("Booking status changed successfully");
         }
+    public void changeStatusToCheckedOut(){
+
+        if (bookingService.updateBookingStatusToCheckedOut(booking))
+            messages.showInfoMessage("Booking status changed successfully");
+    }
 
     public void getAll() {
-        bookings = bookingService.getAll();
+        bookings = bookingService.getReservedBookings();
     }
 
 
@@ -249,5 +256,22 @@ public class BookingManagedBean implements Serializable {
 
     public void setStatusItems(List<SelectItem> statusItems) {
         this.statusItems = statusItems;
+    }
+
+
+    public List<Booking> getActiveBookings() {
+        return activeBookings;
+    }
+
+    public void setActiveBookings(List<Booking> activeBookings) {
+        this.activeBookings = activeBookings;
+    }
+
+    public List<Booking> getCanceledBookings() {
+        return canceledBookings;
+    }
+
+    public void setCanceledBookings(List<Booking> canceledBookings) {
+        this.canceledBookings = canceledBookings;
     }
 }

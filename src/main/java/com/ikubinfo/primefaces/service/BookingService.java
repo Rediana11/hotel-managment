@@ -10,7 +10,11 @@ import com.ikubinfo.primefaces.model.User;
 
 public interface BookingService {
 
-	List<Booking> getAll();
+	List<Booking> getReservedBookings();
+
+	List<Booking> getActiveBookings();
+
+	List<Booking> getCanceledBookings();
 
 	List<BookingStatus> getBookingStatuses();
 
@@ -23,5 +27,8 @@ public interface BookingService {
 	boolean save(Booking booking);
 
 	boolean updateBookingStatusToCheckedIn(Booking booking);
+
+	boolean updateBookingStatusToCheckedOut(Booking booking);
+
 
 }

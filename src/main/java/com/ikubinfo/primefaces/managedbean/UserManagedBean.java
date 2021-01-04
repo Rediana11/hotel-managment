@@ -1,6 +1,7 @@
 package com.ikubinfo.primefaces.managedbean;
 
 
+import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.model.Room;
 import com.ikubinfo.primefaces.model.User;
 import com.ikubinfo.primefaces.service.RoomService;
@@ -17,6 +18,8 @@ import java.io.Serializable;
 public class UserManagedBean implements Serializable {
 
     private User user;
+    private Role role;
+
 
     @ManagedProperty(value = "#{userService}")
     private UserService userService;
@@ -25,6 +28,8 @@ public class UserManagedBean implements Serializable {
     public void init() {
 
         user = userService.getUser(2);
+        role =userService.getUserRole(2);
+
 
     }
 
@@ -42,5 +47,13 @@ public class UserManagedBean implements Serializable {
 
     public void setUserService(UserService userService) {
         this.userService = userService;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
