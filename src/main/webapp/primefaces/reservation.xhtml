@@ -73,13 +73,13 @@
 	</style>
 
 	<h:form id="form">
-	<p:wizard >
+		<p:wizard widgetVar="myWizard" showNavBar="false"  >
 		<p:tab id="basic" title="Basic information" style="width: auto;">
 			<p:panel header="Dates" style="width: auto;">
 				<p:messages />
 				<h:panelGrid columns="4" cellpadding="10">
 					<p:outputLabel for="checkIn" value="Check in:" />
-					<p:calendar id="checkIn" required="true" requiredMessage="Choose check in date!" valueChangeListener="#{bookingManagedBean.onCheckInDateChange}" value="#{bookingManagedBean.booking.checkIn}" mindate="#{bookingManagedBean.today}"  />
+					<p:calendar id="checkIn" required="true" requiredMessage="Choose check in date!" value="#{bookingManagedBean.booking.checkIn}" mindate="#{bookingManagedBean.today}"  />
 					<p:outputLabel for="checkOut" value="Check out:" />
 					<p:calendar id="checkOut"   required="true"  requiredMessage="Choose check out date!" value="#{bookingManagedBean.booking.checkOut}" validarMessage="Data gabim" mindate="#{bookingManagedBean.minDate}" >
 
@@ -102,7 +102,10 @@
 						<f:facet name="footer">
 						</f:facet>
 					</p:selectOneMenu>
+
 				</h:panelGrid>
+				<p:commandButton style="..." value="Next" icon="ui-icon-arrow-1-e" action="#{bookingManagedBean.datesValidate}"
+								 iconPos="left" type="button" onclick="PF('myWizard').next();" />
 			</p:panel>
 		</p:tab>
 		<p:tab id="rooms" title="Rooms" style="width: auto;">
@@ -162,6 +165,11 @@
 
 					</p:dataTable>
 				</h:panelGrid>
+				<p:commandButton style="..." value="Back" icon="ui-icon-arrow-1-w"
+								 iconPos="right" type="button" onclick="PF('myWizard').back();" />
+				<p:commandButton style="..." value="Next" icon="ui-icon-arrow-1-e" action="#{bookingManagedBean.checkedRoomsValidate}"
+								 iconPos="left" type="button" onclick="PF('myWizard').next();" />
+
 			</p:panel>
 		</p:tab>
 		<p:tab id="ask" title="Ask a question">
@@ -174,6 +182,11 @@
 					<p:inputTextarea rows="10" value="#{bookingManagedBean.booking.remarks}" cols="33" />
 					<br/>
 				</h:panelGrid>
+				<p:commandButton style="..." value="Back" icon="ui-icon-arrow-1-w"
+								 iconPos="right" type="button" onclick="PF('myWizard').back();" />
+				<p:commandButton style="..." value="Next" icon="ui-icon-arrow-1-e"
+								 iconPos="left" type="button" onclick="PF('myWizard').next();" />
+
 			</p:panel>
 		</p:tab>
 		<p:tab id="personal" title="Personal" style="width: auto;">
@@ -182,9 +195,9 @@
 
 				<h:outputText for="email" value="Search client by email: "/>
 				<p:inputText id="email"
-							 value="#{userManagedBean.email}"/>
+							 value="#{bookingManagedBean.email}"/>
 				<p:commandButton  value="Search"
-								  action="#{userManagedBean.getUserByEmail}" update="form">
+								  action="#{bookingManagedBean.getClientByEmail}" update="form">
 				</p:commandButton>
 				<div>
 
@@ -193,18 +206,23 @@
 
 
 					<h:outputText value="Firstname: " />
-					<p:inputText required="true"  value="#{userManagedBean.client.firstName}" label="Firstname" />
+					<p:inputText required="true"  value="#{bookingManagedBean.client.firstName}" label="Firstname" />
 
 					<h:outputText value="Lastname: " />
-					<p:inputText value="#{userManagedBean.client.lastName}"  required="true" label="Lastname"/>
+					<p:inputText value="#{bookingManagedBean.client.lastName}"  required="true" label="Lastname"/>
 
 					<h:outputText value="Age: " />
-					<p:inputText   value="#{userManagedBean.client.age}" />
+					<p:inputText   value="#{bookingManagedBean.client.age}" />
 
 					<h:outputText value="Email: *" />
-					<p:inputText   required="true" value="#{userManagedBean.client.email}" label="Email"/>
+					<p:inputText   required="true" value="#{bookingManagedBean.client.email}" label="Email"/>
 
 				</h:panelGrid>
+				<p:commandButton style="..." value="Back" icon="ui-icon-arrow-1-w"
+								 iconPos="right" type="button" onclick="PF('myWizard').back();" />
+				<p:commandButton style="..." value="Next" icon="ui-icon-arrow-1-e"
+								 iconPos="left" type="button" onclick="PF('myWizard').next();" />
+
 			</p:panel>
 		</p:tab>
 
@@ -213,15 +231,15 @@
 			<p:panel header="Confirmation">
 				<h:panelGrid columns="2" columnClasses="label, value">
 					<h:outputText value="Firstname: " />
-					<h:outputText value="#{userManagedBean.user.firstName}" styleClass="outputLabel"/>
+					<h:outputText value="#{bookingManagedBean.client.firstName}" styleClass="outputLabel"/>
 
 					<h:outputText value="Lastname: " />
-					<h:outputText value="#{userManagedBean.user.firstName}" styleClass="outputLabel"/>
+					<h:outputText value="#{bookingManagedBean.client.firstName}" styleClass="outputLabel"/>
 
 					<h:outputText value="Age: " />
-					<h:outputText value="#{userManagedBean.user.age}" styleClass="outputLabel"/>
+					<h:outputText value="#{bookingManagedBean.client.age}" styleClass="outputLabel"/>
 					<h:outputText value="Email: " />
-					<h:outputText value="#{userManagedBean.user.email}" styleClass="outputLabel"/>
+					<h:outputText value="#{bookingManagedBean.client.email}" styleClass="outputLabel"/>
 
 					<h:outputText value="Check in date: " />
 					<h:outputText value="#{bookingManagedBean.booking.checkIn}" styleClass="outputLabel"/>
@@ -231,14 +249,27 @@
 
 					<h:outputText value="Number of persons: " />
 					<h:outputText value="#{bookingManagedBean.booking.personsNumber}" styleClass="outputLabel"/>
+					<h:outputText value="Price" />
+					<h:outputText value="#{bookingManagedBean.booking.price}" styleClass="outputLabel"/>
 
-					<h:outputText value="Choosen room: " />
-					<h:outputText value="#{bookingManagedBean.selectedRoom.room.name}" styleClass="outputLabel"/>
+					<h:outputText value="Choosen room/rooms: " />
 
+					<p:dataTable var="room" value="#{bookingManagedBean.selectedRooms}">
+						<p:column headerText="Name">
+							<h:outputText value="#{room.room.name}" />
+						</p:column>
+
+						<p:column headerText="Description">
+							<h:outputText value="#{room.room.description}" />
+						</p:column>
+
+					</p:dataTable>
 
 				</h:panelGrid>
 				<p:commandButton value="Submit" action="#{bookingManagedBean.reserve}" update="growl" process="@this"/>
 			</p:panel>
+			<p:commandButton style="..." value="Back" icon="ui-icon-arrow-1-w"
+							 iconPos="right" type="button" onclick="PF('myWizard').back();" />
 		</p:tab>
 
 	</p:wizard>

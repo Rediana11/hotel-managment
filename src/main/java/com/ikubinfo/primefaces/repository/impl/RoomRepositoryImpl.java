@@ -22,15 +22,19 @@ class RoomRepositoryImpl implements RoomRepository {
 
 	Logger logger = LoggerFactory.getLogger(RoomRepositoryImpl.class);
 
-	private static final String GET_ROOMS = "select room_id,  r.room_ability_id, r.category_id,  room_name,  description,beds_number, price, facilities, category_name,ability_name, r.updated_on,\n" +
-			"            r.created_on, (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
-			"            CASE WHEN r.updated_by is not null \n" +
-			"            then (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=r.updated_by) else '' end as UpdatedBy\n" +
-			"            from room r\n" +
-			"            join user_ ue on r.created_by=ue.user_id \n" +
-			"\t\t\tjoin category on r.category_id=category.category_id \n" +
-			"\t\t\tjoin room_ability ra on ra.room_ability_id=r.room_ability_id\n" +
-			"\t\t\twhere r.is_valid=true ";
+	private static final String GET_ROOMS = "SELECT r.room_id,r.room_name,STRING_AGG (name,',') AS Facilities,r.room_ability_id, r.category_id,  room_name, r.description,beds_number, price, category_name,ability_name, r.updated_on,\n" +
+			"\t\t            r.created_on, (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
+			"\t\t            CASE WHEN r.updated_by is not null \n" +
+			"\t\t            then (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=r.updated_by) else '' end as UpdatedBy,\n" +
+			"\t\t\t\t\t CASE WHEN STRING_AGG (name,',') is null \n" +
+			"\t\t            then '' end \n" +
+			"FROM room r\n" +
+			" inner join user_ ue on r.created_by=ue.user_id \n" +
+			"\tinner join category on r.category_id=category.category_id \n" +
+			"\t\tinner join room_ability ra on ra.room_ability_id=r.room_ability_id\n" +
+			"\tINNER JOIN facility_room rf ON rf.room_id=r.room_id\n" +
+			"\tinner join facility f on f.facility_id=rf.facility_id\n" +
+			" where r.is_valid=true GROUP by r.room_id, category_name, ability_name, (ue.first_name || ' ' || ue.last_name)";
 	private static final String UPDATE_ROOM ="update room set room_name= :name, description= :description, price= :price, " +
 			"beds_number= :bedsNumber, category_id=:category, room_ability_id=:ability where room_id=:id";
 	private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from film_category where category_id = ?";
@@ -57,20 +61,21 @@ class RoomRepositoryImpl implements RoomRepository {
 			"\t\t\twhere r.is_valid=true and room_id=:id";
 	private static final String GET_FACILITIES= "select facility_id, name from facility";
 
-	private static final String FACILITIES_FOR_EACH_ROOM = "join facility_room fr on fr.facility_id= f.facility_id\n" +
-			"\t\t\tjoin room on room.room_id=fr.room_id";
 
 	private static final String RESERVED_ROOMS_FOR_BOOKING ="select room.room_id,room_name,description, facilities,beds_number, room.price, category_name from \n" +
 			"room join room_booking rb on room.room_id = rb.room_id\n" +
 			"join booking on booking.booking_id=rb.booking_id\n" +
 			"join category on room.category_id=category.category_id\n" +
 			"where rb.booking_id=:id";
+	private static final String GET_MAX_ROOM_ID = "select max(room_id) as room_id from room";
 
 
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private SimpleJdbcInsert insertRoomQuery;
+	private SimpleJdbcInsert insertFacilityRoom;
 	private JdbcTemplate jdbcTemplate;
+
 
 	@Autowired
 	public RoomRepositoryImpl(DataSource datasource) {
@@ -78,6 +83,8 @@ class RoomRepositoryImpl implements RoomRepository {
 		this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(datasource);
 		this.insertRoomQuery = new SimpleJdbcInsert(datasource).withTableName("room")
 				.usingGeneratedKeyColumns("room_id");
+		this.insertFacilityRoom = new SimpleJdbcInsert(datasource).withTableName("facility_room")
+				.usingGeneratedKeyColumns("facility_room_id");
 		this.jdbcTemplate = new JdbcTemplate(datasource);
 	}
 
@@ -137,6 +144,7 @@ class RoomRepositoryImpl implements RoomRepository {
 	public boolean create(Room room) {
 
 		Map<String, Object> parameters = new HashMap<String, Object>();
+		Map<String, Object> parameters1 = new HashMap<String, Object>();
 		parameters.put("room_id", room.getId());
 		parameters.put("room_name", room.getName());
 		parameters.put("description", room.getDescription());
@@ -148,19 +156,21 @@ class RoomRepositoryImpl implements RoomRepository {
 		parameters.put("created_by", 2); //TODO replace this with line 129
 		parameters.put("created_on", new Date());
 		parameters.put("is_valid", "true");
+		insertRoomQuery.execute(parameters);
+		System.out.println(room.getRoomFacilities());
+		for(RoomFacility roomFacility:room.getRoomFacilities()){
+			parameters1.put("facility_id", roomFacility.getId());
+			parameters1.put("room_id", getMaxRoomId());
+			insertFacilityRoom.execute(parameters1);
+		}
 
-		return insertRoomQuery.execute(parameters) > 0;
+		return true;
 
 	}
 
-	/* @Override
-	public boolean isCategoryInUse(Role category) {
-
-		return jdbcTemplate.queryForObject(CATEGORY_IN_USE, Integer.class, category.getId()) > 0;
-
+	private int getMaxRoomId() {
+		return jdbcTemplate.queryForObject(GET_MAX_ROOM_ID,new RoomIdRowMapper()).getId();
 	}
-
-	 */
 
 	@Override
 	public void delete(Room room) {

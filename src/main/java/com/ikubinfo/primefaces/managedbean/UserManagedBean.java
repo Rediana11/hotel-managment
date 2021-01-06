@@ -38,15 +38,13 @@ public class UserManagedBean implements Serializable {
         role =userService.getUserRole(2);
         client = new Client();
 
+
     }
 
-    public void getUserByEmail(){
-        System.out.println(client + "hola");
-        if (! email.equals(client.getEmail()))
-        {
-            messages.showWarningMessage("Client not found! Create a new Client");
-        }
-      client= userService.getClientByEmail(email);
+
+
+    public void insertClient(){
+        userService.insertClient(client);
     }
 
     public User getUser() {

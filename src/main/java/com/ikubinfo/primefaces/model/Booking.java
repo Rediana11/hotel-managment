@@ -16,6 +16,7 @@ public class Booking {
 	private String remarks;
 	private List<User> users;
 	private List<Room> rooms;
+	private Client client;
 	private User createdBy;
 	private Date createdOn;
 	private User updatedBy;
@@ -122,6 +123,14 @@ public class Booking {
 		return isValid;
 	}
 
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
+
 	public void setValid(boolean valid) {
 		isValid = valid;
 	}
@@ -146,6 +155,7 @@ public class Booking {
 				", remarks='" + remarks + '\'' +
 				", users=" + users +
 				", rooms=" + rooms +
+				", client=" + client +
 				", createdBy=" + createdBy +
 				", createdOn=" + createdOn +
 				", updatedBy=" + updatedBy +
@@ -169,6 +179,7 @@ public class Booking {
 				Objects.equals(getRemarks(), booking.getRemarks()) &&
 				Objects.equals(getUsers(), booking.getUsers()) &&
 				Objects.equals(getRooms(), booking.getRooms()) &&
+				Objects.equals(getClient(), booking.getClient()) &&
 				Objects.equals(getCreatedBy(), booking.getCreatedBy()) &&
 				Objects.equals(getCreatedOn(), booking.getCreatedOn()) &&
 				Objects.equals(getUpdatedBy(), booking.getUpdatedBy()) &&
@@ -177,6 +188,6 @@ public class Booking {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getId(), getCheckIn(), getCheckOut(), getPersonsNumber(), getPrice(), getBookingStatus(), getRemarks(), getUsers(), getRooms(), getCreatedBy(), getCreatedOn(), getUpdatedBy(), getUpdatedOn(), isValid());
+		return Objects.hash(getId(), getCheckIn(), getCheckOut(), getPersonsNumber(), getPrice(), getBookingStatus(), getRemarks(), getUsers(), getRooms(), getClient(), getCreatedBy(), getCreatedOn(), getUpdatedBy(), getUpdatedOn(), isValid());
 	}
 }

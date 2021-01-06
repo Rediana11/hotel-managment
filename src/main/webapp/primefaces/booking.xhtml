@@ -20,7 +20,11 @@
 
 			<br/>
 	<br/>
-
+	<style type="text/css">
+		.ui-paginator a {
+			margin-right: 5px;
+		}
+	</style>
 			<h:form id="form">
 
 
@@ -29,8 +33,36 @@
 							 class="table table-striped table-bordered dataTable no-footer"
 							 style="text-align:center" widgetVar="DTWVar" rows="5"
 							 paginator="true"
-							 paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
-							 rowsPerPageTemplate="5,10,15" rowIndexVar="index">
+							 paginatorTemplate="{CurrentPageReport}  {PreviousPageLink} {PageLinks} {NextPageLink}  {Exporters}"
+							 rowsPerPageTemplate="5,10" rowIndexVar="index">
+					<f:facet name="{Exporters}">
+						<div style="float:right;padding-top: 5px;">
+							<h:commandLink>
+								<p:graphicImage name="/demo/images/excel.png" width="24"/>
+								<p:dataExporter type="xls" target="tbl" fileName="bookings" />
+							</h:commandLink>
+
+							<h:commandLink>
+								<p:graphicImage name="/demo/images/xlsx.png" width="24"/>
+								<p:dataExporter type="xlsxstream" target="tbl" fileName="bookings" />
+							</h:commandLink>
+
+							<h:commandLink>
+								<p:graphicImage name="/demo/images/pdf.png" width="24"/>
+								<p:dataExporter type="pdf" target="tbl" fileName="bookings"/>
+							</h:commandLink>
+
+							<h:commandLink>
+								<p:graphicImage name="/demo/images/csv.png" width="24"/>
+								<p:dataExporter type="csv" target="tbl" fileName="bookings" />
+							</h:commandLink>
+
+							<h:commandLink>
+								<p:graphicImage name="/demo/images/xml.png" width="24"/>
+								<p:dataExporter type="xml" target="tbl" fileName="bookings" />
+							</h:commandLink>
+						</div>
+					</f:facet>
 					<p:column headerText="Check in">
 						<p:outputLabel value="#{booking.checkIn}"></p:outputLabel>
 					</p:column>
@@ -95,9 +127,6 @@
 
 				</p:dataTable>
 
-
-
-
 			</h:form>
 
 			<script type="text/javascript">
@@ -134,45 +163,5 @@
 
 			</h:form>
 
-
-
-
-	<h:form id="bookingDetail">
-
-
-		<p:dialog header="View Booking Detail" id="updateDialog"
-				  widgetVar="BookingDetailDialog" modal="true">
-
-
-			<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
-
-				<h:form id="form">
-
-					<p:dataList value="#{bookingManagedBean.booking}" var="booking" type="definition">
-						<f:facet name="header">
-							Booking Info
-						</f:facet>
-						Created by: #{booking.createdBy.username}
-						<br/>
-						Created on: #{booking.createdOn}
-						<br/>
-						Updated by: #{booking.updatedBy.username}
-						<br/>
-						Updated on: #{booking.updatedOn}
-					</p:dataList>
-
-				</h:form>
-
-
-
-			</h:panelGrid>
-
-
-		</p:dialog>
-
-
-
-
-	</h:form>
 	</h:body>
 	</html>

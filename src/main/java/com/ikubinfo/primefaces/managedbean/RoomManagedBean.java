@@ -10,7 +10,9 @@ import javax.faces.bean.ViewScoped;
 
 import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.model.Room;
+import com.ikubinfo.primefaces.model.RoomFacility;
 import com.ikubinfo.primefaces.model.User;
+import com.ikubinfo.primefaces.service.EmailService;
 import com.ikubinfo.primefaces.service.RoomService;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 import com.ikubinfo.primefaces.util.Messages;
@@ -24,6 +26,8 @@ public class RoomManagedBean implements Serializable {
 	private List<Room>  reservedRoomsForBooking;
 	private List<Room>  vacantRooms;
 	private List<Room> rooms;
+	private List<RoomFacility> facilities;
+	private RoomFacility roomFacility;
 	private String name;
 	private User user = new User();
 
@@ -33,11 +37,15 @@ public class RoomManagedBean implements Serializable {
 	@ManagedProperty(value = "#{messages}")
 	private Messages messages;
 
+
 	@ManagedProperty(value="#{bookingManagedBean}")
 	private BookingManagedBean bookingManagedBean;
 
+
+
 	@PostConstruct
 	public void init() {
+
 
 		rooms = roomService.getAll(null);
 		vacantRooms= roomService.getAllVacantRooms(bookingManagedBean.getBooking());
@@ -49,6 +57,7 @@ public class RoomManagedBean implements Serializable {
 		reservedRoomsForBooking=roomService.getReservedRoomsForBooking(bookingManagedBean.getBooking().getId());
 
 	}
+
 	public void save() {
 		if (roomService.save(room)) {
 			getAll();
@@ -145,6 +154,22 @@ public class RoomManagedBean implements Serializable {
 
 	public void setBookingManagedBean(BookingManagedBean bookingManagedBean) {
 		this.bookingManagedBean = bookingManagedBean;
+	}
+
+	public List<RoomFacility> getFacilities() {
+		return facilities;
+	}
+
+	public void setFacilities(List<RoomFacility> facilities) {
+		this.facilities = facilities;
+	}
+
+	public RoomFacility getRoomFacility() {
+		return roomFacility;
+	}
+
+	public void setRoomFacility(RoomFacility roomFacility) {
+		this.roomFacility = roomFacility;
 	}
 
 	public User getUser() {

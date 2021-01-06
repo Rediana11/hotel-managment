@@ -21,7 +21,7 @@
 	</p:breadCrumb>
 	<br/>
 	<p:panel id="basic" header="Room" style="margin-bottom:20px">
-			<h:form  id="addForm">
+			<h:form  id="addForm" enctype="multipart/form-data">
 				<p:growl id="growl" showDetail="true" sticky="true" />
 					<h:messages id="messages"></h:messages>
 					<fieldset>
@@ -54,17 +54,23 @@
 						<div class="col-sm-4">
 						<div class="form-group">
 							<p:outputLabel for="price" styleClass="p-col-fixed" style="width:100px" value="Price" />
-							<h:inputText class="form-control" id="price" value="#{addRoomManagedBean.price}"
+							<h:inputText required="true" class="form-control"
+										 requiredMessage="Price is required " id="price" value="#{addRoomManagedBean.price}"
 										 converterMessage="Please enter digits only.">
 							</h:inputText >
+							<p:message for="price" />
+
 
 						</div>
 						</div>
 						<div class="col-sm-4">
 							<div class="form-group">
 						<h:outputLabel for="bedsNumber" value="Beds number " />
-						<h:inputText  class="form-control"
+						<h:inputText  required="true" class="form-control"
+									  requiredMessage="Beds number is required "
 									  id="bedsNumber" value="#{addRoomManagedBean.bedsNumber}" min="1" max="4" step="1" converterMessage="Please enter digits only."/>
+								<p:message for="bedsNumber" />
+
 							</div>
 						</div>
 					</div>
@@ -97,14 +103,21 @@
 						<div class="form-group">
 							<p:outputLabel for="@next" value="Photo:"/>
 							<br/>
-							<p:fileUpload value="#{fileUploadView.files}" mode="simple" skinSimple="true" multiple="true" />
+							<p:fileUpload listener="#{addRoomManagedBean.upload}" mode="advanced" dragDropSupport="false" value="#{addRoomManagedBean.file}"
+										  update="messages" sizeLimit="100000" fileLimit="3" />
 						</div></div></div>
-
+						<div class="row">
+						<div class="col-sm-12">
+						<div class="form-group">
+						<p:galleria value="#{addRoomManagedBean.filesPath}" var="image" panelWidth="500" panelHeight="313" showCaption="true">
+							<p:graphicImage name="#{image}" alt="Image Description for #{image}" title="#{image}"/>
+						</p:galleria>
+						</div></div></div>
 					<div class="col-sm-4">
 						<div class="form-group">
 							<p:outputLabel for="@next" value="Facilities:"/>
-							<p:selectManyCheckbox id="grid" value="#{addRoomManagedBean.selectedFacilities}" layout="grid" columns="3">
-							<f:selectItems value="#{addRoomManagedBean.roomFacilities}" var="facility" itemLabel="#{facility.name}" itemValue="#{facility}" />
+							<p:selectManyCheckbox id="grid"  value="#{addRoomManagedBean.selectedFacilities}" layout="grid" columns="3">
+							<f:selectItems value="#{addRoomManagedBean.roomFacilities}" var="facility" itemLabel="#{facility.name}" itemValue="#{facility.id}" />
 							</p:selectManyCheckbox>
 						</div>
 					</div>

@@ -1,6 +1,7 @@
 package com.ikubinfo.primefaces.model;
 
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -16,7 +17,7 @@ public class Room {
     private RoomAbility roomAbility;
     private RoomCategory roomCategory;
     private List<Booking> bookings;
-    private List<RoomFacility> roomFacilities;
+    private List<RoomFacility> roomFacilities=new ArrayList<>();
     private User createdBy;
     private Date createdOn;
     private User updatedBy;

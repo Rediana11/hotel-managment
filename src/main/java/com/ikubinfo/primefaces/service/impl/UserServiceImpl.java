@@ -8,6 +8,8 @@ import com.ikubinfo.primefaces.repository.UserRepository;
 import com.ikubinfo.primefaces.service.UserService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("userService")
 public class UserServiceImpl implements UserService {
 
@@ -30,5 +32,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public Client getClientByEmail(String email) {
         return userRepository.getClientByEmail(email);
+    }
+
+    @Override
+    public boolean insertClient(Client client) {
+        return userRepository.insertClient(client);
+    }
+
+    @Override
+    public List<Client> getClients() {
+        return userRepository.getClients();
     }
 }

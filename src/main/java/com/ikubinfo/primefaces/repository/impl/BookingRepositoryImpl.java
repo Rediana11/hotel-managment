@@ -149,14 +149,15 @@ class BookingRepositoryImpl implements BookingRepository {
         parameters.put("created_by", 2); //TODO replace this with current user
         parameters.put("created_on", new Date());
         parameters.put("price", booking.getPrice());
+        //parameters.put("client_id",booking.getClient().getId());
         parameters.put("is_valid","true");
         insertBookingQuery.execute(parameters);
-        for (int i=0;i<rooms.size();i++){
-            int roomId=rooms.get(i).getId();
-            parameters1.put("room_id", roomId);
+        for (Room room: rooms){
+            parameters1.put("room_id", room.getId());
             parameters1.put("booking_id", getMaxBookingId());
+            insertRoomBookingQuery.execute(parameters1);
         }
-        return insertRoomBookingQuery.execute(parameters1)>0;
+        return true;
 
     }
 

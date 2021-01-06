@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ikubinfo.primefaces.repository.RoomRepository;
 import com.ikubinfo.primefaces.service.RoomService;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service("roomService")
  class RoomServiceImpl implements RoomService {
@@ -56,18 +57,16 @@ import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 	}
 
 	@Override
+	@Transactional
 	public boolean create(Room room) {
+
 		return roomRepository.create(room);
 
 	}
 
 	@Override
-	public void delete(Room room) throws CategoryInUseException {
-		/* if (roomRepository.isCategoryInUse(category)) {
-			throw new CategoryInUseException("Cannot delete this category because it is already in use.");
-		} else {
+	public void delete(Room room) {
 
-		 */
 			roomRepository.delete(room);
 
 	}

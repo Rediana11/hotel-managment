@@ -2,6 +2,7 @@ package com.ikubinfo.primefaces.managedbean;
 
 import com.ikubinfo.primefaces.model.*;
 import com.ikubinfo.primefaces.service.BookingService;
+import com.ikubinfo.primefaces.service.EmailService;
 import com.ikubinfo.primefaces.service.RoomService;
 import com.ikubinfo.primefaces.service.UserService;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
@@ -33,6 +34,8 @@ import java.util.List;
 public class BookingManagedBean implements Serializable {
 
     private Booking booking;
+    private Client client;
+    private String email;
     private List<SelectRoom> selectedRooms;
     private SelectRoom selectedRoom;
     private BookingStatus bookingStatus;
@@ -50,10 +53,15 @@ public class BookingManagedBean implements Serializable {
     private Date today;
     private Date maxDate;
 
-
+    @ManagedProperty(value = "#{userService}")
+    private UserService userService;
 
     @ManagedProperty(value = "#{bookingService}")
     private BookingService bookingService;
+
+
+    @ManagedProperty(value="#{emailService}")
+    private EmailService emailService;
 
 
     @ManagedProperty(value = "#{messages}")
@@ -62,6 +70,7 @@ public class BookingManagedBean implements Serializable {
     @PostConstruct
     public void init() {
         booking = new Booking();
+        client = new Client();
         bookingStatus = new BookingStatus();
         bookings = bookingService.getReservedBookings();
         activeBookings= bookingService.getActiveBookings();
@@ -73,25 +82,39 @@ public class BookingManagedBean implements Serializable {
         selectedRooms = new ArrayList<SelectRoom>();
         selectedRoom=new SelectRoom();
         addStatusItems();
+        bookingPrice();
+
+
     }
 
+    public void bookingPrice(){
+        System.out.println("Cmimi 0");
+        double roomPrice = 0;
+        for (SelectRoom selRoom: selectedRooms) {
 
-    public void onCheckInDateChange(ValueChangeEvent e){
-        Date currentChekcedInDate= (Date) e.getNewValue();
-        setCheckIn(currentChekcedInDate);
-        checkIn=(Date) e.getNewValue();
-        long oneDay = 24 * 60 * 60 * 1000;
-        minDate =new Date(currentChekcedInDate.getTime() + ( oneDay));
-    }
-
-    public void checkOutDateValidate(FacesContext context, UIComponent component, Object value) throws ValidatorException{
-        LocalDate localDate= (LocalDate)value;
-        System.out.println(getCheckIn());
-        Date currentChekcedOutDate=Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());;
-        if ((currentChekcedOutDate.getDate()>today.getDate())|| getCheckIn().equals(null)){
-            //messages.showErrorMessage("Dataa");
+            roomPrice= roomPrice+selRoom.getRoom().getPrice();
         }
+        booking.setPrice(roomPrice);
+        System.out.println("Cmimi final");
+
     }
+
+   public boolean datesValidate(){
+        if (booking.getCheckOut().getTime() <= booking.getCheckIn().getTime()){
+            messages.showErrorMessage("Input dates are not valid! Try again!");
+            return false;
+        }
+        return true;
+   }
+
+   public boolean checkedRoomsValidate(){
+        if(selectedRooms.isEmpty()|| selectedRoom.getRoom().equals(null)){
+            messages.showErrorMessage("You must check a room to complete the reservation!");
+            return false;
+        }
+        return true;
+   }
+
     private void addStatusItems(){
         statusItems = new ArrayList<SelectItem>();
         bookingStatuses = bookingService.getBookingStatuses();
@@ -100,6 +123,18 @@ public class BookingManagedBean implements Serializable {
         }
     }
 
+    public void getClientByEmail(){
+        System.out.println(email);
+        for(Client client1: userService.getClients()){
+            if (email.equals(client1.getEmail()))
+            {
+                messages.showInfoMessage("Client found!");
+                client= userService.getClientByEmail(email);
+
+            }
+        }
+        messages.showWarningMessage("Client not found! Create a new client");
+    }
 
     public void delete() {
             bookingService.delete(booking);
@@ -134,10 +169,18 @@ public class BookingManagedBean implements Serializable {
         return rooms;
     }
     public String reserve (){
-        if(bookingService.reserve(booking,mappSelectRoomToRoom(selectedRooms))){
+        if(bookingService.reserve(booking,mappSelectRoomToRoom(selectedRooms))&&checkedRoomsValidate()&&datesValidate()){
+            emailService.sendSimpleMessage(client.getEmail(),"Reservation Confirmation","Hello " + client.getFirstName() + client.getLastName());
+            insertClient();
             messages.showInfoMessage("Successful reservation!");
+            return "booking";
         }
-        return "booking";
+
+        return null;
+    }
+
+    public void insertClient(){
+        userService.insertClient(client);
     }
 
     public void loadBookingStatus(){
@@ -296,5 +339,37 @@ public class BookingManagedBean implements Serializable {
 
     public void setCanceledBookings(List<Booking> canceledBookings) {
         this.canceledBookings = canceledBookings;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
+    }
+
+    public UserService getUserService() {
+        return userService;
+    }
+
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public EmailService getEmailService() {
+        return emailService;
+    }
+
+    public void setEmailService(EmailService emailService) {
+        this.emailService = emailService;
     }
 }

@@ -1,22 +1,28 @@
 package com.ikubinfo.primefaces.managedbean;
 
-import com.ikubinfo.primefaces.model.Room;
-import com.ikubinfo.primefaces.model.RoomAbility;
-import com.ikubinfo.primefaces.model.RoomCategory;
-import com.ikubinfo.primefaces.model.RoomFacility;
+import com.ikubinfo.primefaces.model.*;
 import com.ikubinfo.primefaces.repository.RoomRepository;
+import com.ikubinfo.primefaces.service.EmailService;
 import com.ikubinfo.primefaces.service.RoomService;
+import com.ikubinfo.primefaces.service.helpers.FileHelper;
 import com.ikubinfo.primefaces.util.Messages;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.file.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletContext;
+import java.awt.image.BufferedImage;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,19 +39,20 @@ public class AddRoomManagedBean {
     private List<RoomAbility> roomAbilities;
     private List<RoomFacility> roomFacilities;
     private RoomFacility facility ;
-    private String[] selectedFacilities;
+    private Integer[] selectedFacilities;
     private RoomCategory roomCategory;
     private RoomAbility  roomAbility;
-    private List<SelectItem> categoryItems;
-    private List<SelectItem> abilityItems;
+    private List<RoomPhoto> filesPath;
+
 
     @ManagedProperty(value = "#{messages}")
     private Messages messages;
 
-
     @ManagedProperty(value = "#{roomService}")
     private RoomService roomService;
 
+    @ManagedProperty(value="#{emailService}")
+    private EmailService emailService;
     @PostConstruct
     public void init() {
         room = new Room();
@@ -54,15 +61,23 @@ public class AddRoomManagedBean {
         roomCategory = new RoomCategory();
         roomAbility = new RoomAbility();
         roomFacilities = roomService.getRoomFacilities();
+        int facilitiesNr=roomFacilities.size();
+        selectedFacilities =new Integer[facilitiesNr];
         facility = new RoomFacility();
-
+        filesPath=new ArrayList<RoomPhoto>();
     }
 
+    private void addFacilitiesToRoom(Room room){
+        for(Integer roomFacilityId:selectedFacilities){
+            room.getRoomFacilities().add(new RoomFacility(roomFacilityId));
+        }
+    }
     public String save() {
         room.setPrice(price);
         room.setBedsNumber(bedsNumber);
         room.setRoomCategory(roomCategory);
         room.setRoomAbility(roomAbility);
+        addFacilitiesToRoom(room);
         if(room.getId()==null) {
             if(roomService.create(room)){
                 messages.showInfoMessage("Added Successfully!");
@@ -90,6 +105,39 @@ public class AddRoomManagedBean {
         roomAbility=new RoomAbility();
     }
 
+    private void CreateDir(String pathName){
+        Path path = Paths.get(pathName);
+        try{
+            if(!Files.exists(path)){
+            Files.createDirectories(path);}
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void upload(FileUploadEvent event) {
+
+        if(event.getFile() != null) {
+            UploadedFile file=event.getFile();
+            try {
+                RoomPhoto photo = new RoomPhoto();
+                //String rootpath = FileHelper._PATH;
+                photo.setPath(FileHelper._PATH);
+                photo.setName(file.getFileName());
+                CreateDir(photo.getPath());
+                File fileImage=new File(photo.getPath()+File.separator+file.getFileName());
+                //filesPath.add(rootpath+File.separator+file.getFileName());
+                filesPath.add(photo);
+                InputStream inputStream=file.getInputStream();
+                FileHelper.saveImage(inputStream,fileImage);
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+                messages.showErrorMessage("An error occured while uploading photo!");
+            }
+        }
+    }
+
 
     public Room getRoom() {
         return room;
@@ -115,7 +163,6 @@ public class AddRoomManagedBean {
         this.categories = categories;
     }
 
-
     public RoomCategory getRoomCategory() {
         return roomCategory;
     }
@@ -140,21 +187,7 @@ public class AddRoomManagedBean {
         this.roomAbilities = roomAbilities;
     }
 
-    public List<SelectItem> getCategoryItems() {
-        return categoryItems;
-    }
 
-    public void setCategoryItems(List<SelectItem> categoryItems) {
-        this.categoryItems = categoryItems;
-    }
-
-    public List<SelectItem> getAbilityItems() {
-        return abilityItems;
-    }
-
-    public void setAbilityItems(List<SelectItem> abilityItems) {
-        this.abilityItems = abilityItems;
-    }
 
     public double getPrice() {
         return price;
@@ -188,11 +221,20 @@ public class AddRoomManagedBean {
         this.roomFacilities = roomFacilities;
     }
 
-    public String[] getSelectedFacilities() {
+    public EmailService getEmailService() {
+        return emailService;
+    }
+
+    public void setEmailService(EmailService emailService) {
+        this.emailService = emailService;
+    }
+
+    public Integer[] getSelectedFacilities() {
         return selectedFacilities;
     }
 
-    public void setSelectedFacilities(String[] selectedFacilities) {
+
+    public void setSelectedFacilities(Integer[] selectedFacilities) {
         this.selectedFacilities = selectedFacilities;
     }
 
@@ -202,5 +244,13 @@ public class AddRoomManagedBean {
 
     public void setFacility(RoomFacility facility) {
         this.facility = facility;
+    }
+
+    public List<RoomPhoto> getFilesPath() {
+        return filesPath;
+    }
+
+    public void setFilesPath(List<RoomPhoto> filesPath) {
+        this.filesPath = filesPath;
     }
 }

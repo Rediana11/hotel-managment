@@ -7,7 +7,15 @@ public class RoomFacility {
     private Integer id;
     private String name;
     private String description;
-    private List<Room> rooms;
+
+    public RoomFacility(Integer roomFacilityId) {
+        this.id=roomFacilityId;
+    }
+
+    public RoomFacility() {
+
+    }
+    //private List<Room> rooms;
 
     public Integer getId() {
         return id;
@@ -33,13 +41,13 @@ public class RoomFacility {
         this.description = description;
     }
 
-    public List<Room> getRooms() {
+/*    public List<Room> getRooms() {
         return rooms;
     }
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
-    }
+    }*/
 
     @Override
     public String toString() {
@@ -47,7 +55,6 @@ public class RoomFacility {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
-                ", rooms=" + rooms +
                 '}';
     }
 }

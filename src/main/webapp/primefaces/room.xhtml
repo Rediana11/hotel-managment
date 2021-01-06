@@ -45,33 +45,27 @@
 					 paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
 					 rowsPerPageTemplate="5,10,15" rowIndexVar="index">
 
-					 <p:column >
-						 <f:facet name="header">Name</f:facet>
-						 <h:outputLabel value="#{room.name}"></h:outputLabel>
-					 </p:column>
 
-					 <p:column >
-						 <f:facet name="header">Description</f:facet>
+			<p:column headerText="Name">
+				<p:outputLabel value="#{room.name}"></p:outputLabel>
+			</p:column>
+
+					 <p:column headerText="Description">
 						 <h:outputLabel value="#{room.description}"></h:outputLabel>
 					 </p:column>
-					 <p:column >
-						 <f:facet name="header">Price</f:facet>
+					 <p:column  headerText="Price">
 						 <h:outputLabel value="#{room.price}"></h:outputLabel>
 					 </p:column>
-					 <p:column >
-						 <f:facet name="header">Beds number</f:facet>
+					 <p:column  headerText="Beds number">
 						 <h:outputLabel value="#{room.bedsNumber}"></h:outputLabel>
 					 </p:column>
-			       <p:column >
-				<f:facet name="header">Facilities</f:facet>
+			       <p:column headerText="Facilities">
 				<h:outputLabel value="#{room.facilities}"></h:outputLabel>
 			</p:column>
-			<p:column >
-						 <f:facet name="header">Category</f:facet>
+					<p:column headerText="Category">
 						 <h:outputLabel value="#{room.roomCategory.name}"></h:outputLabel>
 					 </p:column>
-					 <p:column >
-						 <f:facet name="header">Room Ability</f:facet>
+					 <p:column headerText="Ability">
 						 <h:outputLabel value="#{room.roomAbility.name}"></h:outputLabel>
 					 </p:column>
 
