@@ -16,5 +16,7 @@ public interface UserRepository {
 
      boolean insertClient(Client client);
 
+     int getMaxBookingId();
+
      List<Client> getClients();
 }

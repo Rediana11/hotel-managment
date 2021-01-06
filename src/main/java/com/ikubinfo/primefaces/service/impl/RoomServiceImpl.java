@@ -58,9 +58,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 	@Override
 	@Transactional
-	public boolean create(Room room) {
+	public boolean create(List<RoomPhoto> photos,Room room) {
 
-		return roomRepository.create(room);
+		return roomRepository.create(photos,room);
 
 	}
 

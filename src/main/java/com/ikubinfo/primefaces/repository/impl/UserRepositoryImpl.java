@@ -2,10 +2,7 @@ package com.ikubinfo.primefaces.repository.impl;
 
 import com.ikubinfo.primefaces.model.*;
 import com.ikubinfo.primefaces.repository.UserRepository;
-import com.ikubinfo.primefaces.repository.mapper.ClientRowMapper;
-import com.ikubinfo.primefaces.repository.mapper.PhotoRowMapper;
-import com.ikubinfo.primefaces.repository.mapper.RoleUserRowMapper;
-import com.ikubinfo.primefaces.repository.mapper.UserRowMapper;
+import com.ikubinfo.primefaces.repository.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -30,6 +27,8 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String GET_CLIENT_BY_EMAIL= "select * from client where email=:email";
 
     private static final String GET_CLIENTS="select * from client";
+
+    private static final String GET_MAX_CLIENT_ID= " select max(client_id) as client_id from client";
 
 
 
@@ -79,6 +78,11 @@ public class UserRepositoryImpl implements UserRepository {
     public List<Client> getClients() {
 
         return  namedParameterJdbcTemplate.query(GET_CLIENTS, new ClientRowMapper());
+    }
+
+    @Override
+    public int getMaxBookingId() {
+        return jdbcTemplate.queryForObject(GET_MAX_CLIENT_ID,new ClientIdRowMapper()).getId();
     }
 
     @Override

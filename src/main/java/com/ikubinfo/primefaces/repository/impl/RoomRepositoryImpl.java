@@ -75,6 +75,7 @@ class RoomRepositoryImpl implements RoomRepository {
 	private SimpleJdbcInsert insertRoomQuery;
 	private SimpleJdbcInsert insertFacilityRoom;
 	private JdbcTemplate jdbcTemplate;
+	private SimpleJdbcInsert insertPhotoQuery;
 
 
 	@Autowired
@@ -86,6 +87,8 @@ class RoomRepositoryImpl implements RoomRepository {
 		this.insertFacilityRoom = new SimpleJdbcInsert(datasource).withTableName("facility_room")
 				.usingGeneratedKeyColumns("facility_room_id");
 		this.jdbcTemplate = new JdbcTemplate(datasource);
+		this.insertPhotoQuery = new SimpleJdbcInsert(datasource).withTableName("room_photo")
+				.usingGeneratedKeyColumns("room_photo_id");
 	}
 
 	@Override
@@ -141,10 +144,12 @@ class RoomRepositoryImpl implements RoomRepository {
 	}
 
 	@Override
-	public boolean create(Room room) {
+	public boolean create(List<RoomPhoto> photos,Room room) {
 
 		Map<String, Object> parameters = new HashMap<String, Object>();
 		Map<String, Object> parameters1 = new HashMap<String, Object>();
+		Map<String, Object> parameters2= new HashMap<String, Object>();
+
 		parameters.put("room_id", room.getId());
 		parameters.put("room_name", room.getName());
 		parameters.put("description", room.getDescription());
@@ -157,7 +162,24 @@ class RoomRepositoryImpl implements RoomRepository {
 		parameters.put("created_on", new Date());
 		parameters.put("is_valid", "true");
 		insertRoomQuery.execute(parameters);
-		System.out.println(room.getRoomFacilities());
+
+		for(RoomPhoto photo: photos) {
+			parameters2.put("room_photo_id", photo.getId());
+			parameters2.put("file_name", photo.getName());
+			parameters2.put("file_size", photo.getSize());
+			parameters2.put("file_type", photo.getType());
+			parameters2.put("file_path", photo.getPath());
+			parameters2.put("room_id", 8);
+			//parameters2.put("created_by", room.getCreatedBy());
+			parameters2.put("created_by", 2); //TODO replace this with line 129
+			parameters2.put("created_on", new Date());
+			parameters2.put("is_valid", "true");
+			insertPhotoQuery.execute(parameters2);
+
+		}
+
+
+		System.out.println(photos);
 		for(RoomFacility roomFacility:room.getRoomFacilities()){
 			parameters1.put("facility_id", roomFacility.getId());
 			parameters1.put("room_id", getMaxRoomId());

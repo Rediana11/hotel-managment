@@ -21,7 +21,7 @@ public interface RoomService {
 
 	boolean save(Room room);
 
-	boolean create(Room room);
+	boolean create(List<RoomPhoto> photos,Room room);
 
 	void delete(Room room) throws CategoryInUseException;
 

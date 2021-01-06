@@ -83,8 +83,15 @@ public class BookingManagedBean implements Serializable {
         selectedRoom=new SelectRoom();
         addStatusItems();
         bookingPrice();
+    }
 
+    public List<String> completeText() {
+        List<String> results = new ArrayList<>();
+        for(Client client: userService.getClients()) {
+            results.add(client.getEmail());
+        }
 
+        return results;
     }
 
     public void bookingPrice(){
@@ -130,10 +137,14 @@ public class BookingManagedBean implements Serializable {
             {
                 messages.showInfoMessage("Client found!");
                 client= userService.getClientByEmail(email);
+                booking.setClient(client);
 
             }
+            else{
+                messages.showWarningMessage("Client not found! Create a new client!");
+            }
         }
-        messages.showWarningMessage("Client not found! Create a new client");
+
     }
 
     public void delete() {
@@ -171,7 +182,6 @@ public class BookingManagedBean implements Serializable {
     public String reserve (){
         if(bookingService.reserve(booking,mappSelectRoomToRoom(selectedRooms))&&checkedRoomsValidate()&&datesValidate()){
             emailService.sendSimpleMessage(client.getEmail(),"Reservation Confirmation","Hello " + client.getFirstName() + client.getLastName());
-            insertClient();
             messages.showInfoMessage("Successful reservation!");
             return "booking";
         }
@@ -180,7 +190,13 @@ public class BookingManagedBean implements Serializable {
     }
 
     public void insertClient(){
-        userService.insertClient(client);
+        if(userService.insertClient(client)){
+            client.setId(userService.getMaxBookingId());
+            System.out.println(client);
+            booking.setClient(client);
+            messages.showInfoMessage("Client added successfully!");
+        }
+
     }
 
     public void loadBookingStatus(){

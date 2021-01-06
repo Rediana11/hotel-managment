@@ -79,7 +79,7 @@ public class AddRoomManagedBean {
         room.setRoomAbility(roomAbility);
         addFacilitiesToRoom(room);
         if(room.getId()==null) {
-            if(roomService.create(room)){
+            if(roomService.create(filesPath,room)){
                 messages.showInfoMessage("Added Successfully!");
             }
             else{

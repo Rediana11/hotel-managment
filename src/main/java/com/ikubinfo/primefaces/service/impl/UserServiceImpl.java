@@ -40,6 +40,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public int getMaxBookingId() {
+        return userRepository.getMaxBookingId();
+    }
+
+    @Override
     public List<Client> getClients() {
         return userRepository.getClients();
     }
