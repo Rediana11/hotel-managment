@@ -21,6 +21,20 @@
 			<h:form id="form">
 
 
+				<p:outputLabel value="Search by dates: " />
+				<p:calendar id="checkIn"   value="#{bookingManagedBean.checkIn}"  mindate="#{bookingManagedBean.today}" pattern="dd-MM-yyyy"  showOn="button">
+				</p:calendar>
+				<p:calendar id="checkOut"  value="#{bookingManagedBean.checkOut}"  mindate="#{bookingManagedBean.minDate}" pattern="dd-MM-yyyy"  showOn="button">
+				</p:calendar>
+
+				<p:commandButton  value="Search" icon="fa fa-search"
+								  action="#{bookingManagedBean.filterActiveBookings}" update="form">
+				</p:commandButton>
+				<p:commandButton value="Reset" immediate="true" icon="fa fa-refresh"
+								 action="#{bookingManagedBean.resetActiveBookings}" update="form">
+				</p:commandButton>
+				<br/>
+				<br/>
 				<p:dataTable id="table" value="#{bookingManagedBean.activeBookings}"
 					var="booking"
 							 class="table table-striped table-bordered dataTable no-footer"

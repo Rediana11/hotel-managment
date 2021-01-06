@@ -67,9 +67,6 @@ public class RoomManagedBean implements Serializable {
 
 	}
 
-	public void filter() {
-		rooms = roomService.getAll(name);
-	}
 
 	public void delete() {
 		try {
@@ -85,6 +82,10 @@ public class RoomManagedBean implements Serializable {
 
 	public void getAll() {
 		rooms = roomService.getAll(null);
+	}
+
+	public void filter() {
+		rooms = roomService.getAll(name);
 	}
 
 	public void reset() {

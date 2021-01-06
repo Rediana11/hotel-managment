@@ -71,10 +71,12 @@ public class BookingManagedBean implements Serializable {
     public void init() {
         booking = new Booking();
         client = new Client();
+        checkIn = new Date();
+        checkOut = new Date();
         bookingStatus = new BookingStatus();
-        bookings = bookingService.getReservedBookings();
-        activeBookings= bookingService.getActiveBookings();
-        canceledBookings=bookingService.getCanceledBookings();
+        bookings = bookingService.getReservedBookings(null,null);
+        activeBookings= bookingService.getActiveBookings(null,null);
+        canceledBookings=bookingService.getCanceledBookings(null,null);
         rooms=new ArrayList<Room>();
         today = new Date();
         long oneDay = 24 * 60 * 60 * 1000;
@@ -95,14 +97,16 @@ public class BookingManagedBean implements Serializable {
     }
 
     public void bookingPrice(){
-        System.out.println("Cmimi 0");
         double roomPrice = 0;
+
         for (SelectRoom selRoom: selectedRooms) {
 
             roomPrice= roomPrice+selRoom.getRoom().getPrice();
+            System.out.println(roomPrice);
+
         }
         booking.setPrice(roomPrice);
-        System.out.println("Cmimi final");
+        System.out.println(roomPrice);
 
     }
 
@@ -141,15 +145,14 @@ public class BookingManagedBean implements Serializable {
 
             }
             else{
-                messages.showWarningMessage("Client not found! Create a new client!");
             }
-        }
+        }  messages.showWarningMessage("Client not found! Create a new client!");
 
     }
 
     public void delete() {
             bookingService.delete(booking);
-            bookings = bookingService.getReservedBookings();
+            bookings = bookingService.getReservedBookings(checkIn,checkOut);
             messages.showInfoMessage("Deleted");
 
     }
@@ -214,8 +217,26 @@ public class BookingManagedBean implements Serializable {
             messages.showInfoMessage("Booking status changed successfully");
     }
 
-    public void getAll() {
-        bookings = bookingService.getReservedBookings();
+
+    public void filter() {
+        bookings = bookingService.getReservedBookings(checkIn,checkOut);
+    }
+
+    public void filterActiveBookings() {
+        activeBookings = bookingService.getActiveBookings(checkIn,checkOut);
+    }
+
+    public void filterCanceledBookings() {
+        canceledBookings = bookingService.getCanceledBookings(checkIn,checkOut);
+    }
+    public void resetActiveBookings() {
+        activeBookings = bookingService.getActiveBookings(null,null);
+    }
+    public void resetCanceledBookings() {
+        canceledBookings = bookingService.getCanceledBookings(null,null);
+    }
+    public void reset() {
+        bookings = bookingService.getReservedBookings(null,null);
     }
 
 

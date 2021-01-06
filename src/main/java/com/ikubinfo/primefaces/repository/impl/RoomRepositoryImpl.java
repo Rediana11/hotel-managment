@@ -38,13 +38,17 @@ class RoomRepositoryImpl implements RoomRepository {
 	private static final String UPDATE_ROOM ="update room set room_name= :name, description= :description, price= :price, " +
 			"beds_number= :bedsNumber, category_id=:category, room_ability_id=:ability where room_id=:id";
 	private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from film_category where category_id = ?";
-	private static final String GET_VACANT_ROOMS = "select room_id,room_name,description, facilities,beds_number, price, category_name from \n" +
-			"room join room_ability ra on room.room_ability_id= ra.room_ability_id\n" +
-			"join category on room.category_id=category.category_id\n" +
-			"where ra.code='V' and room_id not in (select r.room_id from room r\n" +
-			"\t\t\t\tinner join room_booking br on br.room_id=r.room_id\n" +
-			"\t\t\t\tinner join booking b on b.booking_id=br.booking_id\n" +
-			"\t\t\t\twhere b.check_in >= :firstDate and b.check_in< :secondDate) " ;
+	private static final String GET_VACANT_ROOMS = "select r.room_id,r.is_valid,room_name,STRING_AGG (name,',') AS Facilities,r.description, facilities,beds_number, price, category_name ,\n" +
+			" CASE WHEN STRING_AGG (name,',') is null \n" +
+			"\t\t        then '' end from \n" +
+			"\t\t\troom r join room_ability ra on r.room_ability_id= ra.room_ability_id\n" +
+			"\t\t\tjoin category on r.category_id=category.category_id\n" +
+			"\t\t\tINNER JOIN facility_room rf ON rf.room_id=r.room_id\n" +
+			"\t\tinner join facility f on f.facility_id=rf.facility_id\n" +
+			"\t\t\twhere ra.code='V' and r.room_id not in (select r.room_id from room r\n" +
+			"\t\t\tinner join room_booking br on br.room_id=r.room_id\n" +
+			"\t\t\tinner join booking b on b.booking_id=br.booking_id\n" +
+			"\t\t\twhere b.check_in >= firstDate and b.check_in < secondDate) and r.is_valid=true GROUP by r.room_id, category_name, ability_name\n" ;
 	private static final String DELETE_ROOM = "update room set is_valid= false where room_id=:id";
 	private static final String GET_CATEGORIES = "select category_id, category_name from category";
 	private static final String GET_ABILITIES = "select room_ability_id, ability_name from room_ability";

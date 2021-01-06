@@ -1,6 +1,7 @@
 package com.ikubinfo.primefaces.service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.ikubinfo.primefaces.model.Booking;
@@ -10,11 +11,11 @@ import com.ikubinfo.primefaces.model.User;
 
 public interface BookingService {
 
-	List<Booking> getReservedBookings();
+	List<Booking> getReservedBookings(Date checkIn, Date checkOut);
 
-	List<Booking> getActiveBookings();
+	List<Booking> getActiveBookings(Date checkIn, Date checkOut);
 
-	List<Booking> getCanceledBookings();
+	List<Booking> getCanceledBookings(Date checkIn, Date checkOut);
 
 	List<BookingStatus> getBookingStatuses();
 

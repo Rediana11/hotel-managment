@@ -25,10 +25,10 @@
 				<h:outputLabel for="name" value="Name "></h:outputLabel>
 				<h:inputText id="name" required="true"
 							 value="#{roomManagedBean.name}"></h:inputText>
-				<p:commandButton  value="Search"
-					action="#{roomManagedBean.filter}" update="form">
+				<p:commandButton  value="Search" icon="fa fa-search"
+					action="#{roomManagedBean.filter}"  update="form">
 				</p:commandButton>
-				<p:commandButton value="Reset" immediate="true"
+				<p:commandButton value="Reset" immediate="true" icon="fa fa-refresh"
 											  action="#{roomManagedBean.reset}" update="form">
 
 				</p:commandButton>

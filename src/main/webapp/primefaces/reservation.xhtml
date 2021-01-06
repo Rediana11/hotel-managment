@@ -90,6 +90,9 @@
 					<p:outputLabel for="checkOut" value="Check out:" />
 					<p:calendar id="checkOut"   required="true"  requiredMessage="Choose check out date!" value="#{bookingManagedBean.booking.checkOut}"  mindate="#{bookingManagedBean.minDate}" pattern="dd-MM-yyyy"  showOn="button">
 					</p:calendar>
+						<p:commandButton  value="Search"
+										  action="#{roomManagedBean.filter}" update="form">
+						</p:commandButton>
 					</div>
 					<br/>
 					<div class="col-sm-8">

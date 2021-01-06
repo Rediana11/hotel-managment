@@ -55,18 +55,17 @@ class BookingRepositoryImpl implements BookingRepository {
             "\t\t\t\t\t   then (select (c.first_name || ' ' || c.last_name) from client c where c.client_id=b.client_id ) else '' end as client\n" +
             "                        from booking b join user_ ue on b.created_by=ue.user_id\n" +
             "                  join booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
-            "               where  b.is_valid=false and b.booking_status_id=2";
+            "               where  b.is_valid=false or ( b.booking_status_id=2 and  b.is_valid=false )";
 
-    private static final String GET_BOOKING = "select  booking_id,bs.booking_status_id,check_in,check_out,price,b.created_on,b.updated_on," +
-            "persons_number,status_name remarks,status_name, \n" +
+    private static final String GET_BOOKING = "select  booking_id,bs.booking_status_id,check_in,b.is_valid,check_out,price,b.updated_on,b.created_on,persons_number,status_name remarks,status_name, \n" +
             "\t\t (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
             "\t\t\t            CASE WHEN b.updated_by is not null \n" +
             "\t\t\t            then (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=b.updated_by) else '' end as updated_by," +
             " case when b.client_id is not null\n" +
-            "\t\t\t\t\t   then (select (c.first_name || ' ' || c.last_name) from client c where c.client_id=b.client_id ) else '' end as client\n" +
+            "\t\t\t\t\t   then (select (c.first_name || ' ' || c.last_name) from client c where c.client_id=b.client_id ) else '' end as client \n" +
             "\t\t\t           from booking b join user_ ue on b.created_by=ue.user_id \n" +
             "\t\t\tjoin booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
-            "\t\t\twhere b.is_valid=true and booking_id=:id";
+            "\t\t\twhere b.is_valid=true and booking_id=:id \n";
     private static final String UPDATE_BOOKING = "update booking set check_out=:date, persons_number=:personsNumber, price=:price where booking_id=:id";
     private static final String DELETE_BOOKING = "update booking set is_valid= false where booking_id=:id";
     private static final String UPDATE_STATUS_CHECK_IN ="update booking set booking_status_id=:statusId where booking_id=:id";
@@ -95,26 +94,50 @@ class BookingRepositoryImpl implements BookingRepository {
     }
 
     @Override
-    public List<Booking> getReservedBookings() {
+    public List<Booking> getReservedBookings(Date checkIn, Date checkOut) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("checkIn",  checkIn );
+        params.put("checkOut", checkOut);
 
+        String queryString =GET_RESERVED_BOOKINGS;
+        if (checkIn != null && checkOut != null) {
+            queryString = queryString.concat(" and b.check_in >= :checkIn and b.check_out < :checkOut");
+        }
 
-        return namedParameterJdbcTemplate.query(GET_RESERVED_BOOKINGS, new BookingRowMapper());
+        return namedParameterJdbcTemplate.query(queryString,params, new BookingRowMapper());
 
     }
 
     @Override
-    public List<Booking> getActiveBookings() {
+    public List<Booking> getActiveBookings(Date checkIn, Date checkOut) {
 
 
-        return namedParameterJdbcTemplate.query(GET_ACTIVE_BOOKINGS, new BookingRowMapper());
+        Map<String, Object> params = new HashMap<>();
+        params.put("checkIn",  checkIn );
+        params.put("checkOut", checkOut);
+
+        String queryString =GET_ACTIVE_BOOKINGS;
+        if (checkIn != null && checkOut != null) {
+            queryString = queryString.concat(" and b.check_in >= :checkIn and b.check_out < :checkOut");
+        }
+
+        return namedParameterJdbcTemplate.query(queryString,params, new BookingRowMapper());
 
     }
 
     @Override
-    public List<Booking> getCanceledBookings() {
+    public List<Booking> getCanceledBookings(Date checkIn, Date checkOut) {
 
+        Map<String, Object> params = new HashMap<>();
+        params.put("checkIn",  checkIn );
+        params.put("checkOut", checkOut);
 
-        return namedParameterJdbcTemplate.query(GET_CANCELED_BOOKINGS, new BookingRowMapper());
+        String queryString =GET_CANCELED_BOOKINGS;
+        if (checkIn != null && checkOut != null) {
+            queryString = queryString.concat(" and b.check_in >= :checkIn and b.check_out < :checkOut");
+        }
+
+        return namedParameterJdbcTemplate.query(queryString,params, new BookingRowMapper());
 
     }
 

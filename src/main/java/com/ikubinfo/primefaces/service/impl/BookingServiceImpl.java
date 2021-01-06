@@ -1,6 +1,7 @@
 package com.ikubinfo.primefaces.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.ikubinfo.primefaces.model.Booking;
@@ -24,20 +25,20 @@ class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public List<Booking> getReservedBookings() {
+	public List<Booking> getReservedBookings(Date checkIn, Date checkOut) {
 
-		return bookingRepository.getReservedBookings();
+		return bookingRepository.getReservedBookings(checkIn,checkOut);
 
 	}
 
 	@Override
-	public List<Booking> getActiveBookings() {
-		return bookingRepository.getActiveBookings();
+	public List<Booking> getActiveBookings(Date checkIn, Date checkOut) {
+		return bookingRepository.getActiveBookings(checkIn,checkOut);
 	}
 
 	@Override
-	public List<Booking> getCanceledBookings() {
-		return bookingRepository.getCanceledBookings();
+	public List<Booking> getCanceledBookings(Date checkIn, Date checkOut) {
+		return bookingRepository.getCanceledBookings(checkIn,checkOut);
 	}
 
 	@Override
