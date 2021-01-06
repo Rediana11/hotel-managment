@@ -1,0 +1,70 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<f:metadata>
+	<f:viewParam name="id" value="#{roomDetailManagedBean.room.id}" />
+	<f:viewAction action="#{roomDetailManagedBean.loadRoom()}" />
+</f:metadata>
+<h:body>
+		<ui:include name="template" src="/template/template.xhtml" />
+
+
+		<p:growl id="growl"></p:growl>
+	<p:breadCrumb>
+		<p:menuitem value="Categories" url="#" />
+		<p:menuitem value="Rooms" url="room.xhtml" />
+		<p:menuitem value="Details" url="#" />
+
+	</p:breadCrumb>
+
+	<p:accordionPanel multiple="true">
+	<p:tab title="Room details">
+	<h:panelGrid columns="2" cellpadding="10">
+			<h:form id="form">
+
+				<p:dataList value="#{roomDetailManagedBean.room}" var="room" type="definition">
+					<f:facet name="header">
+						<b> Room Info </b>
+					</f:facet>
+					<b> Name :</b> #{room.name}
+					<br/>
+					<b>Description: </b> #{room.description}
+					<br/>
+					<b> Price: </b> #{room.price}
+					<br/>
+					<b>Beds number: </b> #{room.bedsNumber}
+					<br/>
+					<b> Category: </b> #{room.roomCategory.name}
+					<br/>
+					<b> Ability: </b> #{room.roomAbility.name}
+					<br/>
+					<b> Created on: </b> #{room.createdOn}
+					<br/>
+					<b> Created by: </b> #{room.createdBy.username}
+					<br/>
+					<b> Updated by: </b> #{room.updatedBy.username}
+					<br/>
+					<b> Updated on: </b> #{room.updatedOn}
+				</p:dataList>
+			</h:form>
+	</h:panelGrid>
+	</p:tab>
+	<p:tab title="Room photos">
+	<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+
+
+	<p:contentFlow value="#{imagesManagedBean.images}" var="image">
+		<p:graphicImage name="demo/images/nature/#{image}" styleClass="content" />
+		<div class="caption">#{image}</div>
+	</p:contentFlow>
+	</h:panelGrid>
+	</p:tab>
+	<p:button outcome="room" value="Back">
+	</p:button>
+	</p:accordionPanel>
+
+</h:body>
+</html>

@@ -1,125 +1,116 @@
 package com.ikubinfo.primefaces.managedbean;
 
-import java.io.Serializable;
-import java.util.List;
+import com.ikubinfo.primefaces.model.Room;
+import com.ikubinfo.primefaces.model.RoomCategory;
+import com.ikubinfo.primefaces.service.RoomCategoryService;
+import com.ikubinfo.primefaces.service.RoomService;
+import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
+import com.ikubinfo.primefaces.service.impl.RoomCategoryServiceImpl;
+import com.ikubinfo.primefaces.util.Messages;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-
-import com.ikubinfo.primefaces.model.Role;
-import com.ikubinfo.primefaces.service.CategoryService;
-import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
-import com.ikubinfo.primefaces.util.Messages;
+import javax.faces.context.FacesContext;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 @ManagedBean
 @ViewScoped
 public class CategoryManagedBean implements Serializable {
-	private static final long serialVersionUID = 3800933422824282320L;
-	private Role category;
 
-	private List<Role> categories;
-	private String name;
 
-	@ManagedProperty(value = "#{categoryService}")
-	private CategoryService categoryService;
+    Logger logger = LoggerFactory.getLogger(RoomCategoryServiceImpl.class);
 
-	@ManagedProperty(value = "#{messages}")
-	private Messages messages;
+    private RoomCategory roomCategory;
 
-	@PostConstruct
-	public void init() {
+    private List<RoomCategory> categories;
 
-		categories = categoryService.getAll(null);
-		category = new Role();
+    @ManagedProperty(value = "#{categoryService}")
+    private RoomCategoryService categoryService;
 
-	}
+    @ManagedProperty(value = "#{messages}")
+    private Messages messages;
 
-	public void save() {
-		if (categoryService.save(category)) {
-			getAll();
-			messages.showInfoMessage("Category updated successfully");
+    @PostConstruct
+    public void init()
+    {
 
-		}
-		category = new Role();
+        logger.info(categoryService.getAll().toString());
+        categories = categoryService.getAll();
+        roomCategory = new RoomCategory();
 
-	}
+    }
 
-	public void insert() {
-		Role toAdd = new Role();
-		toAdd.setName(name);
+    public void updateCategory() {
+        if (categoryService.updateCategory(roomCategory)) {
+            getAll();
+            messages.showInfoMessage("Category updated successfully");
+        }
+        roomCategory = new RoomCategory();
 
-		if (categoryService.create(toAdd)) {
-			messages.showInfoMessage("Category was added successfully");
-			getAll();
-		}
+    }
 
-	}
+    public void add() {
 
-	public void filter() {
-		categories = categoryService.getAll(name);
-	}
+        if (categoryService.create(roomCategory)) {
+            messages.showInfoMessage("Category was added successfully");
+            getAll();
+        }
+        roomCategory = new RoomCategory();
 
-	public void delete() {
-		try {
-			categoryService.delete(category);
-			categories = categoryService.getAll(null);
-			messages.showInfoMessage("Deleted");
+    }
+    public void filter() {
+        categories = categoryService.getAll();
+    }
 
-		} catch (CategoryInUseException e) {
-			messages.showWarningMessage(e.getMessage());
-		}
+    public void delete() {
+            categoryService.delete(roomCategory);
+            categories = categoryService.getAll();
+            messages.showInfoMessage("Deleted");
 
-	}
 
-	public void getAll() {
-		categories = categoryService.getAll(null);
-	}
+    }
 
-	public void reset() {
-		name = null;
-		filter();
-	}
+    public void getAll() {
+        categories = categoryService.getAll();
+    }
 
-	public Role getCategory() {
-		return category;
-	}
 
-	public void setCategory(Role category) {
-		this.category = category;
-	}
+    public RoomCategory getRoomCategory() {
+        return roomCategory;
+    }
 
-	public List<Role> getCategories() {
-		return categories;
-	}
+    public void setRoomCategory(RoomCategory roomCategory) {
+        this.roomCategory = roomCategory;
+    }
 
-	public void setCategories(List<Role> categories) {
-		this.categories = categories;
-	}
+    public List<RoomCategory> getCategories() {
+        return categories;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setCategories(List<RoomCategory> categories) {
+        this.categories = categories;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public RoomCategoryService getCategoryService() {
+        return categoryService;
+    }
 
-	public CategoryService getCategoryService() {
-		return categoryService;
-	}
+    public void setCategoryService(RoomCategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
-	public void setCategoryService(CategoryService categoryService) {
-		this.categoryService = categoryService;
-	}
+    public Messages getMessages() {
+        return messages;
+    }
 
-	public Messages getMessages() {
-		return messages;
-	}
-
-	public void setMessages(Messages messages) {
-		this.messages = messages;
-	}
-
+    public void setMessages(Messages messages) {
+        this.messages = messages;
+    }
 }

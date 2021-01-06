@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<f:metadata>
+	<f:viewParam name="id" value="#{categoryDetailManagedBean.roomCategory.id}" />
+	<f:viewAction action="#{categoryDetailManagedBean.loadCategory()}" />
+</f:metadata>
+<h:body>
+		<ui:include name="template" src="/template/template.xhtml" />
+
+
+	<p:breadCrumb>
+		<p:menuitem value="Categories" url="#" />
+		<p:menuitem value="Categories" url="category.xhtml" />
+		<p:menuitem value="Category Detail" url="#" />
+	</p:breadCrumb>
+	<br/>
+
+
+	<style type="text/css">
+		.ui-datalist {
+			width:100%;
+			margin-bottom: 20px;
+		}
+
+		.ui-datalist-item {
+			padding:5px;
+		}
+
+	</style>
+	<h:form id="form">
+		<p:dataList value="#{categoryDetailManagedBean.roomCategory}" var="roomCategory"  type="ordered">
+		<f:facet name="header">
+			<b>Details</b>
+		</f:facet>
+
+			<b>Code:</b> #{roomCategory.code}
+
+			<br/>
+			<br/>
+
+			<b>Name: </b>#{roomCategory.name}
+			<br/>
+			<br/>
+
+			<b> Created by: </b>#{roomCategory.createdBy.username}
+			<br/>
+			<br/>
+
+
+			<b> Created on: </b> #{roomCategory.createdOn}
+			<br/>
+			<br/>
+
+
+			<b> Updated by: </b> #{roomCategory.updatedBy.username}
+			<br/>
+			<br/>
+
+			<b> Updated on:</b> #{roomCategory.updatedOn}
+		</p:dataList>
+
+			</h:form>
+	<p:button outcome="category"  icon="pi pi-arrow-left" value="Back">
+	</p:button>
+
+
+</h:body>
+</html>

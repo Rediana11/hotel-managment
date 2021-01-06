@@ -1,0 +1,93 @@
+.ui-widget {
+	font-family: 'Open Sans' sans-serif !important;
+	font-size: 13px !important;
+}
+
+.ui-corner-top {
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+.ui-widget-header {
+	border: none;
+	background: #fff;
+}
+
+.ui-datatable thead th, .ui-datatable tbody td, .ui-datatable tfoot td,
+	.ui-datatable tfoot th {
+	padding: 4px 10px !important;
+	overflow: hidden !important;
+	border-width: 0 !important;
+	border-style: none !important;
+}
+
+.ui-state-highlight, .ui-widget-content .ui-state-highlight,
+	.ui-widget-header .ui-state-highlight {
+	color: #ffffff !important;
+	text-decoration: none !important;
+	background-color: #0088cc !important;
+}
+
+.ui-widget-content {
+	border: 1px solid #a8a8a8;
+	color: #4f4f4f;
+	border-left: none;
+	border-right: none;
+}
+
+
+.button {
+    border: none !important;
+    color: white !important;
+    padding: 1px 15px !important;
+    text-align: center !important;
+    text-decoration: none !important;
+    display: inline-block !important;
+    font-size: 16px !important;
+    cursor: pointer !important;
+}
+
+
+
+.button4 {
+    color: black !important;
+    border: 1px solid #bfbfbf!important;
+}
+
+.button4:hover {background-color: #e7e7e7;}
+
+
+.submitButton {
+	color: #fff !important;
+	background: #007bff !important;
+	font-weight: normal !important;
+	font-family: Arial, sans-serif !important;
+	font-size: 1em !important;
+	text-shadow: none !important;
+	border: 0 !important;
+}
+
+.OnProgres {
+	background: #f1f2f7c4 !important;
+}
+
+.Failed {
+	background-color: #ff240185 !important;
+	color: #ffffff !important;
+}
+
+.Done {
+	background: #0efe0e7a !important;
+}
+
+.ui-button-text-only .ui-button-text {
+	padding: .5em 1em !important;
+}
+
+.ui-corner-all {
+	border-radius: 0 !important;
+}
+
+.ui-inputfield {
+	padding: 9px !important;
+}

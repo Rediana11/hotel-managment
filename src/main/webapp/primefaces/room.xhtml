@@ -1,0 +1,120 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+<h:head>
+
+</h:head>
+<h:body>
+		<ui:include name="template" src="/template/template.xhtml" />
+		<p:growl id="growl"></p:growl>
+
+	<p:breadCrumb>
+		<p:menuitem value="Categories" url="#" />
+		<p:menuitem value="Rooms" url="#" />
+	</p:breadCrumb>
+	<br/>
+			<p:button outcome="addUpdateRoom" value="Add">
+			</p:button>
+
+			<br/>
+	<br/>
+	<h:form id="form">
+				<h:outputLabel for="name" value="Name "></h:outputLabel>
+				<h:inputText id="name" required="true"
+							 value="#{roomManagedBean.name}"></h:inputText>
+				<p:commandButton  value="Search"
+					action="#{roomManagedBean.filter}" update="form">
+				</p:commandButton>
+				<p:commandButton value="Reset" immediate="true"
+											  action="#{roomManagedBean.reset}" update="form">
+
+				</p:commandButton>
+	<br/>
+	<br/>
+
+
+
+		<p:dataTable id="table" sortMode="multiple" styleClass="table table-hover table table-striped table-bordered dataTable "
+					 value="#{roomManagedBean.rooms}"
+					 var="room"
+					 style="text-align:center" widgetVar="DTWVar" rows="5"
+					 paginator="true"
+					 paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
+					 rowsPerPageTemplate="5,10,15" rowIndexVar="index">
+
+
+			<p:column headerText="Name">
+				<p:outputLabel value="#{room.name}"></p:outputLabel>
+			</p:column>
+
+					 <p:column headerText="Description">
+						 <h:outputLabel value="#{room.description}"></h:outputLabel>
+					 </p:column>
+					 <p:column  headerText="Price">
+						 <h:outputLabel value="#{room.price}"></h:outputLabel>
+					 </p:column>
+					 <p:column  headerText="Beds number">
+						 <h:outputLabel value="#{room.bedsNumber}"></h:outputLabel>
+					 </p:column>
+			       <p:column headerText="Facilities">
+				<h:outputLabel value="#{room.facilities}"></h:outputLabel>
+			</p:column>
+					<p:column headerText="Category">
+						 <h:outputLabel value="#{room.roomCategory.name}"></h:outputLabel>
+					 </p:column>
+					 <p:column headerText="Ability">
+						 <h:outputLabel value="#{room.roomAbility.name}"></h:outputLabel>
+					 </p:column>
+
+
+
+					 <p:column >
+					 <f:facet name="header">Actions</f:facet>
+					 <div class="container">
+					 <div class="row">
+					 <div class="col-sm-2">
+
+						<p:button outcome="addUpdateRoom" title="Edit" icon="pi pi-pencil" style="margin-right:20px;">
+							<f:param name="id" value="#{room.id}" />
+						</p:button>
+					 </div>
+					 <div class="col-sm-2">
+
+
+					 <p:commandButton immediate="true"  title="Delete"
+									  icon="pi pi-trash"
+							update="table" action="#{roomManagedBean.delete}">
+							<p:confirm header="Confirmation" message="Are you sure to delete?"
+								icon="pi pi-exclamation-triangle" />
+
+							<f:setPropertyActionListener
+								target="#{roomManagedBean.room}" value="#{room}" />
+						</p:commandButton>
+					 </div>
+						 <div class="col-sm-2">
+							 <p:button outcome="roomDetail"
+									   title="Details"
+									   icon="pi pi-info">
+								 <f:param name="id" value="#{room.id}" />
+							 </p:button>
+						 </div>
+						 <p:confirmDialog global="true"  height="100" width="250" showEffect="fade" hideEffect="fade">
+							 <p:commandButton value="Yes" type="button"
+											  styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							 <p:commandButton value="No" type="button"
+											  styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+						 </p:confirmDialog>
+					 </div>
+					 </div>
+					 </p:column>
+
+
+
+				</p:dataTable>
+	</h:form>
+
+</h:body>
+</html>
