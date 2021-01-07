@@ -16,8 +16,6 @@ public interface BookingRepository {
 
 	Booking getBooking(int id);
 
-	boolean save(Booking booking);
-
 	boolean reserve(Booking booking, List<Room> rooms);
 
 	boolean updateBookingStatusToCheckedIn(Booking booking);

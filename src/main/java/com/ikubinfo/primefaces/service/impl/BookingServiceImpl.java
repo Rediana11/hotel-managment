@@ -63,10 +63,6 @@ class BookingServiceImpl implements BookingService {
 		return bookingRepository.reserve(booking,rooms);
 	}
 
-	@Override
-	public boolean save(Booking booking) {
-		return bookingRepository.save(booking);
-	}
 
 	@Override
 	public boolean updateBookingStatusToCheckedIn(Booking booking) {

@@ -30,7 +30,6 @@ public class RoomCategoryRepositoryImpl implements RoomCategoryRepository {
             "from category c\n" +
             "join user_ ue on c.created_by=ue.user_id where c.is_valid=true";
     private static final String UPDATE_CATEGORY ="update category set category_name= :name, code= :code, updated_on=:updatedOn, updated_by=:updatedBy where category_id=:id";
-    private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from film_category where category_id = ?";
     private static final String DELETE_CATEGORY = "update category set is_valid= false where category_id=:id";
     private static final String GET_CATEGORY = "select category_id,  code,  category_name, c.updated_on,\n" +
             "\t\tc.created_on, (ue.first_name || ' ' || ue.last_name) as created_by,\n" +

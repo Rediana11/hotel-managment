@@ -1,12 +1,11 @@
 package com.ikubinfo.primefaces.managedbean;
 
 import com.ikubinfo.primefaces.model.*;
-import com.ikubinfo.primefaces.service.BookingService;
-import com.ikubinfo.primefaces.service.EmailService;
-import com.ikubinfo.primefaces.service.RoomService;
-import com.ikubinfo.primefaces.service.UserService;
+import com.ikubinfo.primefaces.repository.LogsRepository;
+import com.ikubinfo.primefaces.service.*;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 import com.ikubinfo.primefaces.service.helpers.SelectRoom;
+import com.ikubinfo.primefaces.util.Logs;
 import com.ikubinfo.primefaces.util.Messages;
 import org.primefaces.event.FlowEvent;
 import sun.security.validator.ValidatorException;
@@ -59,6 +58,8 @@ public class BookingManagedBean implements Serializable {
     @ManagedProperty(value = "#{bookingService}")
     private BookingService bookingService;
 
+    @ManagedProperty(value = "#{logs}")
+    private Logs logs;
 
     @ManagedProperty(value="#{emailService}")
     private EmailService emailService;
@@ -87,14 +88,6 @@ public class BookingManagedBean implements Serializable {
         bookingPrice();
     }
 
-    public List<String> completeText() {
-        List<String> results = new ArrayList<>();
-        for(Client client: userService.getClients()) {
-            results.add(client.getEmail());
-        }
-
-        return results;
-    }
 
     public void bookingPrice(){
         double roomPrice = 0;
@@ -184,6 +177,7 @@ public class BookingManagedBean implements Serializable {
     }
     public String reserve (){
         if(bookingService.reserve(booking,mappSelectRoomToRoom(selectedRooms))&&checkedRoomsValidate()&&datesValidate()){
+            logs.addSuccessfulLog("Successful reservation");
             emailService.sendSimpleMessage(client.getEmail(),"Reservation Confirmation","Hello " + client.getFirstName() + client.getLastName());
             messages.showInfoMessage("Successful reservation!");
             return "booking";
@@ -408,5 +402,13 @@ public class BookingManagedBean implements Serializable {
 
     public void setEmailService(EmailService emailService) {
         this.emailService = emailService;
+    }
+
+    public Logs getLogs() {
+        return logs;
+    }
+
+    public void setLogs(Logs logs) {
+        this.logs = logs;
     }
 }

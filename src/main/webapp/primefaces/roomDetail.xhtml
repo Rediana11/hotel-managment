@@ -7,6 +7,7 @@
 <f:metadata>
 	<f:viewParam name="id" value="#{roomDetailManagedBean.room.id}" />
 	<f:viewAction action="#{roomDetailManagedBean.loadRoom()}" />
+	<f:viewAction action="#{roomManagedBean.idUrlValidation}" />
 </f:metadata>
 <h:body>
 		<ui:include name="template" src="/template/template.xhtml" />

@@ -18,7 +18,7 @@ public interface RoomRepository {
 
 	RoomAbility getAbility(int id);
 
-	boolean save(Room room);
+	boolean updateRoom(Room room);
 
 	boolean create(List<RoomPhoto> photos,Room room);
 
@@ -27,6 +27,8 @@ public interface RoomRepository {
 	List<RoomCategory> getCategories();
 
 	List<RoomAbility> getRoomAbilities();
+
+	boolean checkIfRoomExists(int id);
 
 
 }

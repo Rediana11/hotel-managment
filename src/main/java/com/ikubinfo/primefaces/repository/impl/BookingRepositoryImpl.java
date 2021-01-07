@@ -66,10 +66,9 @@ class BookingRepositoryImpl implements BookingRepository {
             "\t\t\t           from booking b join user_ ue on b.created_by=ue.user_id \n" +
             "\t\t\tjoin booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
             "\t\t\twhere b.is_valid=true and booking_id=:id \n";
-    private static final String UPDATE_BOOKING = "update booking set check_out=:date, persons_number=:personsNumber, price=:price where booking_id=:id";
     private static final String DELETE_BOOKING = "update booking set is_valid= false where booking_id=:id";
-    private static final String UPDATE_STATUS_CHECK_IN ="update booking set booking_status_id=:statusId where booking_id=:id";
-    private static final String UPDATE_STATUS_CHECK_OUT ="update booking set booking_status_id=:statusId where booking_id=:id";
+    private static final String UPDATE_STATUS_CHECK_IN ="update booking set booking_status_id=:statusId, updated_on=:updatedOn where booking_id=:id";
+    private static final String UPDATE_STATUS_CHECK_OUT ="update booking set booking_status_id=:statusId, updated_on=:updatedOn where booking_id=:id";
     private static final String GET_BOOKING_STATUSES = "select booking_status_id, status_name from booking_status";
     private static  String GET_ROOM_ABILITY_ID ="select room_ability_id from room_ability where code= ";
     private static String UPDATE_ROOM_ABILITY = "update room \n" +
@@ -152,21 +151,6 @@ class BookingRepositoryImpl implements BookingRepository {
     }
 
 
-	@Override
-	public boolean save(Booking booking) {
-
-		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-
-		namedParameters.addValue("date", booking.getCheckOut());
-		namedParameters.addValue("personsNumber", booking.getPersonsNumber());
-		namedParameters.addValue("price", booking.getPrice());
-		namedParameters.addValue("id", booking.getId());
-
-		int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_BOOKING, namedParameters);
-
-		return updatedCount > 0;
-	}
-
     @Override
     public boolean reserve(Booking booking,List<Room> rooms) {
         Map<String, Object> parameters = new HashMap<String, Object>();
@@ -204,6 +188,7 @@ class BookingRepositoryImpl implements BookingRepository {
         namedParameters.addValue("id", booking.getId());
 
         namedParameters.addValue("statusId", 3);
+        namedParameters.addValue("updatedOn",new Date());
 
 
         int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_STATUS_CHECK_IN, namedParameters);
@@ -219,6 +204,7 @@ class BookingRepositoryImpl implements BookingRepository {
         namedParameters.addValue("id", booking.getId());
 
         namedParameters.addValue("statusId", 5);
+        namedParameters.addValue("updatedOn",new Date());
 
 
         int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_STATUS_CHECK_OUT, namedParameters);

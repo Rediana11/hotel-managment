@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.model.Room;
@@ -30,6 +31,7 @@ public class RoomManagedBean implements Serializable {
 	private RoomFacility roomFacility;
 	private String name;
 	private User user = new User();
+	private String value;
 
 	@ManagedProperty(value = "#{roomService}")
 	private RoomService roomService;
@@ -46,7 +48,7 @@ public class RoomManagedBean implements Serializable {
 	@PostConstruct
 	public void init() {
 
-
+		value = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
 		rooms = roomService.getAll(null);
 		vacantRooms= roomService.getAllVacantRooms(bookingManagedBean.getBooking());
 		room = new Room();
@@ -59,7 +61,7 @@ public class RoomManagedBean implements Serializable {
 	}
 
 	public void save() {
-		if (roomService.save(room)) {
+		if (roomService.updateRoom(room)) {
 			getAll();
 			messages.showInfoMessage("Room updated successfully");
 		}
@@ -91,6 +93,12 @@ public class RoomManagedBean implements Serializable {
 	public void reset() {
 		name = null;
 		filter();
+	}
+
+	public void idUrlValidation(){
+		if(!roomService.checkIfRoomExists(Integer.parseInt(value))){
+			messages.showErrorMessage("Ups! Id " + value + " does not exist!");
+		}
 	}
 
 	public List<Room> getVacantRooms() {
@@ -156,6 +164,7 @@ public class RoomManagedBean implements Serializable {
 	public void setBookingManagedBean(BookingManagedBean bookingManagedBean) {
 		this.bookingManagedBean = bookingManagedBean;
 	}
+
 
 	public List<RoomFacility> getFacilities() {
 		return facilities;

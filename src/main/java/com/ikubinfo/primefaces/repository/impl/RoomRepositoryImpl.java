@@ -36,8 +36,7 @@ class RoomRepositoryImpl implements RoomRepository {
 			"\tinner join facility f on f.facility_id=rf.facility_id\n" +
 			" where r.is_valid=true GROUP by r.room_id, category_name, ability_name, (ue.first_name || ' ' || ue.last_name)";
 	private static final String UPDATE_ROOM ="update room set room_name= :name, description= :description, price= :price, " +
-			"beds_number= :bedsNumber, category_id=:category, room_ability_id=:ability where room_id=:id";
-	private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from film_category where category_id = ?";
+			"beds_number= :bedsNumber, category_id=:category,updated_on=:updatedOn, room_ability_id=:ability where room_id=:id";
 	private static final String GET_VACANT_ROOMS = "select r.room_id,r.is_valid,room_name,STRING_AGG (name,',') AS Facilities,r.description, facilities,beds_number, price, category_name ,\n" +
 			" CASE WHEN STRING_AGG (name,',') is null \n" +
 			"\t\t        then '' end from \n" +
@@ -48,7 +47,7 @@ class RoomRepositoryImpl implements RoomRepository {
 			"\t\t\twhere ra.code='V' and r.room_id not in (select r.room_id from room r\n" +
 			"\t\t\tinner join room_booking br on br.room_id=r.room_id\n" +
 			"\t\t\tinner join booking b on b.booking_id=br.booking_id\n" +
-			"\t\t\twhere b.check_in >= firstDate and b.check_in < secondDate) and r.is_valid=true GROUP by r.room_id, category_name, ability_name\n" ;
+			"\t\t\twhere b.check_in >= :firstDate and b.check_in < :secondDate) and r.is_valid=true GROUP by r.room_id, category_name, ability_name\n" ;
 	private static final String DELETE_ROOM = "update room set is_valid= false where room_id=:id";
 	private static final String GET_CATEGORIES = "select category_id, category_name from category";
 	private static final String GET_ABILITIES = "select room_ability_id, ability_name from room_ability";
@@ -65,13 +64,14 @@ class RoomRepositoryImpl implements RoomRepository {
 			"\t\t\twhere r.is_valid=true and room_id=:id";
 	private static final String GET_FACILITIES= "select facility_id, name from facility";
 
-
 	private static final String RESERVED_ROOMS_FOR_BOOKING ="select room.room_id,room_name,description, facilities,beds_number, room.price, category_name from \n" +
 			"room join room_booking rb on room.room_id = rb.room_id\n" +
 			"join booking on booking.booking_id=rb.booking_id\n" +
 			"join category on room.category_id=category.category_id\n" +
 			"where rb.booking_id=:id";
 	private static final String GET_MAX_ROOM_ID = "select max(room_id) as room_id from room";
+
+	private static final String CHECK_IF_ROOM_EXISTS="select room_id from room where room_id=:id";
 
 
 
@@ -130,7 +130,7 @@ class RoomRepositoryImpl implements RoomRepository {
 
 
 	@Override
-	public boolean save(Room room) {
+	public boolean updateRoom(Room room) {
 
 		MapSqlParameterSource namedParameters = new MapSqlParameterSource();
 
@@ -141,6 +141,7 @@ class RoomRepositoryImpl implements RoomRepository {
 		namedParameters.addValue("category", room.getRoomCategory().getId());
 		namedParameters.addValue("ability", room.getRoomAbility().getId());
 		namedParameters.addValue("id", room.getId());
+		namedParameters.addValue("updatedOn",new Date());
 
 		int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_ROOM, namedParameters);
 
@@ -252,6 +253,14 @@ class RoomRepositoryImpl implements RoomRepository {
 
 		return  namedParameterJdbcTemplate.queryForObject(queryString, params, new RoomAbilityRowMapper());
 
+	}
+
+	@Override
+	public boolean checkIfRoomExists(int id) {
+		Map<String, Object> params = new HashMap<>();
+		params.put("id", id );
+		int number= namedParameterJdbcTemplate.queryForObject(CHECK_IF_ROOM_EXISTS,params,new RoomIdRowMapper()).getId();
+		return number>0;
 	}
 
 }

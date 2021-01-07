@@ -25,8 +25,6 @@ public interface BookingService {
 
 	boolean reserve(Booking booking, List<Room> rooms);
 
-	boolean save(Booking booking);
-
 	boolean updateBookingStatusToCheckedIn(Booking booking);
 
 	boolean updateBookingStatusToCheckedOut(Booking booking);

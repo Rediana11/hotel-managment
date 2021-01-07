@@ -50,9 +50,8 @@ import org.springframework.transaction.annotation.Transactional;
 	}
 
 	@Override
-	public boolean save(Room room) {
-		//category.setLastUpdated(new Date());
-		return roomRepository.save(room);
+	public boolean updateRoom(Room room) {
+		return roomRepository.updateRoom(room);
 
 	}
 
@@ -79,5 +78,10 @@ import org.springframework.transaction.annotation.Transactional;
 	@Override
 	public List<RoomAbility> getRoomAbilities() {
 		return roomRepository.getRoomAbilities();
+	}
+
+	@Override
+	public boolean checkIfRoomExists(int id) {
+		return roomRepository.checkIfRoomExists(id);
 	}
 }

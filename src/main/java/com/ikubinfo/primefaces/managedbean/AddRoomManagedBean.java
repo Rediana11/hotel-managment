@@ -87,7 +87,7 @@ public class AddRoomManagedBean {
             }
         }
         else{
-            roomService.save(room);
+            roomService.updateRoom(room);
             messages.showInfoMessage("Room Updated Successfully!");
         }
         return "room";
