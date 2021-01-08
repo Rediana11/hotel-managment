@@ -85,23 +85,8 @@ public class BookingManagedBean implements Serializable {
         selectedRooms = new ArrayList<SelectRoom>();
         selectedRoom=new SelectRoom();
         addStatusItems();
-        bookingPrice();
     }
 
-
-    public void bookingPrice(){
-        double roomPrice = 0;
-
-        for (SelectRoom selRoom: selectedRooms) {
-
-            roomPrice= roomPrice+selRoom.getRoom().getPrice();
-            System.out.println(roomPrice);
-
-        }
-        booking.setPrice(roomPrice);
-        System.out.println(roomPrice);
-
-    }
 
    public boolean datesValidate(){
         if (booking.getCheckOut().getTime() <= booking.getCheckIn().getTime()){
@@ -127,21 +112,28 @@ public class BookingManagedBean implements Serializable {
         }
     }
 
-    public void getClientByEmail(){
+    private boolean getClientByEmail(){
         System.out.println(email);
         for(Client client1: userService.getClients()){
             if (email.equals(client1.getEmail()))
             {
-                messages.showInfoMessage("Client found!");
                 client= userService.getClientByEmail(email);
                 booking.setClient(client);
 
+                return true;
             }
-            else{
-            }
-        }  messages.showWarningMessage("Client not found! Create a new client!");
 
+        }
+        return false;
     }
+    public void isClientRegistred(){
+        if (getClientByEmail()){
+            messages.showInfoMessage("Client found!");
+        }
+        else
+            messages.showWarningMessage("Client not found! Create a new client!");
+    }
+
 
     public void delete() {
             bookingService.delete(booking);
@@ -175,24 +167,54 @@ public class BookingManagedBean implements Serializable {
         }
         return rooms;
     }
+
+    public void bookingPrice(){
+        double roomPrice = 0;
+
+        for (SelectRoom selRoom: selectedRooms) {
+
+            roomPrice= roomPrice+selRoom.getRoom().getPrice();
+            System.out.println(roomPrice);
+
+        }
+        booking.setPrice(roomPrice);
+        System.out.println(roomPrice);
+
+    }
     public String reserve (){
+        bookingPrice();
         if(bookingService.reserve(booking,mappSelectRoomToRoom(selectedRooms))&&checkedRoomsValidate()&&datesValidate()){
             logs.addSuccessfulLog("Successful reservation");
-            emailService.sendSimpleMessage(client.getEmail(),"Reservation Confirmation","Hello " + client.getFirstName() + client.getLastName());
+            emailService.sendSimpleMessage(client.getEmail(),"Reservation Confirmation",emailText());
             messages.showInfoMessage("Successful reservation!");
             return "booking";
-        }
+        }//TODO
+        else messages.showErrorMessage("There was a problem reserving the room");
+
 
         return null;
     }
 
+    private String emailText(){
+        String roomText = null;
+        for (Room room:mappSelectRoomToRoom(selectedRooms)){
+             roomText = room.getName() +"  "+ room.getDescription() + "\n";
+        }
+        String text="Hello " + client.getFirstName() +" "+ client.getLastName() +"\n\n\n You have reserved room "+ roomText
+                +"in dates " + booking.getCheckIn() + " - " + booking.getCheckOut() + "\n\n\n Booking price:" + booking.getPrice()
+                + "\n\n You are welcomed! :)";
+        return text;
+    }
+
+
     public void insertClient(){
         if(userService.insertClient(client)){
             client.setId(userService.getMaxBookingId());
-            System.out.println(client);
             booking.setClient(client);
             messages.showInfoMessage("Client added successfully!");
         }
+        else
+            messages.showErrorMessage("There was a problem adding the client");
 
     }
 
@@ -201,14 +223,15 @@ public class BookingManagedBean implements Serializable {
     }
 
     public void changeStatusToCheckedIn(){
-
             if (bookingService.updateBookingStatusToCheckedIn(booking))
             messages.showInfoMessage("Booking status changed successfully");
-        }
-    public void changeStatusToCheckedOut(){
+            else messages.showErrorMessage("There was a problem changing the booking status");
+    }
 
+    public void changeStatusToCheckedOut(){
         if (bookingService.updateBookingStatusToCheckedOut(booking))
             messages.showInfoMessage("Booking status changed successfully");
+        else messages.showErrorMessage("There was a problem changing the booking status");
     }
 
 

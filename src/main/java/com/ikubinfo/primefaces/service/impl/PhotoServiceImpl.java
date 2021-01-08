@@ -1,6 +1,7 @@
 package com.ikubinfo.primefaces.service.impl;
 
 import com.ikubinfo.primefaces.model.Booking;
+import com.ikubinfo.primefaces.model.Room;
 import com.ikubinfo.primefaces.model.RoomPhoto;
 import com.ikubinfo.primefaces.repository.BookingRepository;
 import com.ikubinfo.primefaces.repository.PhotoRepository;
@@ -20,9 +21,9 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public List<RoomPhoto> getAll() {
+    public List<RoomPhoto> getAll(int id) {
 
-        return photoRepository.getAll();
+        return photoRepository.getAll(id);
 
     }
 

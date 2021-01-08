@@ -52,6 +52,7 @@ public class CategoryManagedBean implements Serializable {
             getAll();
             messages.showInfoMessage("Category updated successfully");
         }
+        else{messages.showErrorMessage("There was a problem updating the category");}
         roomCategory = new RoomCategory();
 
     }
@@ -62,6 +63,7 @@ public class CategoryManagedBean implements Serializable {
             messages.showInfoMessage("Category was added successfully");
             getAll();
         }
+        else{messages.showErrorMessage("There was a problem adding the category");}
         roomCategory = new RoomCategory();
 
     }

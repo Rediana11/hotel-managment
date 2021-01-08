@@ -20,15 +20,15 @@ public class UserRepositoryImpl implements UserRepository {
 
 
     private static final String GET_USER = "select user_id,first_name, last_name,age, email  from user_ where user_id=:id";
-
     private static final String GET_USER_ROLE = "select role_.role_id, role_name \n" +
             "from user_ join role_user rl on rl.user_id=user_.user_id join role_ on rl.role_id = role_.role_id\n" +
             "where user_.user_id=:id";
     private static final String GET_CLIENT_BY_EMAIL= "select * from client where email=:email";
-
     private static final String GET_CLIENTS="select * from client";
-
     private static final String GET_MAX_CLIENT_ID= " select max(client_id) as client_id from client";
+    private static final String GET_USER_BY_EMAIL= " select user_id,first_name, last_name, username, password_, email, is_valid from user_ \n" +
+            "where (user_.email=:email and password_=:password) and is_valid=true";
+
 
 
 
@@ -53,6 +53,17 @@ public class UserRepositoryImpl implements UserRepository {
         params.put("id", id );
 
         return  namedParameterJdbcTemplate.queryForObject(GET_USER, params, new UserRowMapper());
+
+    }
+
+    @Override
+    public User getLoggedUser(String email, String password) {
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("email", email );
+        params.put("password", password );
+
+        return  namedParameterJdbcTemplate.queryForObject(GET_USER_BY_EMAIL, params, new UserRowMapper());
 
     }
 

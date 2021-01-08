@@ -194,10 +194,11 @@
 				<p:messages />
 
 				<h:outputText for="email" value="Search client by email: "/>
-				<p:autoComplete id="email" value="#{bookingManagedBean.email}" />
+				<p:autoComplete id="email"  placeholder="******@example.**" value="#{bookingManagedBean.email}" />
 				<p:commandButton  value="Search" icon="fa fa-search"
-								  action="#{bookingManagedBean.getClientByEmail}" update="form">
+								  action="#{bookingManagedBean.isClientRegistred}" update="form">
 				</p:commandButton>
+				<br/>
 				<br/>
 				<br/>
 				<div style="text-align:center">
@@ -233,8 +234,6 @@
 
 					<h:outputText value="Number of persons: " />
 					<h:outputText value="#{bookingManagedBean.booking.personsNumber}" styleClass="outputLabel"/>
-					<h:outputText value="Price" />
-					<h:outputText value="#{bookingManagedBean.booking.price}" styleClass="outputLabel"/>
 
 					<h:outputText value="Choosen room/rooms: " />
 
@@ -281,7 +280,7 @@
 			<div class="form-group">
 				<p:outputLabel for="email" value="Email" />
 
-				<h:inputText id="email" class="form-control form-control-lg" required="true"
+				<h:inputText id="email" class="form-control form-control-lg"  required="true"
 							 value="#{bookingManagedBean.client.email}"></h:inputText>
 				<small id="username-help">A confirmation email will be sent to your email address.</small>
 

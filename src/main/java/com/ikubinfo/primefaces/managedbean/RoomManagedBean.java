@@ -22,8 +22,8 @@ import com.ikubinfo.primefaces.util.Messages;
 @ViewScoped
 public class RoomManagedBean implements Serializable {
 	private static final long serialVersionUID = 3800933422824282320L;
-	private Room room;
 
+	private Room room;
 	private List<Room>  reservedRoomsForBooking;
 	private List<Room>  vacantRooms;
 	private List<Room> rooms;
@@ -31,7 +31,6 @@ public class RoomManagedBean implements Serializable {
 	private RoomFacility roomFacility;
 	private String name;
 	private User user = new User();
-	private String value;
 
 	@ManagedProperty(value = "#{roomService}")
 	private RoomService roomService;
@@ -48,11 +47,9 @@ public class RoomManagedBean implements Serializable {
 	@PostConstruct
 	public void init() {
 
-		value = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id");
 		rooms = roomService.getAll(null);
 		vacantRooms= roomService.getAllVacantRooms(bookingManagedBean.getBooking());
 		room = new Room();
-
 	}
 
 	public void loadReservedRooms(){
@@ -65,20 +62,16 @@ public class RoomManagedBean implements Serializable {
 			getAll();
 			messages.showInfoMessage("Room updated successfully");
 		}
+		else{messages.showErrorMessage("There was a problem updating the room");}
 		room = new Room();
 
 	}
 
 
 	public void delete() {
-		try {
 			roomService.delete(room);
 			rooms = roomService.getAll(null);
-			messages.showInfoMessage("Deleted");
-
-		} catch (CategoryInUseException e) {
-			messages.showWarningMessage(e.getMessage());
-		}
+			messages.showInfoMessage("Room deleted");
 
 	}
 
@@ -95,11 +88,6 @@ public class RoomManagedBean implements Serializable {
 		filter();
 	}
 
-	public void idUrlValidation(){
-		if(!roomService.checkIfRoomExists(Integer.parseInt(value))){
-			messages.showErrorMessage("Ups! Id " + value + " does not exist!");
-		}
-	}
 
 	public List<Room> getVacantRooms() {
 		return vacantRooms;

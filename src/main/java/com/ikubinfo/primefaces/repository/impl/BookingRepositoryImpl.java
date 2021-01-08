@@ -48,14 +48,14 @@ class BookingRepositoryImpl implements BookingRepository {
             "\t\t\tjoin booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
             "\t\t\twhere b.is_valid=true and b.booking_status_id=3";
     private static final String GET_CANCELED_BOOKINGS="select  booking_id,bs.booking_status_id,check_in,check_out,price,b.updated_on,b.created_on,b.is_valid,persons_number,status_name remarks,status_name,\n" +
-            "                    (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
-            "                       CASE WHEN b.updated_by is not null\n" +
-            "               then (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=b.updated_by) else '' end as updated_by," +
-            " case when b.client_id is not null\n" +
-            "\t\t\t\t\t   then (select (c.first_name || ' ' || c.last_name) from client c where c.client_id=b.client_id ) else '' end as client\n" +
-            "                        from booking b join user_ ue on b.created_by=ue.user_id\n" +
-            "                  join booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
-            "               where  b.is_valid=false or ( b.booking_status_id=2 and  b.is_valid=false )";
+            "                                (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
+            "                                   CASE WHEN b.updated_by is not null\n" +
+            "                           then (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=b.updated_by) else '' end as updated_by,\n" +
+            "             case when b.client_id is not null\n" +
+            "               then (select (c.first_name || ' ' || c.last_name) from client c where c.client_id=b.client_id ) else '' end as client\n" +
+            "                                    from booking b join user_ ue on b.created_by=ue.user_id\n" +
+            "                              join booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
+            "                           where  b.is_valid=false or  b.booking_status_id=2 or  b.booking_status_id=5 ";
 
     private static final String GET_BOOKING = "select  booking_id,bs.booking_status_id,check_in,b.is_valid,check_out,price,b.updated_on,b.created_on,persons_number,status_name remarks,status_name, \n" +
             "\t\t (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
@@ -169,7 +169,7 @@ class BookingRepositoryImpl implements BookingRepository {
         for (Room room: rooms){
             parameters1.put("room_id", room.getId());
             parameters1.put("booking_id", getMaxBookingId());
-            insertRoomBookingQuery.execute(parameters1);
+            insertRoomBookingQuery.execute(parameters1);//TODO
         }
         return true;
 

@@ -1,0 +1,68 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	  xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<ui:insert>
+		<ui:include name="style" src="/template/styleFiles.xhtml" />
+	</ui:insert>
+</h:head>
+
+<h:body class="bg-dark">
+
+	<div class="sufee-login d-flex align-content-center flex-wrap">
+		<div class="container">
+			<div class="login-content">
+				<div class="login-logo">
+					<a href="index.html"> <img class="align-content"
+											   src="images/logo.png" alt="" />
+					</a>
+				</div>
+				<p:messages id="messages" closable="true" />
+				<div class="login-form">
+					<h:form>
+						<div class="row form-group">
+							<div class="col col-md-3">
+								<label for="email" class="form-control-label">Email</label>
+							</div>
+							<div class="col-12 col-md-8">
+								<h:inputText class="form-control" id="email" name="email"
+											 value="#{logInManagedBean.email}"
+											 pt:placeholder="******@example.**" />
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col col-md-3">
+								<label for="password" class="form-control-label">Password</label>
+							</div>
+							<div class="col-12 col-md-8">
+								<h:inputSecret class="form-control" id="password"
+											   name="password" value="#{logInManagedBean.password}" type="password"
+											   pt:placeholder="**********" />
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col col-md-3"></div>
+							<div class="col col-md-8">
+								<h:commandButton class="btn btn-success  " type="submit"
+												 value="LOG IN" action="#{logInManagedBean.logIn}" name="log_in"
+												 update="messages">
+								</h:commandButton>
+							</div>
+						</div>
+					</h:form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<ui:insert>
+		<ui:include name="footer" src="/template/footer.xhtml" />
+	</ui:insert>
+
+</h:body>
+
+</html>

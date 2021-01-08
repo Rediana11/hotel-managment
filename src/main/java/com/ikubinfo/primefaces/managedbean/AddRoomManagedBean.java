@@ -24,6 +24,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @ManagedBean
@@ -33,8 +35,6 @@ public class AddRoomManagedBean {
     private static final Logger LOG = LoggerFactory.getLogger(RoomRepository.class);
 
     private Room room;
-    private double price;
-    private int bedsNumber;
     private List<RoomCategory> categories;
     private List<RoomAbility> roomAbilities;
     private List<RoomFacility> roomFacilities;
@@ -43,6 +43,7 @@ public class AddRoomManagedBean {
     private RoomCategory roomCategory;
     private RoomAbility  roomAbility;
     private List<RoomPhoto> filesPath;
+    private List facilitiesList;
 
 
     @ManagedProperty(value = "#{messages}")
@@ -53,6 +54,8 @@ public class AddRoomManagedBean {
 
     @ManagedProperty(value="#{emailService}")
     private EmailService emailService;
+
+
     @PostConstruct
     public void init() {
         room = new Room();
@@ -65,6 +68,7 @@ public class AddRoomManagedBean {
         selectedFacilities =new Integer[facilitiesNr];
         facility = new RoomFacility();
         filesPath=new ArrayList<RoomPhoto>();
+        facilitiesList = Arrays.asList(selectedFacilities);
     }
 
     private void addFacilitiesToRoom(Room room){
@@ -72,23 +76,24 @@ public class AddRoomManagedBean {
             room.getRoomFacilities().add(new RoomFacility(roomFacilityId));
         }
     }
+
     public String save() {
-        room.setPrice(price);
-        room.setBedsNumber(bedsNumber);
         room.setRoomCategory(roomCategory);
         room.setRoomAbility(roomAbility);
         addFacilitiesToRoom(room);
         if(room.getId()==null) {
             if(roomService.create(filesPath,room)){
-                messages.showInfoMessage("Added Successfully!");
+                messages.showInfoMessage("Room added Successfully!");
             }
-            else{
-                messages.showErrorMessage("There was a problem adding the room!");
-            }
+            else
+                messages.showErrorMessage("There was a problem adding the room");
         }
         else{
-            roomService.updateRoom(room);
-            messages.showInfoMessage("Room Updated Successfully!");
+            if(roomService.updateRoom(room));
+            {
+                messages.showInfoMessage("Room Updated Successfully!");
+            }
+            messages.showErrorMessage("There was a problem updating the room");
         }
         return "room";
 
@@ -100,9 +105,9 @@ public class AddRoomManagedBean {
         room = roomService.getRoom(room.getId());
         roomCategory=room.getRoomCategory();
         roomAbility=room.getRoomAbility();
+        facilitiesList = Collections.singletonList(room.getFacilities());
+        System.out.println(facilitiesList);
         }
-        roomCategory=new RoomCategory();
-        roomAbility=new RoomAbility();
     }
 
     private void CreateDir(String pathName){
@@ -189,21 +194,6 @@ public class AddRoomManagedBean {
 
 
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public int getBedsNumber() {
-        return bedsNumber;
-    }
-
-    public void setBedsNumber(int bedsNumber) {
-        this.bedsNumber = bedsNumber;
-    }
 
     public Messages getMessages() {
         return messages;
@@ -252,5 +242,13 @@ public class AddRoomManagedBean {
 
     public void setFilesPath(List<RoomPhoto> filesPath) {
         this.filesPath = filesPath;
+    }
+
+    public List getFacilitiesList() {
+        return facilitiesList;
+    }
+
+    public void setFacilitiesList(List facilitiesList) {
+        this.facilitiesList = facilitiesList;
     }
 }

@@ -21,11 +21,11 @@ import java.util.Map;
 @Repository
 public class PhotoRepositoryImpl implements PhotoRepository {
 
-    private static final String GET_PHOTOS = "select room_photo_id,  r.room_id, file_name,  file_path, file_type, file_size, room_name,\n" +
+    private static final String GET_PHOTOS = "select room_photo_id,r.is_valid,  r.room_id, file_name,  file_path, file_type, file_size, room_name,\n" +
             "\t\t           r.created_on, (ue.first_name || ' ' || ue.last_name) as created_by\n" +
             "\t\t           from room_photo r join user_ ue on r.created_by= ue.user_id \n" +
             "\t\t\tjoin room on room.room_id=r.room_id\n" +
-            "\t\t\twhere r.is_valid=true";
+            "\t\t\twhere r.is_valid=true and r.room_id=:id";
 
     private  static final String GET_PHOTO = "select room_photo_id,  r.room_id, file_name,  file_path, file_type, file_size, room_name,\n" +
             "\t\t           r.created_on, (ue.first_name || ' ' || ue.last_name) as created_by\n" +
@@ -47,9 +47,13 @@ public class PhotoRepositoryImpl implements PhotoRepository {
                 .usingGeneratedKeyColumns("room_photo_id");
         this.jdbcTemplate = new JdbcTemplate(datasource);
     }
+
     @Override
-    public List<RoomPhoto> getAll() {
-        return namedParameterJdbcTemplate.query(GET_PHOTOS, new PhotoRowMapper());    }
+    public List<RoomPhoto> getAll(int id) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("id", id);
+
+        return namedParameterJdbcTemplate.query(GET_PHOTOS,params, new PhotoRowMapper());    }
 
     @Override
     public RoomPhoto getRoomPhoto(int id) {

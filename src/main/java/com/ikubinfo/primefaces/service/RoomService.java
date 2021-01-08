@@ -23,7 +23,7 @@ public interface RoomService {
 
 	boolean create(List<RoomPhoto> photos,Room room);
 
-	void delete(Room room) throws CategoryInUseException;
+	void delete(Room room);
 
 	List<RoomCategory> getCategories();
 

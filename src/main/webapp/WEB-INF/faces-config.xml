@@ -10,5 +10,12 @@
         <el-resolver>
             org.springframework.web.jsf.el.SpringBeanFacesELResolver
         </el-resolver>
-    </application> 
+    </application>
+
+    <factory>
+        <exception-handler-factory>
+            com.ikubinfo.primefaces.util.CustomExceptionHandlerFactory
+        </exception-handler-factory>
+    </factory>
+
 </faces-config>

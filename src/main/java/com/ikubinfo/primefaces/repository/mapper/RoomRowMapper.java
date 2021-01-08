@@ -20,11 +20,11 @@ public class RoomRowMapper implements RowMapper<Room> {
 		User user = new User();
 		User user1 = new User();
 		roomFacility.setName(result.getString("facilities"));
+		room.setFacilities(result.getString("facilities"));
 		room.setId(result.getInt("room_id"));
 		room.setName(result.getString("room_name"));
 		room.setDescription(result.getString("description"));
 		room.setPrice(result.getDouble("price"));
-		room.setFacilities(result.getString("facilities"));
 		room.setBedsNumber(result.getInt("beds_number"));
 		category.setId(result.getInt("category_id"));
 		category.setName( result.getString("category_name"));

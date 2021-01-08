@@ -7,7 +7,8 @@
 </h:head>
 <f:metadata>
 	<f:viewParam name="id" value="#{addRoomManagedBean.room.id}" />
-	<f:viewAction action="#{addRoomManagedBean.loadRoom()}" />
+	<f:viewAction action="#{addRoomManagedBean.loadRoom()}"
+	/>
 
 </f:metadata>
 <h:body>
@@ -55,7 +56,7 @@
 						<div class="form-group">
 							<p:outputLabel for="price" styleClass="p-col-fixed" style="width:100px" value="Price" />
 							<h:inputText required="true" class="form-control"
-										 requiredMessage="Price is required " id="price" value="#{addRoomManagedBean.price}"
+										 requiredMessage="Price is required " id="price" value="#{addRoomManagedBean.room.price}"
 										 converterMessage="Please enter digits only.">
 							</h:inputText >
 							<p:message for="price" />
@@ -68,7 +69,7 @@
 						<h:outputLabel for="bedsNumber" value="Beds number " />
 						<h:inputText  required="true" class="form-control"
 									  requiredMessage="Beds number is required "
-									  id="bedsNumber" value="#{addRoomManagedBean.bedsNumber}" min="1" max="4" step="1" converterMessage="Please enter digits only."/>
+									  id="bedsNumber" value="#{addRoomManagedBean.room.bedsNumber}" min="1" max="4" step="1" converterMessage="Please enter digits only."/>
 								<p:message for="bedsNumber" />
 
 							</div>
@@ -105,13 +106,6 @@
 							<br/>
 							<p:fileUpload listener="#{addRoomManagedBean.upload}" mode="advanced" dragDropSupport="false" value="#{addRoomManagedBean.file}"
 										  update="messages" sizeLimit="100000" fileLimit="3" />
-						</div></div></div>
-						<div class="row">
-						<div class="col-sm-12">
-						<div class="form-group">
-						<p:galleria value="#{addRoomManagedBean.filesPath}" var="image" panelWidth="500" panelHeight="313" showCaption="true">
-							<p:graphicImage name="#{image}" alt="Image Description for #{image}" title="#{image}"/>
-						</p:galleria>
 						</div></div></div>
 					<div class="col-sm-4">
 						<div class="form-group">

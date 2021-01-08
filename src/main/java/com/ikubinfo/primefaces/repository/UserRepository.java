@@ -12,6 +12,8 @@ public interface UserRepository {
 
      Role getUserRole(int id);
 
+     User getLoggedUser(String email , String password);
+
      Client getClientByEmail(String email);
 
      boolean insertClient(Client client);

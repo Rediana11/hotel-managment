@@ -174,7 +174,7 @@ class RoomRepositoryImpl implements RoomRepository {
 			parameters2.put("file_size", photo.getSize());
 			parameters2.put("file_type", photo.getType());
 			parameters2.put("file_path", photo.getPath());
-			parameters2.put("room_id", 8);
+			parameters2.put("room_id", getMaxRoomId());
 			//parameters2.put("created_by", room.getCreatedBy());
 			parameters2.put("created_by", 2); //TODO replace this with line 129
 			parameters2.put("created_on", new Date());
@@ -182,9 +182,6 @@ class RoomRepositoryImpl implements RoomRepository {
 			insertPhotoQuery.execute(parameters2);
 
 		}
-
-
-		System.out.println(photos);
 		for(RoomFacility roomFacility:room.getRoomFacilities()){
 			parameters1.put("facility_id", roomFacility.getId());
 			parameters1.put("room_id", getMaxRoomId());
