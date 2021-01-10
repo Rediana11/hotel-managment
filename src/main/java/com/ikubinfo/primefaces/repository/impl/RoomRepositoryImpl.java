@@ -9,6 +9,7 @@ import com.ikubinfo.primefaces.repository.mapper.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -232,13 +233,16 @@ class RoomRepositoryImpl implements RoomRepository {
 
 	@Override
 	public Room getRoom(int id) {
-
+		try {
 		Map<String, Object> params = new HashMap<>();
 		params.put("id", id );
 		String queryString = GET_ROOM;
 
 		return  namedParameterJdbcTemplate.queryForObject(queryString, params, new RoomRowMapper());
 
+		} catch (EmptyResultDataAccessException ex) {
+			return null;
+		}
 	}
 
 	@Override
@@ -252,12 +256,5 @@ class RoomRepositoryImpl implements RoomRepository {
 
 	}
 
-	@Override
-	public boolean checkIfRoomExists(int id) {
-		Map<String, Object> params = new HashMap<>();
-		params.put("id", id );
-		int number= namedParameterJdbcTemplate.queryForObject(CHECK_IF_ROOM_EXISTS,params,new RoomIdRowMapper()).getId();
-		return number>0;
-	}
 
 }

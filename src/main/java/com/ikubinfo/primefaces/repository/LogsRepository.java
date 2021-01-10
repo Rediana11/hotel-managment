@@ -6,7 +6,10 @@ import java.util.List;
 
 public interface LogsRepository {
 
-    boolean create(String name, String detail);
+    boolean addSuccessfulLog ( String detail);
+
+    boolean addErrorLog ( String detail);
+
     public List<Logs> getLogs();
 
 }

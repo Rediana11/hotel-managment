@@ -11,21 +11,29 @@ import java.util.List;
 @Service("logsService")
 public class LogsServiceImpl implements LogsService {
 
-
-    private LogsRepository  logsRepository;
+    private LogsRepository logsRepository;
 
     public LogsServiceImpl(LogsRepository logsRepository) {
         super();
         this.logsRepository = logsRepository;
     }
 
+    public LogsServiceImpl() {
+
+    }
+
     @Override
-    public boolean create(String name, String detail) {
-        return logsRepository.create( name,  detail);
+    public boolean addSuccessfulLog(String detail) {
+        return false;
+    }
+
+    @Override
+    public boolean addErrorLog(String detail) {
+        return false;
     }
 
     @Override
     public List<Logs> getLogs() {
-        return logsRepository.getLogs();
+        return null;
     }
 }

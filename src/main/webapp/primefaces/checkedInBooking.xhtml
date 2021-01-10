@@ -22,20 +22,20 @@
 
 
 				<p:outputLabel value="Search by dates: " />
-				<p:calendar id="checkIn"   value="#{bookingManagedBean.checkIn}"  mindate="#{bookingManagedBean.today}" pattern="dd-MM-yyyy"  showOn="button">
+				<p:calendar id="checkIn"   value="#{checkedInBookingManagedBean.checkIn}"  mindate="#{checkedInBookingManagedBean.today}" pattern="dd-MM-yyyy"  showOn="button">
 				</p:calendar>
-				<p:calendar id="checkOut"  value="#{bookingManagedBean.checkOut}"  mindate="#{bookingManagedBean.minDate}" pattern="dd-MM-yyyy"  showOn="button">
+				<p:calendar id="checkOut"  value="#{checkedInBookingManagedBean.checkOut}"  mindate="#{checkedInBookingManagedBean.minDate}" pattern="dd-MM-yyyy"  showOn="button">
 				</p:calendar>
 
 				<p:commandButton  value="Search" icon="fa fa-search"
-								  action="#{bookingManagedBean.filterActiveBookings}" update="form">
+								  action="#{checkedInBookingManagedBean.filter}" update="form">
 				</p:commandButton>
 				<p:commandButton value="Reset" immediate="true" icon="fa fa-refresh"
-								 action="#{bookingManagedBean.resetActiveBookings}" update="form">
+								 action="#{checkedInBookingManagedBean.reset}" update="form">
 				</p:commandButton>
 				<br/>
 				<br/>
-				<p:dataTable id="table" value="#{bookingManagedBean.activeBookings}"
+				<p:dataTable id="table" value="#{checkedInBookingManagedBean.bookings}"
 					var="booking"
 							 class="table table-striped table-bordered dataTable no-footer"
 							 style="text-align:center" widgetVar="DTWVar" rows="5"
@@ -63,12 +63,12 @@
 
 
 						<p:commandButton immediate="true" title="Delete" icon="pi pi-trash"
-							update=":form:table growl" action="#{bookingManagedBean.delete}">
+							update=":form:table growl" action="#{checkedInBookingManagedBean.delete}">
 							<p:confirm header="Confirmation" message="Are you sure?"
 								icon="pi pi-exclamation-triangle" />
 
 							<f:setPropertyActionListener
-								target="#{bookingManagedBean.booking}" value="#{booking}" />
+								target="#{checkedInBookingManagedBean.booking}" value="#{booking}" />
 						</p:commandButton>
 
 						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
@@ -83,12 +83,12 @@
 
 					<p:commandButton immediate="true"  title="Check out"
 									 icon="pi pi-check"
-									 update="table" action="#{bookingManagedBean.changeStatusToCheckedOut}">
+									 update="table" action="#{checkedInBookingManagedBean.changeStatusToCheckedOut}">
 						<p:confirm header="Confirmation" message="Are you sure to make booking status checked Out?"
 								   icon="pi pi-exclamation-triangle" />
 
 						<f:setPropertyActionListener
-								target="#{bookingManagedBean.booking}" value="#{booking}" />
+								target="#{checkedInBookingManagedBean.booking}" value="#{booking}" />
 						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
 							<p:commandButton value="Yes" type="button"
 											 styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
@@ -159,7 +159,7 @@
 
 				<h:form id="form">
 
-					<p:dataList value="#{bookingManagedBean.booking}" var="booking" type="definition">
+					<p:dataList value="#{checkedInBookingManagedBean.booking}" var="booking" type="definition">
 						<f:facet name="header">
 							Booking Info
 						</f:facet>

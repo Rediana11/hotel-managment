@@ -80,8 +80,4 @@ import org.springframework.transaction.annotation.Transactional;
 		return roomRepository.getRoomAbilities();
 	}
 
-	@Override
-	public boolean checkIfRoomExists(int id) {
-		return roomRepository.checkIfRoomExists(id);
-	}
 }

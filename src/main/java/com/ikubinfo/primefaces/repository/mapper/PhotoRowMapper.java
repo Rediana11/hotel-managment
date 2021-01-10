@@ -19,7 +19,7 @@ public class PhotoRowMapper implements RowMapper<RoomPhoto> {
 
         photo.setId(result.getInt("room_photo_id"));
         photo.setName(result.getString("file_name"));
-        photo.setSize(result.getString("file_size"));
+        photo.setSize(result.getLong("file_size"));
         photo.setType(result.getString("file_type"));
         photo.setPath(result.getString("file_path"));
         photo.setValid(result.getBoolean("is_valid"));

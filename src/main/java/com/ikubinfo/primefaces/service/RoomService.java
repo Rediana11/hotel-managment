@@ -29,7 +29,6 @@ public interface RoomService {
 
 	List<RoomAbility> getRoomAbilities();
 
-	boolean checkIfRoomExists(int id);
 
 
 }

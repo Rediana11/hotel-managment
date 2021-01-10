@@ -42,8 +42,6 @@ public class RoomManagedBean implements Serializable {
 	@ManagedProperty(value="#{bookingManagedBean}")
 	private BookingManagedBean bookingManagedBean;
 
-
-
 	@PostConstruct
 	public void init() {
 

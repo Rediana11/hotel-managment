@@ -28,7 +28,6 @@ public interface RoomRepository {
 
 	List<RoomAbility> getRoomAbilities();
 
-	boolean checkIfRoomExists(int id);
 
 
 }

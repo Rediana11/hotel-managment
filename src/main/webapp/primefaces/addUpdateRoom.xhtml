@@ -104,8 +104,41 @@
 						<div class="form-group">
 							<p:outputLabel for="@next" value="Photo:"/>
 							<br/>
-							<p:fileUpload listener="#{addRoomManagedBean.upload}" mode="advanced" dragDropSupport="false" value="#{addRoomManagedBean.file}"
-										  update="messages" sizeLimit="100000" fileLimit="3" />
+							<p:fileUpload listener="#{addRoomManagedBean.upload}" mode="advanced" dragDropSupport="false"
+										  update="messages photosDt" sizeLimit="100000" fileLimit="3" />
+						</div></div></div>
+						<div class="row">
+						<div class="col-sm-12">
+						<div class="form-group">
+							<p:dataTable id="photosDt" var="row" value="#{addRoomManagedBean.roomPhotos}"
+										 editable="false" widgetVar="documentTable">
+
+								<p:column headerText="Name" style="width:10%">
+									<h:outputText value="#{row.name}" title="Id" />
+								</p:column>
+
+								<p:column headerText="Size" style="width:10%">
+									<h:outputText value="#{row.size} mb" title="Name" />
+								</p:column>
+
+								<p:column headerText="Image" style="width:30%">
+									<p:graphicImage name="/photos/#{row.name}">
+									</p:graphicImage>
+								</p:column>
+								<p:column headerText="Action" style="width:30%">
+								<p:commandButton immediate="true"
+												 title="Delete"
+												 icon="pi pi-trash"
+												 update=":addForm:photosDt growl" action="#{addRoomManagedBean.deleteRoomPhoto}">
+
+									<f:setPropertyActionListener
+											target="#{addRoomManagedBean.roomPhoto}" value="#{row}" />
+
+								</p:commandButton>
+								</p:column>
+
+							</p:dataTable>
+
 						</div></div></div>
 					<div class="col-sm-4">
 						<div class="form-group">

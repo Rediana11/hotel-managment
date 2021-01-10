@@ -1,8 +1,11 @@
 package com.ikubinfo.primefaces.util;
 
+import com.ikubinfo.primefaces.repository.LogsRepository;
+import com.ikubinfo.primefaces.service.LogsService;
+import com.ikubinfo.primefaces.service.impl.LogsServiceImpl;
+
 import javax.faces.FacesException;
 import javax.faces.application.NavigationHandler;
-import javax.faces.bean.ManagedProperty;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.FacesContext;
@@ -14,9 +17,8 @@ import java.util.Iterator;
 public class CustomExceptionHandler extends ExceptionHandlerWrapper {
     private ExceptionHandler wrapped;
 
-    @ManagedProperty(value = "#{logs}")
-    private Logs logs;
 
+    private LogsServiceImpl logsService=new LogsServiceImpl();
 
     public CustomExceptionHandler(ExceptionHandler wrapped) {
         this.wrapped = wrapped;
@@ -42,24 +44,20 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
             try {
                 Flash flash = fc.getExternalContext().getFlash();
 
-                // Put the exception in the flash scope to be displayed in the error
-                // page if necessary ...
                 flash.put("errorDetails", throwable.getMessage());
 
                 System.out.println("the error is put in the flash: " + throwable.getMessage());
-                //logs.addErrorLog("An error occured");
+                logsService.addErrorLog("An error occured" + throwable.getMessage());
 
                 NavigationHandler navigationHandler = fc.getApplication().getNavigationHandler();
 
-                navigationHandler.handleNavigation(fc, null, "error?faces-redirect=true");
+                navigationHandler.handleNavigation(fc, null, "generalError");
 
                 fc.renderResponse();
             } finally {
                 iterator.remove();
             }
         }
-
-        // Let the parent handle the rest
         getWrapped().handle();
     }
 }

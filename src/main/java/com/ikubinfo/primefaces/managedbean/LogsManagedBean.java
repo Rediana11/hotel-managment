@@ -1,11 +1,8 @@
 package com.ikubinfo.primefaces.managedbean;
 
 import com.ikubinfo.primefaces.model.Logs;
-import com.ikubinfo.primefaces.model.RoomCategory;
 import com.ikubinfo.primefaces.service.LogsService;
-import com.ikubinfo.primefaces.service.RoomCategoryService;
 import com.ikubinfo.primefaces.service.impl.RoomCategoryServiceImpl;
-import com.ikubinfo.primefaces.util.Messages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

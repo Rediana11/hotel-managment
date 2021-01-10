@@ -41,12 +41,27 @@ public class LogsRepositoryImpl implements LogsRepository {
         return namedParameterJdbcTemplate.query(GET_LOGS, new LogRowMapper());    }
 
     @Override
-    public boolean create(String name, String detail) {
+    public boolean addErrorLog (String detail) {
 
         Logs logs = new Logs();
         Map<String, Object> parameters = new HashMap<String, Object>();
         parameters.put("logs_id", 1);
-        parameters.put("logs_name",name);
+        parameters.put("logs_name","Error");
+        parameters.put("details", detail);
+        //parameters.put("created_by", room.getCreatedBy());
+        parameters.put("created_by", 2); //TODO replace this with line 38
+        parameters.put("created_on", new Date());
+
+        return insertLogsQuery.execute(parameters) > 0;
+
+    }
+
+    @Override
+    public boolean addSuccessfulLog( String detail) {
+        Logs logs = new Logs();
+        Map<String, Object> parameters = new HashMap<String, Object>();
+        parameters.put("logs_id", 1);
+        parameters.put("logs_name","Successful");
         parameters.put("details", detail);
         //parameters.put("created_by", room.getCreatedBy());
         parameters.put("created_by", 2); //TODO replace this with line 38

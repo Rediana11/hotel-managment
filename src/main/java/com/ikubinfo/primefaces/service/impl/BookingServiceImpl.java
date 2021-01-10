@@ -7,6 +7,7 @@ import java.util.List;
 import com.ikubinfo.primefaces.model.Booking;
 import com.ikubinfo.primefaces.model.BookingStatus;
 import com.ikubinfo.primefaces.model.Room;
+import com.ikubinfo.primefaces.service.EmailService;
 import org.springframework.stereotype.Service;
 
 import com.ikubinfo.primefaces.model.User;
@@ -25,10 +26,8 @@ class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public List<Booking> getReservedBookings(Date checkIn, Date checkOut) {
-
-		return bookingRepository.getReservedBookings(checkIn,checkOut);
-
+	public List<Booking> getCheckedInBookings(Date checkIn, Date checkOut) {
+		return bookingRepository.getCheckedInBookings(checkIn,checkOut);
 	}
 
 	@Override

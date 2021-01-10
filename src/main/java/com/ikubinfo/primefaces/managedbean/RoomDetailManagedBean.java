@@ -40,19 +40,18 @@ public class RoomDetailManagedBean implements Serializable {
         room= new Room();
         photo = new RoomPhoto();
         category = new RoomCategory();
+        //photos = photoService.getAll(room.getId());
 
     }
 
     public void loadRoom(){
+
         room = roomService.getRoom(room.getId());
+        if (room==null){
+            messages.showErrorMessage("Room with this id does not exist");
+        }
         photos = photoService.getAll(room.getId());
 
-
-    }
-    public void idUrlValidation(){
-        if(!roomService.checkIfRoomExists(room.getId())){
-            messages.showErrorMessage("Ups! Id does not exist!");
-        }
     }
 
     public Room getRoom() {

@@ -31,6 +31,9 @@ public class CategoryDetailManagedBean implements Serializable {
 
     public void loadCategory(){
         roomCategory = categoryService.getCategory(roomCategory.getId());
+        if (roomCategory==null){
+            messages.showErrorMessage("Category does not exist");
+        }
     }
 
 

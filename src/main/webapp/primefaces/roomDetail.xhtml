@@ -6,8 +6,7 @@
 	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 <f:metadata>
 	<f:viewParam name="id" value="#{roomDetailManagedBean.room.id}" />
-	<f:viewAction action="#{roomDetailManagedBean.loadRoom()}" />
-	<f:viewAction action="#{roomDetailManagedBean.idUrlValidation}" />
+	<f:viewAction action="#{roomDetailManagedBean.loadRoom}" />
 </f:metadata>
 <h:body>
 		<ui:include name="template" src="/template/template.xhtml" />
@@ -56,13 +55,9 @@
 	<p:tab title="Room photos">
 	<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 
-		<div class="row">
-			<div class="col-sm-12">
-				<div class="form-group">
 					<p:galleria value="#{roomDetailManagedBean.photos}" var="image" panelWidth="500" panelHeight="313" showCaption="true">
-						<p:graphicImage  name="#{image.path}" alt="Image Description for #{image.path}" title="#{image.name}"/>
+						<p:graphicImage  name="/photos/#{image.name}" alt="Image Description for #{image.name}" title="#{image.name}"/>
 					</p:galleria>
-				</div></div></div>
 	</h:panelGrid>
 	</p:tab>
 	<p:button outcome="room" value="Back">
