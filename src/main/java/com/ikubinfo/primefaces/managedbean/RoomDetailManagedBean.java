@@ -20,7 +20,6 @@ import java.util.List;
 public class RoomDetailManagedBean implements Serializable {
 
     private Room room;
-
     private RoomCategory category;
     private List<RoomPhoto> photos;
     private RoomPhoto photo;
@@ -40,17 +39,17 @@ public class RoomDetailManagedBean implements Serializable {
         room= new Room();
         photo = new RoomPhoto();
         category = new RoomCategory();
-        //photos = photoService.getAll(room.getId());
-
     }
 
     public void loadRoom(){
+        if(room!=null){
+            room = roomService.getRoom(room.getId());
+            photos = photoService.getAll(room.getId());
 
-        room = roomService.getRoom(room.getId());
-        if (room==null){
+        }
+        else{
             messages.showErrorMessage("Room with this id does not exist");
         }
-        photos = photoService.getAll(room.getId());
 
     }
 

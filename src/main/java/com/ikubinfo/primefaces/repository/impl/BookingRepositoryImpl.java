@@ -58,6 +58,16 @@ class BookingRepositoryImpl implements BookingRepository {
             "                              join booking_status bs on b.booking_status_id=bs.booking_status_id \n" +
             "                           where  b.is_valid=false or  b.booking_status_id=2 or  b.booking_status_id=5 ";
 
+    private static final String GET_BOOKINGS ="select  booking_id,bs.booking_status_id,check_in,b.is_valid,check_out,price,b.updated_on,b.created_on,persons_number,status_name remarks,status_name, " +
+            "            (ue.first_name || ' ' || ue.last_name) as created_by, " +
+            "                    CASE WHEN b.updated_by is not null  " +
+            "                    then (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=b.updated_by) else '' end as updated_by, " +
+            "            case when b.client_id is not null " +
+            "              then (select (c.first_name || ' ' || c.last_name) from client c where c.client_id=b.client_id ) else '' end as client " +
+            "                     from booking b join user_ ue on b.created_by=ue.user_id  " +
+            "          join booking_status bs on b.booking_status_id=bs.booking_status_id  " +
+            "         where b.is_valid=true ";
+
     private static final String GET_BOOKING = "select  booking_id,bs.booking_status_id,check_in,b.is_valid,check_out,price,b.updated_on,b.created_on,persons_number,status_name remarks,status_name, \n" +
             "\t\t (ue.first_name || ' ' || ue.last_name) as created_by,\n" +
             "\t\t\t            CASE WHEN b.updated_by is not null \n" +
@@ -69,12 +79,13 @@ class BookingRepositoryImpl implements BookingRepository {
             "\t\t\twhere b.is_valid=true and booking_id=:id \n";
     private static final String DELETE_BOOKING = "update booking set is_valid= false where booking_id=:id";
     private static final String UPDATE_STATUS_CHECK_IN = "update booking set booking_status_id=:statusId, updated_on=:updatedOn where booking_id=:id";
+    private static final String UPDATE_ROOM_ABILITY_TO_NOT_VACANT="update room set room_ability_id =:roomAbility, updated_on=:updatedOn where room_id =:id";
     private static final String UPDATE_STATUS_CHECK_OUT = "update booking set booking_status_id=:statusId, updated_on=:updatedOn where booking_id=:id";
+    private static final String UPDATE_ROOM_ABILITY_TO_VACANT="update room set room_ability_id =:roomAbility, updated_on=:updatedOn where room_id =:id";
     private static final String GET_BOOKING_STATUSES = "select booking_status_id, status_name from booking_status";
     private static String GET_ROOM_ABILITY_ID = "select room_ability_id from room_ability where code= ";
     private static String UPDATE_ROOM_ABILITY = "update room \n" +
             "set  room_ability_id =:abilityId from  room_booking rb  join booking b on b.booking_id=rb.booking_id where  b.booking_id=:bookingId";
-    private static final String GET_MAX_BOOKING_ID = "select max(booking_id) as booking_id from booking";
 
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -126,6 +137,23 @@ class BookingRepositoryImpl implements BookingRepository {
     }
 
     @Override
+    public List<Booking> getBookings(Date checkIn, Date checkOut) {
+
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("checkIn", checkIn);
+        params.put("checkOut", checkOut);
+
+        String queryString = GET_BOOKINGS;
+        if (checkIn != null && checkOut != null) {
+            queryString = queryString.concat(" and b.check_in >= :checkIn and b.check_out < :checkOut");
+        }
+
+        return namedParameterJdbcTemplate.query(queryString, params, new BookingRowMapper());
+
+    }
+
+    @Override
     public List<Booking> getCanceledBookings(Date checkIn, Date checkOut) {
 
         Map<String, Object> params = new HashMap<>();
@@ -164,52 +192,66 @@ class BookingRepositoryImpl implements BookingRepository {
         parameters.put("check_out", booking.getCheckOut());
         parameters.put("persons_number", booking.getPersonsNumber());
         parameters.put("booking_status_id", 1);
-        parameters.put("created_by", 2); //TODO replace this with current user
+        parameters.put("created_by", booking.getCreatedBy().getId());
         parameters.put("created_on", new Date());
+        parameters.put("remarks",booking.getRemarks());
         parameters.put("price", booking.getPrice());
         parameters.put("client_id", booking.getClient().getId());
         parameters.put("is_valid", "true");
-        insertBookingQuery.execute(parameters);
+        int nr= this.insertBookingQuery.execute(parameters);
+        Number newBookingId = insertBookingQuery.executeAndReturnKey(parameters);
+
         for (Room room : rooms) {
             parameters1.put("room_id", room.getId());
-            parameters1.put("booking_id", getMaxBookingId());
-            insertRoomBookingQuery.execute(parameters1);//TODO
+            parameters1.put("booking_id", newBookingId);
+            insertRoomBookingQuery.execute(parameters1);
         }
-        return true;
+        return nr>0;
+
 
     }
 
-    private int getMaxBookingId() {
-        return jdbcTemplate.queryForObject(GET_MAX_BOOKING_ID, new BookingIdRowMaper()).getId();
-    }
 
 
     @Override
     public boolean updateBookingStatusToCheckedIn(Booking booking) {
 
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        MapSqlParameterSource namedParameters1 = new MapSqlParameterSource();
 
         namedParameters.addValue("id", booking.getId());
-
         namedParameters.addValue("statusId", 3);
         namedParameters.addValue("updatedOn", new Date());
 
+        for (Room room:booking.getRooms()){
+            namedParameters1.addValue("roomAbility", 2);
+            namedParameters1.addValue("id", room.getId());
+            namedParameters1.addValue("updatedOn", new Date());
+            int updatedNr = this.namedParameterJdbcTemplate.update(UPDATE_ROOM_ABILITY_TO_NOT_VACANT, namedParameters1);
 
+        }
         int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_STATUS_CHECK_IN, namedParameters);
 
-        return updatedCount > 0;
+        return updatedCount  > 0;
     }
 
     @Override
     public boolean updateBookingStatusToCheckedOut(Booking booking) {
 
         MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        MapSqlParameterSource namedParameters1 = new MapSqlParameterSource();
 
         namedParameters.addValue("id", booking.getId());
 
         namedParameters.addValue("statusId", 5);
         namedParameters.addValue("updatedOn", new Date());
+        for (Room room:booking.getRooms()){
+            namedParameters1.addValue("roomAbility", 1);
+            namedParameters1.addValue("id", room.getId());
+            namedParameters1.addValue("updatedOn", new Date());
+            int updatedNr = this.namedParameterJdbcTemplate.update(UPDATE_ROOM_ABILITY_TO_VACANT, namedParameters1);
 
+        }
 
         int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_STATUS_CHECK_OUT, namedParameters);
 

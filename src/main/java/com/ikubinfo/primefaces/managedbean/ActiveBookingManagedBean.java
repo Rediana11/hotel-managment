@@ -4,10 +4,7 @@ import com.ikubinfo.primefaces.model.Booking;
 import com.ikubinfo.primefaces.model.BookingStatus;
 import com.ikubinfo.primefaces.model.Client;
 import com.ikubinfo.primefaces.model.Room;
-import com.ikubinfo.primefaces.service.BookingService;
-import com.ikubinfo.primefaces.service.EmailService;
-import com.ikubinfo.primefaces.service.LogsService;
-import com.ikubinfo.primefaces.service.UserService;
+import com.ikubinfo.primefaces.service.*;
 import com.ikubinfo.primefaces.service.helpers.SelectRoom;
 import com.ikubinfo.primefaces.util.Messages;
 
@@ -36,6 +33,9 @@ public class ActiveBookingManagedBean implements Serializable {
 
     @ManagedProperty(value = "#{bookingService}")
     private BookingService bookingService;
+
+    @ManagedProperty(value = "#{roomService}")
+    private RoomService roomService;
 
     @ManagedProperty(value = "#{logsService}")
     private LogsService logs;
@@ -68,15 +68,16 @@ public class ActiveBookingManagedBean implements Serializable {
 
     public void delete() {
         bookingService.delete(booking);
-        bookings = bookingService.getActiveBookings(checkIn, checkOut);
+        bookings = bookingService.getActiveBookings(null, null);
         messages.showInfoMessage("Deleted");
-
     }
 
     public void changeStatusToCheckedIn() {
+        booking.setRooms(roomService.getReservedRoomsForBooking(booking.getId()));
         if (bookingService.updateBookingStatusToCheckedIn(booking)) {
             bookings = bookingService.getActiveBookings(null, null);
             messages.showInfoMessage("Booking status changed successfully");
+            logs.addSuccessfulLog("Booking status changed successfully");
         }
         else messages.showErrorMessage("There was a problem changing the booking status");
     }
@@ -184,5 +185,13 @@ public class ActiveBookingManagedBean implements Serializable {
 
     public void setMessages(Messages messages) {
         this.messages = messages;
+    }
+
+    public RoomService getRoomService() {
+        return roomService;
+    }
+
+    public void setRoomService(RoomService roomService) {
+        this.roomService = roomService;
     }
 }

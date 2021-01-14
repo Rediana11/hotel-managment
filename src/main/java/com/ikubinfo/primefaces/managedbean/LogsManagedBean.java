@@ -26,15 +26,25 @@ public class LogsManagedBean implements Serializable {
     @ManagedProperty(value = "#{logsService}")
     private LogsService logsService;
 
+    @ManagedProperty(value = "#{loggedUserMangedBean}")
+    private LoggedUserMangedBean loggedUserMangedBean;
 
     @PostConstruct
     public void init()
     {
-        logs = logsService.getLogs();
         log = new Logs();
-
+        logs = logsService.getLogs();
     }
 
+    public void addSuccessfulLog(String detail){
+        log.setCreatedBy(loggedUserMangedBean.getUser());
+        logsService.addSuccessfulLog(detail);
+    }
+
+    public void addErrorLog(String detail){
+        log.setCreatedBy(loggedUserMangedBean.getUser());
+        logsService.addErrorLog(detail);
+    }
     public Logs getLog() {
         return log;
     }
@@ -57,5 +67,13 @@ public class LogsManagedBean implements Serializable {
 
     public void setLogsService(LogsService logsService) {
         this.logsService = logsService;
+    }
+
+    public LoggedUserMangedBean getLoggedUserMangedBean() {
+        return loggedUserMangedBean;
+    }
+
+    public void setLoggedUserMangedBean(LoggedUserMangedBean loggedUserMangedBean) {
+        this.loggedUserMangedBean = loggedUserMangedBean;
     }
 }

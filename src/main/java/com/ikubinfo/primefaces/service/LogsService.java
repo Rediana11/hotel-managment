@@ -9,7 +9,7 @@ public interface LogsService {
 
     boolean addSuccessfulLog ( String detail);
 
-    boolean addErrorLog ( String detail);
+    boolean addErrorLog(String detail) ;
 
     List<Logs> getLogs();
 }

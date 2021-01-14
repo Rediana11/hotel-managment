@@ -11,6 +11,8 @@ import com.ikubinfo.primefaces.model.User;
 
 public interface BookingService {
 
+	List<Booking> getBookings(Date checkIn, Date checkOut);
+
 	List<Booking> getCheckedInBookings(Date checkIn, Date checkOut);
 
 	List<Booking> getActiveBookings(Date checkIn, Date checkOut);

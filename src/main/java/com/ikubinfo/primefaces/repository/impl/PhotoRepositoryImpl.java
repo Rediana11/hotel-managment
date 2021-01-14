@@ -86,8 +86,6 @@ public class PhotoRepositoryImpl implements PhotoRepository {
         parameters.put("file_type", room.getType());
         parameters.put("file_path", room.getPath());
         parameters.put("room_id", room.getRoom().getId());
-        //parameters.put("created_by", room.getCreatedBy());
-        parameters.put("created_by", 2); //TODO replace this with line 129
         parameters.put("created_on", new Date());
         parameters.put("is_valid", "true");
 

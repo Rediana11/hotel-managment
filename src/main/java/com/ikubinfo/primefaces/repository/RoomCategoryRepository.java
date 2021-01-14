@@ -15,7 +15,7 @@ public interface RoomCategoryRepository {
 
     boolean createCategory(RoomCategory roomCategory);
 
-    //boolean isCategoryInUse(Room room);
+    boolean isCategoryInUse(RoomCategory roomCategory);
 
     void deleteCategory(RoomCategory roomCategory);
 }

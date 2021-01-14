@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ikubinfo.primefaces.model.*;
 import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
+import org.primefaces.event.FileUploadEvent;
 
 public interface RoomService {
 
@@ -28,6 +29,8 @@ public interface RoomService {
 	List<RoomCategory> getCategories();
 
 	List<RoomAbility> getRoomAbilities();
+
+	void upload(FileUploadEvent event, List<RoomPhoto> photos);
 
 
 

@@ -26,6 +26,11 @@ class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
+	public List<Booking> getBookings(Date checkIn, Date checkOut) {
+		return bookingRepository.getBookings(checkIn,checkOut);
+	}
+
+	@Override
 	public List<Booking> getCheckedInBookings(Date checkIn, Date checkOut) {
 		return bookingRepository.getCheckedInBookings(checkIn,checkOut);
 	}
@@ -63,12 +68,15 @@ class BookingServiceImpl implements BookingService {
 	}
 
 
+
 	@Override
+	@Transactional
 	public boolean updateBookingStatusToCheckedIn(Booking booking) {
 		return bookingRepository.updateBookingStatusToCheckedIn(booking);
 	}
 
 	@Override
+	@Transactional
 	public boolean updateBookingStatusToCheckedOut(Booking booking) {
 		return bookingRepository.updateBookingStatusToCheckedOut(booking);
 	}

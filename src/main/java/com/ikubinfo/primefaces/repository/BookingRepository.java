@@ -8,6 +8,8 @@ import com.ikubinfo.primefaces.model.*;
 
 public interface BookingRepository {
 
+	List<Booking> getBookings(Date checkIn, Date checkOut);
+
 	List<Booking> getCheckedInBookings(Date checkIn, Date checkOut);
 
 	List<Booking> getActiveBookings(Date checkIn, Date checkOut);

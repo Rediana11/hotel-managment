@@ -11,7 +11,6 @@ public class CustomExceptionHandlerFactory  extends ExceptionHandlerFactory {
     private ExceptionHandlerFactory parent;
     public CustomExceptionHandlerFactory(ExceptionHandlerFactory parent) {
         this.parent = parent;
-
     }
 
     @Override

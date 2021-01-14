@@ -4,7 +4,6 @@ import com.ikubinfo.primefaces.model.Client;
 import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.model.User;
 import com.ikubinfo.primefaces.repository.UserRepository;
-import com.ikubinfo.primefaces.repository.mapper.ClientIdRowMapper;
 import com.ikubinfo.primefaces.repository.mapper.ClientRowMapper;
 import com.ikubinfo.primefaces.repository.mapper.RoleUserRowMapper;
 import com.ikubinfo.primefaces.repository.mapper.UserRowMapper;
@@ -30,7 +29,6 @@ public class UserRepositoryImpl implements UserRepository {
             "where user_.user_id=:id";
     private static final String GET_CLIENT_BY_EMAIL = "select * from client where email=:email";
     private static final String GET_CLIENTS = "select * from client";
-    private static final String GET_MAX_CLIENT_ID = " select max(client_id) as client_id from client";
     private static final String GET_USER_BY_EMAIL = " select user_id,first_name, last_name, username, password_, email, is_valid from user_ \n" +
             "where (user_.email=:email and password_=:password) and is_valid=true";
 
@@ -84,10 +82,13 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Client getClientByEmail(String email) {
-        Map<String, Object> params = new HashMap<>();
+      try{  Map<String, Object> params = new HashMap<>();
         params.put("email", email);
 
         return namedParameterJdbcTemplate.queryForObject(GET_CLIENT_BY_EMAIL, params, new ClientRowMapper());
+    } catch (EmptyResultDataAccessException ex) {
+        return null;
+    }
     }
 
     @Override
@@ -96,10 +97,6 @@ public class UserRepositoryImpl implements UserRepository {
         return namedParameterJdbcTemplate.query(GET_CLIENTS, new ClientRowMapper());
     }
 
-    @Override
-    public int getMaxBookingId() {
-        return jdbcTemplate.queryForObject(GET_MAX_CLIENT_ID, new ClientIdRowMapper()).getId();
-    }
 
     @Override
     public boolean insertClient(Client client) {

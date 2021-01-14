@@ -3,22 +3,38 @@ package com.ikubinfo.primefaces.util;
 import com.ikubinfo.primefaces.repository.LogsRepository;
 import com.ikubinfo.primefaces.service.LogsService;
 import com.ikubinfo.primefaces.service.impl.LogsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 
 import javax.faces.FacesException;
 import javax.faces.application.NavigationHandler;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerWrapper;
 import javax.faces.context.FacesContext;
 import javax.faces.context.Flash;
 import javax.faces.event.ExceptionQueuedEvent;
 import javax.faces.event.ExceptionQueuedEventContext;
+import java.io.Serializable;
 import java.util.Iterator;
 
+@Configuration
+@ComponentScan("com.ikubinfo")
 public class CustomExceptionHandler extends ExceptionHandlerWrapper {
+
+
     private ExceptionHandler wrapped;
 
+    @Autowired
+    LogsServiceImpl logsService;
 
-    private LogsServiceImpl logsService=new LogsServiceImpl();
+    public CustomExceptionHandler(){}
 
     public CustomExceptionHandler(ExceptionHandler wrapped) {
         this.wrapped = wrapped;
@@ -35,7 +51,7 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
 
         while (iterator.hasNext()) {
             ExceptionQueuedEvent event = (ExceptionQueuedEvent) iterator.next();
-            ExceptionQueuedEventContext context = (ExceptionQueuedEventContext)event.getSource();
+            ExceptionQueuedEventContext context = (ExceptionQueuedEventContext) event.getSource();
 
             Throwable throwable = context.getException();
 
@@ -47,7 +63,7 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
                 flash.put("errorDetails", throwable.getMessage());
 
                 System.out.println("the error is put in the flash: " + throwable.getMessage());
-                logsService.addErrorLog("An error occured" + throwable.getMessage());
+                logsService.addErrorLog("An error occurred" + throwable.getMessage());
 
                 NavigationHandler navigationHandler = fc.getApplication().getNavigationHandler();
 
@@ -59,5 +75,17 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
             }
         }
         getWrapped().handle();
+    }
+
+    public void setWrapped(ExceptionHandler wrapped) {
+        this.wrapped = wrapped;
+    }
+
+    public LogsServiceImpl getLogsService() {
+        return logsService;
+    }
+
+    public void setLogsService(LogsServiceImpl logsService) {
+        this.logsService = logsService;
     }
 }

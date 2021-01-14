@@ -10,6 +10,6 @@ public interface LogsRepository {
 
     boolean addErrorLog ( String detail);
 
-    public List<Logs> getLogs();
+    List<Logs> getLogs();
 
 }

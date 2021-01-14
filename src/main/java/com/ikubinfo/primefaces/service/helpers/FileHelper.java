@@ -20,7 +20,6 @@ public class FileHelper {
                 Files.createDirectories(path);}
         } catch (IOException e) {
             e.printStackTrace();
-            //TODO: log exception
         }
     }
     public static void saveImage(InputStream inputStream, File fileImage,String contentType) throws IOException {

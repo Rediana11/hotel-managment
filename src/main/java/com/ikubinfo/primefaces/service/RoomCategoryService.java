@@ -17,6 +17,8 @@ public interface RoomCategoryService {
 
     boolean create(RoomCategory roomCategory);
 
-    void delete(RoomCategory roomCategory) ;
+    void delete(RoomCategory roomCategory) throws CategoryInUseException;
+
+    boolean isCategoryInUse(RoomCategory roomCategory);
 
 }

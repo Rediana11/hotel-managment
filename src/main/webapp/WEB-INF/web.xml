@@ -3,12 +3,10 @@
  "http://java.sun.com/dtd/web-app_2_3.dtd" >
 
 <web-app>
-	
+	<display-name>Hotel Managment</display-name>
 
-	<error-page>
-		<error-code>500</error-code>
-		<location>/generalError.xhtml</location>
-	</error-page>
+
+
 	<error-page>
 		<error-code>403</error-code>
 		<location>/error403.xhtml</location>

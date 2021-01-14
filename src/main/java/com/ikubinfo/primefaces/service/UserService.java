@@ -18,7 +18,5 @@ public interface UserService {
 
     boolean insertClient(Client client);
 
-    int getMaxBookingId();
-
     List<Client> getClients();
 }

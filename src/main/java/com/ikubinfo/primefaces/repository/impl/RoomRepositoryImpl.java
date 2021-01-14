@@ -37,7 +37,7 @@ class RoomRepositoryImpl implements RoomRepository {
 			"\tinner join facility f on f.facility_id=rf.facility_id\n" +
 			" where r.is_valid=true GROUP by r.room_id, category_name, ability_name, (ue.first_name || ' ' || ue.last_name)";
 	private static final String UPDATE_ROOM ="update room set room_name= :name, description= :description, price= :price, " +
-			"beds_number= :bedsNumber, category_id=:category,updated_on=:updatedOn, room_ability_id=:ability where room_id=:id";
+			"beds_number= :bedsNumber, category_id=:category,updated_on=:updatedOn,updated_by=:updatedBy, room_ability_id=:ability where room_id=:id";
 	private static final String GET_VACANT_ROOMS = "select r.room_id,r.is_valid,room_name,STRING_AGG (name,',') AS Facilities,r.description, facilities,beds_number, price, category_name ,\n" +
 			" CASE WHEN STRING_AGG (name,',') is null \n" +
 			"\t\t        then '' end from \n" +
@@ -50,7 +50,7 @@ class RoomRepositoryImpl implements RoomRepository {
 			"\t\t\tinner join booking b on b.booking_id=br.booking_id\n" +
 			"\t\t\twhere b.check_in >= :firstDate and b.check_in < :secondDate) and r.is_valid=true GROUP by r.room_id, category_name, ability_name\n" ;
 	private static final String DELETE_ROOM = "update room set is_valid= false where room_id=:id";
-	private static final String GET_CATEGORIES = "select category_id, category_name from category";
+	private static final String GET_CATEGORIES = "select category_id, category_name from category where is_valid=true";
 	private static final String GET_ABILITIES = "select room_ability_id, ability_name from room_ability";
 	private static final String GET_ABILITY = "select room_ability_id, ability_name from room_ability where room_ability_id=:id";
 
@@ -70,16 +70,11 @@ class RoomRepositoryImpl implements RoomRepository {
 			"join booking on booking.booking_id=rb.booking_id\n" +
 			"join category on room.category_id=category.category_id\n" +
 			"where rb.booking_id=:id";
-	private static final String GET_MAX_ROOM_ID = "select max(room_id) as room_id from room";
-
-	private static final String CHECK_IF_ROOM_EXISTS="select room_id from room where room_id=:id";
-
 
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private SimpleJdbcInsert insertRoomQuery;
 	private SimpleJdbcInsert insertFacilityRoom;
-	private JdbcTemplate jdbcTemplate;
 	private SimpleJdbcInsert insertPhotoQuery;
 
 
@@ -91,7 +86,6 @@ class RoomRepositoryImpl implements RoomRepository {
 				.usingGeneratedKeyColumns("room_id");
 		this.insertFacilityRoom = new SimpleJdbcInsert(datasource).withTableName("facility_room")
 				.usingGeneratedKeyColumns("facility_room_id");
-		this.jdbcTemplate = new JdbcTemplate(datasource);
 		this.insertPhotoQuery = new SimpleJdbcInsert(datasource).withTableName("room_photo")
 				.usingGeneratedKeyColumns("room_photo_id");
 	}
@@ -143,6 +137,7 @@ class RoomRepositoryImpl implements RoomRepository {
 		namedParameters.addValue("ability", room.getRoomAbility().getId());
 		namedParameters.addValue("id", room.getId());
 		namedParameters.addValue("updatedOn",new Date());
+		namedParameters.addValue("updatedBy",room.getUpdatedBy().getId());
 
 		int updatedCount = this.namedParameterJdbcTemplate.update(UPDATE_ROOM, namedParameters);
 
@@ -163,11 +158,11 @@ class RoomRepositoryImpl implements RoomRepository {
 		parameters.put("beds_number", room.getBedsNumber());
 		parameters.put("category_id", room.getRoomCategory().getId());
 		parameters.put("room_ability_id", room.getRoomAbility().getId());
-		//parameters.put("created_by", room.getCreatedBy());
-		parameters.put("created_by", 2); //TODO replace this with line 129
+		parameters.put("created_by", room.getCreatedBy().getId());
 		parameters.put("created_on", new Date());
 		parameters.put("is_valid", "true");
 		insertRoomQuery.execute(parameters);
+		Number newRoomId = insertRoomQuery.executeAndReturnKey(parameters);
 
 		for(RoomPhoto photo: photos) {
 			parameters2.put("room_photo_id", photo.getId());
@@ -175,9 +170,8 @@ class RoomRepositoryImpl implements RoomRepository {
 			parameters2.put("file_size", photo.getSize());
 			parameters2.put("file_type", photo.getType());
 			parameters2.put("file_path", photo.getPath());
-			parameters2.put("room_id", getMaxRoomId());
-			//parameters2.put("created_by", room.getCreatedBy());
-			parameters2.put("created_by", 2); //TODO replace this with line 129
+			parameters2.put("room_id", newRoomId);
+			parameters2.put("created_by", room.getCreatedBy().getId());
 			parameters2.put("created_on", new Date());
 			parameters2.put("is_valid", "true");
 			insertPhotoQuery.execute(parameters2);
@@ -185,16 +179,12 @@ class RoomRepositoryImpl implements RoomRepository {
 		}
 		for(RoomFacility roomFacility:room.getRoomFacilities()){
 			parameters1.put("facility_id", roomFacility.getId());
-			parameters1.put("room_id", getMaxRoomId());
+			parameters1.put("room_id", newRoomId);
 			insertFacilityRoom.execute(parameters1);
 		}
 
 		return true;
 
-	}
-
-	private int getMaxRoomId() {
-		return jdbcTemplate.queryForObject(GET_MAX_ROOM_ID,new RoomIdRowMapper()).getId();
 	}
 
 	@Override

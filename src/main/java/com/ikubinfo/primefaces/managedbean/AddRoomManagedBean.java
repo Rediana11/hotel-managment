@@ -41,10 +41,10 @@ public class AddRoomManagedBean {
     private List<RoomCategory> categories;
     private List<RoomAbility> roomAbilities;
     private List<RoomFacility> roomFacilities;
-    private RoomFacility facility ;
+    private RoomFacility facility;
     private Integer[] selectedFacilities;
     private RoomCategory roomCategory;
-    private RoomAbility  roomAbility;
+    private RoomAbility roomAbility;
     private List<RoomPhoto> roomPhotos;
     private RoomPhoto roomPhoto;
     private List facilitiesList;
@@ -56,30 +56,35 @@ public class AddRoomManagedBean {
     @ManagedProperty(value = "#{roomService}")
     private RoomService roomService;
 
-    @ManagedProperty(value="#{emailService}")
+    @ManagedProperty(value = "#{emailService}")
     private EmailService emailService;
 
-    @ManagedProperty(value="#{photoService}")
+
+    @ManagedProperty(value = "#{loggedUserMangedBean}")
+    private LoggedUserMangedBean loggedUserMangedBean;
+
+
+    @ManagedProperty(value = "#{photoService}")
     private PhotoService photoService;
 
     @PostConstruct
     public void init() {
         room = new Room();
         categories = roomService.getCategories();
-        roomAbilities= roomService.getRoomAbilities();
+        roomAbilities = roomService.getRoomAbilities();
         roomCategory = new RoomCategory();
         roomAbility = new RoomAbility();
         roomFacilities = roomService.getRoomFacilities();
-        int facilitiesNr=roomFacilities.size();
-        selectedFacilities =new Integer[facilitiesNr];
+        int facilitiesNr = roomFacilities.size();
+        selectedFacilities = new Integer[facilitiesNr];
         facility = new RoomFacility();
         facilitiesList = Arrays.asList(selectedFacilities);
-        roomPhotos=new ArrayList<>();
-        roomPhoto=new RoomPhoto();
+        roomPhotos = new ArrayList<>();
+        roomPhoto = new RoomPhoto();
     }
 
-    private void addFacilitiesToRoom(Room room){
-        for(Integer roomFacilityId:selectedFacilities){
+    private void addFacilitiesToRoom(Room room) {
+        for (Integer roomFacilityId : selectedFacilities) {
             room.getRoomFacilities().add(new RoomFacility(roomFacilityId));
         }
     }
@@ -89,63 +94,42 @@ public class AddRoomManagedBean {
         room.setRoomCategory(roomCategory);
         room.setRoomAbility(roomAbility);
         addFacilitiesToRoom(room);
-        if(room.getId()==null) {
-            if(roomService.create(roomPhotos,room)){
+        room.setCreatedBy(loggedUserMangedBean.getUser());
+        room.setUpdatedBy(loggedUserMangedBean.getUser());
+        if (room.getId() == null) {
+            if (roomService.create(roomPhotos, room)) {
                 messages.showInfoMessage("Room added Successfully!");
-            }
-            else
+            } else
                 messages.showErrorMessage("There was a problem adding the room");
-        }
-        else{
-            if(roomService.updateRoom(room));
-            {
+        } else {
+            if (roomService.updateRoom(room)) {
+
                 messages.showInfoMessage("Room Updated Successfully!");
             }
-            messages.showErrorMessage("There was a problem updating the room");
         }
         return "room";
 
     }
 
 
-    public void loadRoom(){
-        if (room.getId()!=null){
-        room = roomService.getRoom(room.getId());
-        roomCategory=room.getRoomCategory();
-        roomAbility=room.getRoomAbility();
-        facilitiesList = Collections.singletonList(room.getFacilities());
-        roomPhotos=photoService.getAll(room.getId());
+    public void loadRoom() {
+        if (room.getId() != null) {
+            room = roomService.getRoom(room.getId());
+            roomCategory = room.getRoomCategory();
+            roomAbility = room.getRoomAbility();
+            facilitiesList = Collections.singletonList(room.getFacilities());
+            roomPhotos = photoService.getAll(room.getId());
         }
     }
 
 
     public void upload(FileUploadEvent event) {
-        if(event.getFile() != null) {
-            UploadedFile file=event.getFile();
-            try {
-                RoomPhoto photo = new RoomPhoto();
-                photo.setPath(FileHelper._PATH);
-                FileHelper.createDir(photo.getPath());
-                photo.setName(file.getFileName());
-                photo.setSize(file.getSize()/1024);
-                photo.setType(file.getContentType());
-                File fileImage=new File(photo.getPath()+File.separator+file.getFileName());
-                roomPhotos.add(photo);
-
-                try(InputStream inputStream=file.getInputStream();) {
-                    FileHelper.saveImage(inputStream,fileImage,file.getContentType());
-                }
-            }
-            catch(IOException e) {
-                e.printStackTrace();
-                messages.showErrorMessage("An error occured while uploading photo!");
-            }
-        }
+        roomService.upload(event, roomPhotos);
     }
 
-    public void deleteRoomPhoto(){
+    public void deleteRoomPhoto() {
         Path path
-                = Paths.get("/photos/"+ roomPhoto.getName());
+                = Paths.get("/photos/" + roomPhoto.getName());
         try {
             Files.deleteIfExists(path);
             roomPhotos.remove(roomPhoto);
@@ -153,6 +137,7 @@ public class AddRoomManagedBean {
             e.printStackTrace();
         }
     }
+
     public Room getRoom() {
         return room;
     }
@@ -217,9 +202,6 @@ public class AddRoomManagedBean {
         this.roomAbilities = roomAbilities;
     }
 
-
-
-
     public Messages getMessages() {
         return messages;
     }
@@ -275,5 +257,13 @@ public class AddRoomManagedBean {
 
     public void setFacilitiesList(List facilitiesList) {
         this.facilitiesList = facilitiesList;
+    }
+
+    public LoggedUserMangedBean getLoggedUserMangedBean() {
+        return loggedUserMangedBean;
+    }
+
+    public void setLoggedUserMangedBean(LoggedUserMangedBean loggedUserMangedBean) {
+        this.loggedUserMangedBean = loggedUserMangedBean;
     }
 }

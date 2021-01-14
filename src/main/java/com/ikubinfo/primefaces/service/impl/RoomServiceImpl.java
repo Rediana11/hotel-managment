@@ -1,8 +1,14 @@
 package com.ikubinfo.primefaces.service.impl;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import com.ikubinfo.primefaces.model.*;
+import com.ikubinfo.primefaces.service.helpers.FileHelper;
+import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.file.UploadedFile;
 import org.springframework.stereotype.Service;
 
 import com.ikubinfo.primefaces.repository.RoomRepository;
@@ -47,6 +53,30 @@ import org.springframework.transaction.annotation.Transactional;
 	@Override
 	public Room getRoom(int id) {
 		return roomRepository.getRoom(id);
+	}
+
+	@Override
+	public void upload(FileUploadEvent event,List<RoomPhoto> photos) {
+		if(event.getFile() != null) {
+			UploadedFile file=event.getFile();
+			try {
+				RoomPhoto photo = new RoomPhoto();
+				photo.setPath(FileHelper._PATH);
+				FileHelper.createDir(photo.getPath());
+				photo.setName(file.getFileName());
+				photo.setSize(file.getSize()/1024);
+				photo.setType(file.getContentType());
+				File fileImage=new File(photo.getPath()+File.separator+file.getFileName());
+				photos.add(photo);
+
+				try(InputStream inputStream=file.getInputStream();) {
+					FileHelper.saveImage(inputStream,fileImage,file.getContentType());
+				}
+			}
+			catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override

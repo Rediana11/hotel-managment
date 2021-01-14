@@ -55,16 +55,6 @@ public class RoomManagedBean implements Serializable {
 
 	}
 
-	public void save() {
-		if (roomService.updateRoom(room)) {
-			getAll();
-			messages.showInfoMessage("Room updated successfully");
-		}
-		else{messages.showErrorMessage("There was a problem updating the room");}
-		room = new Room();
-
-	}
-
 
 	public void delete() {
 			roomService.delete(room);
@@ -175,4 +165,5 @@ public class RoomManagedBean implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
 }

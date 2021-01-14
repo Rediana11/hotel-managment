@@ -48,8 +48,7 @@ public class LogsRepositoryImpl implements LogsRepository {
         parameters.put("logs_id", 1);
         parameters.put("logs_name","Error");
         parameters.put("details", detail);
-        //parameters.put("created_by", room.getCreatedBy());
-        parameters.put("created_by", 2); //TODO replace this with line 38
+        parameters.put("created_by", logs.getCreatedBy().getId());
         parameters.put("created_on", new Date());
 
         return insertLogsQuery.execute(parameters) > 0;
@@ -63,8 +62,7 @@ public class LogsRepositoryImpl implements LogsRepository {
         parameters.put("logs_id", 1);
         parameters.put("logs_name","Successful");
         parameters.put("details", detail);
-        //parameters.put("created_by", room.getCreatedBy());
-        parameters.put("created_by", 2); //TODO replace this with line 38
+        parameters.put("created_by", logs.getCreatedBy().getId());
         parameters.put("created_on", new Date());
 
         return insertLogsQuery.execute(parameters) > 0;
