@@ -2,6 +2,7 @@ package com.ikubinfo.primefaces.managedbean;
 
 import com.ikubinfo.primefaces.model.Booking;
 import com.ikubinfo.primefaces.model.Client;
+import com.ikubinfo.primefaces.model.Logs;
 import com.ikubinfo.primefaces.model.Room;
 import com.ikubinfo.primefaces.service.*;
 import com.ikubinfo.primefaces.service.helpers.SelectRoom;
@@ -40,8 +41,6 @@ public class CheckedInBookingManagedBean implements Serializable {
     @ManagedProperty(value = "#{roomService}")
     private RoomService roomService;
 
-    @ManagedProperty(value = "#{logsService}")
-    private LogsService logs;
 
     @ManagedProperty(value = "#{emailService}")
     private EmailService emailService;
@@ -59,6 +58,7 @@ public class CheckedInBookingManagedBean implements Serializable {
         today = new Date();
         long oneDay = 24 * 60 * 60 * 1000;
         minDate = new Date(today.getTime() + (oneDay));
+
 
     }
 
@@ -81,9 +81,8 @@ public class CheckedInBookingManagedBean implements Serializable {
         booking.setRooms(roomService.getReservedRoomsForBooking(booking.getId()));
         if (bookingService.updateBookingStatusToCheckedOut(booking))
         {
-            bookings = bookingService.getCheckedInBookings(null, null);
             messages.showInfoMessage("Booking status changed successfully");
-            logs.addSuccessfulLog("Booking status changed successfully to checked out");
+            bookings = bookingService.getCheckedInBookings(null, null);
 
         }
         else messages.showErrorMessage("There was a problem changing the booking status");
@@ -193,13 +192,6 @@ public class CheckedInBookingManagedBean implements Serializable {
         this.bookingService = bookingService;
     }
 
-    public LogsService getLogs() {
-        return logs;
-    }
-
-    public void setLogs(LogsService logs) {
-        this.logs = logs;
-    }
 
     public EmailService getEmailService() {
         return emailService;

@@ -34,9 +34,14 @@ public class RoomCategoryServiceImpl implements RoomCategoryService {
     }
 
     @Override
-    public boolean updateCategory(RoomCategory roomCategory) {
-        roomCategory.setUpdatedOn(new Date());
-        return categoryRepository.updateCategory(roomCategory);
+    public boolean updateCategory(RoomCategory roomCategory) throws CategoryInUseException {
+        if (categoryRepository.isCategoryInUse(roomCategory)) {
+            throw new CategoryInUseException(" Cannot update this category because it is already in use. ");
+        } else {
+            roomCategory.setUpdatedOn(new Date());
+            return categoryRepository.updateCategory(roomCategory);
+        }
+
     }
 
     @Override

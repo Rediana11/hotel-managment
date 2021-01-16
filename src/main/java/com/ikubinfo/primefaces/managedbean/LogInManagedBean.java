@@ -3,6 +3,7 @@ package com.ikubinfo.primefaces.managedbean;
 import com.ikubinfo.primefaces.model.User;
 import com.ikubinfo.primefaces.service.UserService;
 import com.ikubinfo.primefaces.util.Messages;
+//import org.jasypt.util.password.StrongPasswordEncryptor;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -27,13 +28,12 @@ public class LogInManagedBean implements Serializable {
         public String logIn() {
             User user = userService.getLoggedUser(email,password);
             if (user != null) {
-                System.out.println(user);
                 loggedUserMangedBean.setUser(user);
                 return "booking";
 
-            } else {
-                messages.showErrorMessage("Email or password is not correct");
-
+           }
+            else {
+               messages.showErrorMessage("Email or password is not correct");
             }
             return null;
         }

@@ -19,13 +19,13 @@ public class LogsServiceImpl implements LogsService {
     }
 
     @Override
-    public boolean addSuccessfulLog(String detail) {
-        return logsRepository.addSuccessfulLog(detail);
+    public boolean addSuccessfulLog(Logs log,String detail) {
+        return logsRepository.addSuccessfulLog(log,detail);
     }
 
     @Override
-    public  boolean addErrorLog(String detail) {
-        return logsRepository.addErrorLog(detail);
+    public  boolean addErrorLog(Logs log,String detail) {
+        return logsRepository.addErrorLog(log,detail);
     }
 
     @Override

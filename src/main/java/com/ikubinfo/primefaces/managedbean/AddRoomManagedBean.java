@@ -3,8 +3,10 @@ package com.ikubinfo.primefaces.managedbean;
 import com.ikubinfo.primefaces.model.*;
 import com.ikubinfo.primefaces.repository.RoomRepository;
 import com.ikubinfo.primefaces.service.EmailService;
+import com.ikubinfo.primefaces.service.LogsService;
 import com.ikubinfo.primefaces.service.PhotoService;
 import com.ikubinfo.primefaces.service.RoomService;
+import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 import com.ikubinfo.primefaces.service.helpers.FileHelper;
 import com.ikubinfo.primefaces.util.Messages;
 import org.primefaces.event.FileUploadEvent;
@@ -47,6 +49,7 @@ public class AddRoomManagedBean {
     private RoomAbility roomAbility;
     private List<RoomPhoto> roomPhotos;
     private RoomPhoto roomPhoto;
+    private Logs log;
     private List facilitiesList;
 
 
@@ -58,6 +61,9 @@ public class AddRoomManagedBean {
 
     @ManagedProperty(value = "#{emailService}")
     private EmailService emailService;
+
+    @ManagedProperty(value = "#{logsManagedBean}")
+    private LogsManagedBean logsManagedBean;
 
 
     @ManagedProperty(value = "#{loggedUserMangedBean}")
@@ -81,6 +87,7 @@ public class AddRoomManagedBean {
         facilitiesList = Arrays.asList(selectedFacilities);
         roomPhotos = new ArrayList<>();
         roomPhoto = new RoomPhoto();
+        log = new Logs();
     }
 
     private void addFacilitiesToRoom(Room room) {
@@ -99,13 +106,20 @@ public class AddRoomManagedBean {
         if (room.getId() == null) {
             if (roomService.create(roomPhotos, room)) {
                 messages.showInfoMessage("Room added Successfully!");
+                logsManagedBean.addSuccessfulLog("Room added successfully! ");
+
             } else
                 messages.showErrorMessage("There was a problem adding the room");
-        } else {
-            if (roomService.updateRoom(room)) {
+            logsManagedBean.addErrorLog("There was a problem adding the room");
 
-                messages.showInfoMessage("Room Updated Successfully!");
+        }   try {
+            if (roomService.updateRoom(room)) {
+                messages.showInfoMessage("Room updated successfully");
+
             }
+        }
+        catch (CategoryInUseException e) {
+            messages.showWarningMessage(e.getMessage());
         }
         return "room";
 
@@ -245,6 +259,22 @@ public class AddRoomManagedBean {
 
     public List<RoomPhoto> getRoomPhotos() {
         return roomPhotos;
+    }
+
+    public LogsManagedBean getLogsManagedBean() {
+        return logsManagedBean;
+    }
+
+    public void setLogsManagedBean(LogsManagedBean logsManagedBean) {
+        this.logsManagedBean = logsManagedBean;
+    }
+
+    public Logs getLog() {
+        return log;
+    }
+
+    public void setLog(Logs log) {
+        this.log = log;
     }
 
     public void setRoomPhotos(List<RoomPhoto> roomPhotos) {

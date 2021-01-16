@@ -30,11 +30,10 @@ public class UserRepositoryImpl implements UserRepository {
     private static final String GET_CLIENT_BY_EMAIL = "select * from client where email=:email";
     private static final String GET_CLIENTS = "select * from client";
     private static final String GET_USER_BY_EMAIL = " select user_id,first_name, last_name, username, password_, email, is_valid from user_ \n" +
-            "where (user_.email=:email and password_=:password) and is_valid=true";
+            "where (user_.email=:email and user_.password_=:password ) and is_valid=true";
 
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private JdbcTemplate jdbcTemplate;
     private SimpleJdbcInsert insertClientQuery;
 
 
@@ -44,7 +43,6 @@ public class UserRepositoryImpl implements UserRepository {
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(datasource);
         this.insertClientQuery = new SimpleJdbcInsert(datasource).withTableName("client")
                 .usingGeneratedKeyColumns("client_id");
-        this.jdbcTemplate = new JdbcTemplate(datasource);
     }
 
     @Override

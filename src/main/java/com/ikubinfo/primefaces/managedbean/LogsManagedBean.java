@@ -38,12 +38,12 @@ public class LogsManagedBean implements Serializable {
 
     public void addSuccessfulLog(String detail){
         log.setCreatedBy(loggedUserMangedBean.getUser());
-        logsService.addSuccessfulLog(detail);
+        logsService.addSuccessfulLog(log,detail);
     }
 
     public void addErrorLog(String detail){
         log.setCreatedBy(loggedUserMangedBean.getUser());
-        logsService.addErrorLog(detail);
+        logsService.addErrorLog(log,detail);
     }
     public Logs getLog() {
         return log;

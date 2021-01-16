@@ -25,7 +25,7 @@ public class BookingManagedBean implements Serializable {
     private List<SelectRoom> selectedRooms;
     private SelectRoom selectedRoom;
     private Booking booking;
-    private List<Booking>  bookings;
+    private List<Booking> bookings;
     private List<Room> rooms;
     private Date checkIn;
     private Date checkOut;
@@ -40,7 +40,7 @@ public class BookingManagedBean implements Serializable {
     private BookingService bookingService;
 
     @ManagedProperty(value = "#{logsManagedBean}")
-    private LogsManagedBean logs;
+    private LogsManagedBean logsManagedBean;
 
     @ManagedProperty(value = "#{emailService}")
     private EmailService emailService;
@@ -58,13 +58,14 @@ public class BookingManagedBean implements Serializable {
         checkIn = new Date();
         checkOut = new Date();
         today = new Date();
-        bookings = bookingService.getBookings(null,null);
+        bookings = bookingService.getBookings(null, null);
         long oneDay = 24 * 60 * 60 * 1000;
         minDate = new Date(today.getTime() + (oneDay));
         selectedRooms = new ArrayList<SelectRoom>();
         selectedRoom = new SelectRoom();
 
     }
+
     public void loadBooking() {
 
         booking = bookingService.getBooking(booking.getId());
@@ -72,20 +73,6 @@ public class BookingManagedBean implements Serializable {
             messages.showErrorMessage("Booking with this id does not exist");
         }
     }
-
-
-
-    private boolean getClientByEmail1() {
-        for (Client client1 : userService.getClients()) {
-            if (email.equals(client1.getEmail())) {
-                client = userService.getClientByEmail(email);
-                booking.setClient(client);
-                return true;
-            }
-        }
-        return false;
-    }
-
 
 
     public void selectRoom(Room room) {
@@ -102,14 +89,6 @@ public class BookingManagedBean implements Serializable {
     }
 
 
-    private List<Room> mappSelectRoomToRoom(List<SelectRoom> selRooms) {
-        List<Room> rooms = new ArrayList<Room>();
-        for (SelectRoom el : selRooms) {
-            rooms.add(el.getRoom());
-        }
-        return rooms;
-    }
-
     public void bookingPrice() {
         double roomPrice = 0;
         for (SelectRoom selRoom : selectedRooms) {
@@ -122,23 +101,33 @@ public class BookingManagedBean implements Serializable {
         bookingPrice();
         booking.setCreatedBy(loggedUserMangedBean.getUser());
         if (finishReservation()) {
-            logs.addSuccessfulLog("Successful reservation");
+            logsManagedBean.addSuccessfulLog("Successful reservation");
             emailService.sendSimpleMessage(client.getEmail(), "Reservation Confirmation", emailText());
             messages.showInfoMessage("Successful reservation!");
             return "booking";
+        } else {
+            messages.showErrorMessage("There was a problem reserving the room");
+            logsManagedBean.addErrorLog("There was a problem reserving the room");
         }
-        else messages.showErrorMessage("There was a problem reserving the room");
+
         return null;
     }
 
     public void getClientByEmail() {
-        if (userService.getClientByEmail(email)!=null) {
+        if (userService.getClientByEmail(email) != null) {
             client = userService.getClientByEmail(email);
             booking.setClient(client);
             messages.showInfoMessage("Client found!");
-        }
-        else
+        } else
             messages.showWarningMessage("Client not found! Create a new client!");
+    }
+
+    private List<Room> mappSelectRoomToRoom(List<SelectRoom> selRooms) {
+        List<Room> rooms = new ArrayList<Room>();
+        for (SelectRoom el : selRooms) {
+            rooms.add(el.getRoom());
+        }
+        return rooms;
     }
 
     private String emailText() {
@@ -153,25 +142,19 @@ public class BookingManagedBean implements Serializable {
     }
 
 
-    public void insertClient() {
-        if(!checkIfEmailExists()){
-            if (userService.insertClient(client)) {
-                booking.setClient(client);
-                messages.showInfoMessage("Client added successfully!");
-            } else
-                messages.showErrorMessage("There was a problem adding the client");
-        }
+    public void checkIfEmailExists() {
+        if (userService.getClientByEmail(newEmail) == null) {
+            client.setEmail(newEmail);
+            userService.insertClient(client);
+            booking.setClient(client);
+            messages.showInfoMessage("Client added successfully!");
 
+        } else {
+            System.out.println(userService.getClientByEmail(newEmail).getEmail());
+            messages.showErrorMessage("Can not add client! Client with this email already exists!");
+        }
     }
 
-    private boolean checkIfEmailExists(){
-        if(newEmail.equals(userService.getClientByEmail(newEmail).getEmail()))
-        {
-            messages.showErrorMessage("Cant add client! Client with this email already exists!");
-            return true;
-        }
-        return false;
-    }
     private boolean datesValidate() {
         if (booking.getCheckOut().getTime() <= booking.getCheckIn().getTime()) {
             messages.showErrorMessage("Input dates are not valid! Try again!");
@@ -181,12 +164,13 @@ public class BookingManagedBean implements Serializable {
     }
 
     private boolean clientValidate() {
-        if (booking.getClient()==null) {
+        if (booking.getClient() == null) {
             messages.showErrorMessage("Put client email to finish the reservation!");
             return false;
         }
         return true;
     }
+
     private boolean checkedRoomsValidate() {
         if (selectedRooms.isEmpty() || selectedRoom.getRoom().equals(null)) {
             messages.showErrorMessage("You must check a room to complete the reservation!");
@@ -195,7 +179,7 @@ public class BookingManagedBean implements Serializable {
         return true;
     }
 
-    private boolean finishReservation(){
+    private boolean finishReservation() {
         if (bookingService.reserve(booking, mappSelectRoomToRoom(selectedRooms)) && checkedRoomsValidate() && datesValidate() && clientValidate()) {
             return true;
         }
@@ -334,12 +318,12 @@ public class BookingManagedBean implements Serializable {
         this.emailService = emailService;
     }
 
-    public LogsManagedBean getLogs() {
-        return logs;
+    public LogsManagedBean getLogsManagedBean() {
+        return logsManagedBean;
     }
 
-    public void setLogs(LogsManagedBean logs) {
-        this.logs = logs;
+    public void setLogsManagedBean(LogsManagedBean logsManagedBean) {
+        this.logsManagedBean = logsManagedBean;
     }
 
     public Booking getBooking() {

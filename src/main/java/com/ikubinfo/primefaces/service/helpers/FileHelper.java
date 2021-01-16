@@ -11,21 +11,23 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FileHelper {
-    public static final String _PATH="/home/gledisgjinaj/Documents/redi/git/grupi3/src/main/webapp/resources/photos";
+    public static final String _PATH = "/home/gledisgjinaj/Documents/redi/git/grupi3/src/main/webapp/resources/photos";
 
-    public static void createDir(String pathName){
+    public static void createDir(String pathName) {
         Path path = Paths.get(pathName);
-        try{
-            if(!Files.exists(path)){
-                Files.createDirectories(path);}
+        try {
+            if (!Files.exists(path)) {
+                Files.createDirectories(path);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    public static void saveImage(InputStream inputStream, File fileImage,String contentType) throws IOException {
+
+    public static void saveImage(InputStream inputStream, File fileImage, String contentType) throws IOException {
         BufferedImage image = null;
         image = ImageIO.read(inputStream);
-        String extention=contentType.substring(contentType.lastIndexOf("/")+1);
-        ImageIO.write(image, extention,fileImage);
+        String extention = contentType.substring(contentType.lastIndexOf("/") + 1);
+        ImageIO.write(image, extention, fileImage);
     }
 }

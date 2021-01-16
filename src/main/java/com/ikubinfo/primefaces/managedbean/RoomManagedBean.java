@@ -57,10 +57,14 @@ public class RoomManagedBean implements Serializable {
 
 
 	public void delete() {
+		try {
 			roomService.delete(room);
-			rooms = roomService.getAll(null);
 			messages.showInfoMessage("Room deleted");
+			rooms = roomService.getAll(null);
 
+		} catch (CategoryInUseException e) {
+			messages.showWarningMessage(e.getMessage());
+		}
 	}
 
 	public void getAll() {

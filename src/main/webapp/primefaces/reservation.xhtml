@@ -292,7 +292,7 @@
 			<div class="form-group">
 				<div style="text-align: center;">
 					<p:commandButton style="margin:auto" process="addDialog" update=":form:table growl"
-									 value="Save" actionListener="#{bookingManagedBean.insertClient}"
+									 value="Save" actionListener="#{bookingManagedBean.checkIfEmailExists}"
 									 oncomplete="PF('AddDialog').hide();">
 					</p:commandButton>
 

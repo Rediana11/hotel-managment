@@ -16,15 +16,13 @@ public interface RoomService {
 
 	List<RoomFacility> getRoomFacilities();
 
-	RoomAbility getAbility (int id);
-
 	Room getRoom(int id);
 
-	boolean updateRoom(Room room);
+	boolean updateRoom(Room room) throws CategoryInUseException;
 
 	boolean create(List<RoomPhoto> photos,Room room);
 
-	void delete(Room room);
+	void delete(Room room) throws CategoryInUseException;
 
 	List<RoomCategory> getCategories();
 

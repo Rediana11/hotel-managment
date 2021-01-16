@@ -41,14 +41,13 @@ public class LogsRepositoryImpl implements LogsRepository {
         return namedParameterJdbcTemplate.query(GET_LOGS, new LogRowMapper());    }
 
     @Override
-    public boolean addErrorLog (String detail) {
+    public boolean addErrorLog (Logs log,String detail) {
 
-        Logs logs = new Logs();
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("logs_id", 1);
+        parameters.put("logs_id", log.getId());
         parameters.put("logs_name","Error");
         parameters.put("details", detail);
-        parameters.put("created_by", logs.getCreatedBy().getId());
+        parameters.put("created_by", log.getCreatedBy().getId());
         parameters.put("created_on", new Date());
 
         return insertLogsQuery.execute(parameters) > 0;
@@ -56,13 +55,12 @@ public class LogsRepositoryImpl implements LogsRepository {
     }
 
     @Override
-    public boolean addSuccessfulLog( String detail) {
-        Logs logs = new Logs();
+    public boolean addSuccessfulLog( Logs log,String detail) {
         Map<String, Object> parameters = new HashMap<String, Object>();
-        parameters.put("logs_id", 1);
+        parameters.put("logs_id", log.getId());
         parameters.put("logs_name","Successful");
         parameters.put("details", detail);
-        parameters.put("created_by", logs.getCreatedBy().getId());
+        parameters.put("created_by", log.getCreatedBy().getId());
         parameters.put("created_on", new Date());
 
         return insertLogsQuery.execute(parameters) > 0;

@@ -24,15 +24,12 @@ import javax.faces.event.ExceptionQueuedEventContext;
 import java.io.Serializable;
 import java.util.Iterator;
 
-@Configuration
-@ComponentScan("com.ikubinfo")
+
 public class CustomExceptionHandler extends ExceptionHandlerWrapper {
 
 
     private ExceptionHandler wrapped;
 
-    @Autowired
-    LogsServiceImpl logsService;
 
     public CustomExceptionHandler(){}
 
@@ -63,7 +60,6 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
                 flash.put("errorDetails", throwable.getMessage());
 
                 System.out.println("the error is put in the flash: " + throwable.getMessage());
-                logsService.addErrorLog("An error occurred" + throwable.getMessage());
 
                 NavigationHandler navigationHandler = fc.getApplication().getNavigationHandler();
 
@@ -81,11 +77,4 @@ public class CustomExceptionHandler extends ExceptionHandlerWrapper {
         this.wrapped = wrapped;
     }
 
-    public LogsServiceImpl getLogsService() {
-        return logsService;
-    }
-
-    public void setLogsService(LogsServiceImpl logsService) {
-        this.logsService = logsService;
-    }
 }

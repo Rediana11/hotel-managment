@@ -12,7 +12,7 @@ public interface UserRepository {
 
      Role getUserRole(int id);
 
-     User getLoggedUser(String email , String password);
+     User getLoggedUser(String email,String password);
 
      Client getClientByEmail(String email);
 

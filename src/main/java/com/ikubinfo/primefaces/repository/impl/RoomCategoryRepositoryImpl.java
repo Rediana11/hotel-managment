@@ -36,18 +36,21 @@ public class RoomCategoryRepositoryImpl implements RoomCategoryRepository {
             "\t\t \t\tthen (select (u.first_name || ' ' || u.last_name) from user_ u where u.user_id=c.updated_by) else '' end as UpdatedBy\n" +
             "from category c\n" +
             "join user_ ue on c.created_by=ue.user_id where c.is_valid=true and c.category_id=:id";
-    private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from room where category_id =:id";
+    private static final String CATEGORY_IN_USE = "Select count(category_id) as category_count from room where category_id = ?";
 
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    private SimpleJdbcInsert insertRoomQuery;
+    private SimpleJdbcInsert insertCategoryQuery;
+    private JdbcTemplate jdbcTemplate;
+
 
     @Autowired
     public RoomCategoryRepositoryImpl(DataSource datasource) {
         super();
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(datasource);
-        this.insertRoomQuery = new SimpleJdbcInsert(datasource).withTableName("category")
+        this.insertCategoryQuery = new SimpleJdbcInsert(datasource).withTableName("category")
                 .usingGeneratedKeyColumns("category_id");
+        this.jdbcTemplate = new JdbcTemplate(datasource);
     }
 
     @Override
@@ -94,7 +97,7 @@ public class RoomCategoryRepositoryImpl implements RoomCategoryRepository {
         parameters.put("created_on", new Date());
         parameters.put("is_valid", "true");
 
-        return insertRoomQuery.execute(parameters) > 0;
+        return insertCategoryQuery.execute(parameters) > 0;
     }
 
     @Override
@@ -108,10 +111,8 @@ public class RoomCategoryRepositoryImpl implements RoomCategoryRepository {
     @Override
     public boolean isCategoryInUse(RoomCategory roomCategory) {
 
-        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
-        namedParameters.addValue("id", roomCategory.getId());
-        int count = this.namedParameterJdbcTemplate.update(CATEGORY_IN_USE, namedParameters);
-        return count > 0;
+        return jdbcTemplate.queryForObject(CATEGORY_IN_USE, Integer.class, roomCategory.getId()) > 0;
+
 
     }
 }

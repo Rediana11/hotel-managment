@@ -46,16 +46,33 @@ public class CategoryManagedBean implements Serializable {
         roomCategory = new RoomCategory();
     }
 
-    public void updateCategory() {
+    public void updateCategory() throws CategoryInUseException {
         roomCategory.setUpdatedBy(loggedUserMangedBean.getUser());
-        if (categoryService.updateCategory(roomCategory)) {
-            getAll();
-            messages.showInfoMessage("Category updated successfully");
-        } else {
-            messages.showErrorMessage("There was a problem updating the category");
+        try {
+            if (categoryService.updateCategory(roomCategory)) {
+                getAll();
+                messages.showInfoMessage("Category updated successfully");
+
+            } else {
+                messages.showErrorMessage("There was a problem updating the category");
+            }
+        }
+        catch (CategoryInUseException e) {
+            messages.showWarningMessage(e.getMessage());
         }
         roomCategory = new RoomCategory();
     }
+
+    public void delete() {
+        try {
+            categoryService.delete(roomCategory);
+            messages.showInfoMessage(" Category deleted! ");
+            categories = categoryService.getAll();
+        } catch (CategoryInUseException e) {
+            messages.showWarningMessage(e.getMessage());
+        }
+    }
+
 
     public void add() {
         roomCategory.setCreatedBy(loggedUserMangedBean.getUser());
@@ -73,16 +90,6 @@ public class CategoryManagedBean implements Serializable {
         categories = categoryService.getAll();
     }
 
-    public void delete() {
-        try {
-            categoryService.delete(roomCategory);
-            categories = categoryService.getAll();
-            messages.showInfoMessage(" Category deleted! ");
-        } catch (CategoryInUseException e) {
-            messages.showWarningMessage(e.getMessage());
-        }
-
-    }
 
     public void getAll() {
         categories = categoryService.getAll();

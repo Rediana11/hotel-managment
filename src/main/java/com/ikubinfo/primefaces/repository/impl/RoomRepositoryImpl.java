@@ -71,11 +71,14 @@ class RoomRepositoryImpl implements RoomRepository {
 			"join category on room.category_id=category.category_id\n" +
 			"where rb.booking_id=:id";
 
+	private static final String ROOM_IN_USE = "Select count(room_id) as room_count from room_booking where room_id = ?";
+
 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	private SimpleJdbcInsert insertRoomQuery;
 	private SimpleJdbcInsert insertFacilityRoom;
 	private SimpleJdbcInsert insertPhotoQuery;
+	private JdbcTemplate jdbcTemplate;
 
 
 	@Autowired
@@ -88,6 +91,7 @@ class RoomRepositoryImpl implements RoomRepository {
 				.usingGeneratedKeyColumns("facility_room_id");
 		this.insertPhotoQuery = new SimpleJdbcInsert(datasource).withTableName("room_photo")
 				.usingGeneratedKeyColumns("room_photo_id");
+		this.jdbcTemplate = new JdbcTemplate(datasource);
 	}
 
 	@Override
@@ -235,16 +239,12 @@ class RoomRepositoryImpl implements RoomRepository {
 		}
 	}
 
+
 	@Override
-	public RoomAbility getAbility(int id) {
+	public boolean isRoomInUse(Room room) {
 
-		Map<String, Object> params = new HashMap<>();
-		params.put("id", id );
-		String queryString = GET_ABILITY;
+		return jdbcTemplate.queryForObject(ROOM_IN_USE, Integer.class, room.getId()) > 0;
 
-		return  namedParameterJdbcTemplate.queryForObject(queryString, params, new RoomAbilityRowMapper());
 
 	}
-
-
 }

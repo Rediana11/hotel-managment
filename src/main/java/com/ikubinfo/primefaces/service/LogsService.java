@@ -7,9 +7,9 @@ import java.util.List;
 public interface LogsService {
 
 
-    boolean addSuccessfulLog ( String detail);
+    boolean addSuccessfulLog (Logs log, String detail);
 
-    boolean addErrorLog(String detail) ;
+    boolean addErrorLog(Logs log,String detail) ;
 
     List<Logs> getLogs();
 }
