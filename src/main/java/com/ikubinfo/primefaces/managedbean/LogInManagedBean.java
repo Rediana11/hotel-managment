@@ -29,7 +29,7 @@ public class LogInManagedBean implements Serializable {
             User user = userService.getLoggedUser(email,password);
             if (user != null) {
                 loggedUserMangedBean.setUser(user);
-                return "booking";
+                return "primefaces/booking";
 
            }
             else {
