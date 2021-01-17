@@ -72,8 +72,8 @@ public class ActiveBookingManagedBean implements Serializable {
     public void changeStatusToCheckedIn() {
         booking.setRooms(roomService.getReservedRoomsForBooking(booking.getId()));
         if (bookingService.updateBookingStatusToCheckedIn(booking)) {
-            bookings = bookingService.getActiveBookings(null, null);
             messages.showInfoMessage("Booking status changed successfully");
+            bookings = bookingService.getActiveBookings(null, null);
         }
         else messages.showErrorMessage("There was a problem changing the booking status");
     }

@@ -102,7 +102,7 @@ public class BookingManagedBean implements Serializable {
         booking.setCreatedBy(loggedUserMangedBean.getUser());
         if (finishReservation()) {
             logsManagedBean.addSuccessfulLog("Successful reservation");
-            emailService.sendSimpleMessage(client.getEmail(), "Reservation Confirmation", emailText());
+            emailService.sendSimpleMessage(client.getEmail(), "Booking confirmed", emailText());
             messages.showInfoMessage("Successful reservation!");
             return "booking";
         } else {
