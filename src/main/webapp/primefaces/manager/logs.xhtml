@@ -27,11 +27,17 @@
 							 rowsPerPageTemplate="10,15" rowIndexVar="index">
 
 
-					<p:column headerText="Name">
-						<p:outputLabel value="#{log.name}"></p:outputLabel>
+					<p:column headerText="Type">
+						<p:outputLabel value="#{log.type}"></p:outputLabel>
 					</p:column>
 					<p:column headerText="Details">
-						<p:outputLabel value="#{log.detail}"></p:outputLabel>
+						<p:outputLabel value="#{log.details}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Message">
+						<p:outputLabel value="#{log.message}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Method">
+						<p:outputLabel value="#{log.location_exception}"></p:outputLabel>
 					</p:column>
 					<p:column headerText="Created By">
 						<p:outputLabel value="#{log.createdBy.username}"></p:outputLabel>

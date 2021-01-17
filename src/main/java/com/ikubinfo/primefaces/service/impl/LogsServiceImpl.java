@@ -18,15 +18,7 @@ public class LogsServiceImpl implements LogsService {
         this.logsRepository = logsRepository;
     }
 
-    @Override
-    public boolean addSuccessfulLog(Logs log,String detail) {
-        return logsRepository.addSuccessfulLog(log,detail);
-    }
 
-    @Override
-    public  boolean addErrorLog(Logs log,String detail) {
-        return logsRepository.addErrorLog(log,detail);
-    }
 
     @Override
     public List<Logs> getLogs() {

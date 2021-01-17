@@ -1,7 +1,10 @@
 package com.ikubinfo.primefaces.managedbean;
 
 import com.ikubinfo.primefaces.model.Logs;
+import com.ikubinfo.primefaces.repository.LogsRepository;
+import com.ikubinfo.primefaces.repository.impl.LogsRepositoryImpl;
 import com.ikubinfo.primefaces.service.LogsService;
+import com.ikubinfo.primefaces.service.impl.LogsServiceImpl;
 import com.ikubinfo.primefaces.service.impl.RoomCategoryServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,32 +21,18 @@ import java.util.List;
 public class LogsManagedBean implements Serializable {
 
     Logger logger = LoggerFactory.getLogger(RoomCategoryServiceImpl.class);
-
+   @ManagedProperty(value = "#{logsService}")
+    private LogsService logsService;
     private Logs log;
 
     private List<Logs> logs;
 
-    @ManagedProperty(value = "#{logsService}")
-    private LogsService logsService;
-
-    @ManagedProperty(value = "#{loggedUserMangedBean}")
-    private LoggedUserMangedBean loggedUserMangedBean;
 
     @PostConstruct
     public void init()
     {
         log = new Logs();
         logs = logsService.getLogs();
-    }
-
-    public void addSuccessfulLog(String detail){
-        log.setCreatedBy(loggedUserMangedBean.getUser());
-        logsService.addSuccessfulLog(log,detail);
-    }
-
-    public void addErrorLog(String detail){
-        log.setCreatedBy(loggedUserMangedBean.getUser());
-        logsService.addErrorLog(log,detail);
     }
     public Logs getLog() {
         return log;
@@ -57,23 +46,16 @@ public class LogsManagedBean implements Serializable {
         return logs;
     }
 
+    public LogsService getLogsService() {
+        return logsService;
+}
+
+   public void setLogsService(LogsService logsService) {
+        this.logsService = logsService;
+    }
+
     public void setLogs(List<Logs> logs) {
         this.logs = logs;
     }
 
-    public LogsService getLogsService() {
-        return logsService;
-    }
-
-    public void setLogsService(LogsService logsService) {
-        this.logsService = logsService;
-    }
-
-    public LoggedUserMangedBean getLoggedUserMangedBean() {
-        return loggedUserMangedBean;
-    }
-
-    public void setLoggedUserMangedBean(LoggedUserMangedBean loggedUserMangedBean) {
-        this.loggedUserMangedBean = loggedUserMangedBean;
-    }
 }

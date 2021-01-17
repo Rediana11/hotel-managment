@@ -1,8 +1,5 @@
 package com.ikubinfo.primefaces.util;
 
-import com.ikubinfo.primefaces.repository.LogsRepository;
-import com.ikubinfo.primefaces.service.LogsService;
-
 import javax.faces.context.ExceptionHandler;
 import javax.faces.context.ExceptionHandlerFactory;
 
