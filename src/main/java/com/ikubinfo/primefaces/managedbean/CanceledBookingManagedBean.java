@@ -1,14 +1,9 @@
 package com.ikubinfo.primefaces.managedbean;
 
 import com.ikubinfo.primefaces.model.Booking;
-import com.ikubinfo.primefaces.model.BookingStatus;
-import com.ikubinfo.primefaces.model.Client;
-import com.ikubinfo.primefaces.model.Room;
 import com.ikubinfo.primefaces.service.BookingService;
 import com.ikubinfo.primefaces.service.EmailService;
-import com.ikubinfo.primefaces.service.LogsService;
 import com.ikubinfo.primefaces.service.UserService;
-import com.ikubinfo.primefaces.service.helpers.SelectRoom;
 import com.ikubinfo.primefaces.util.Messages;
 
 import javax.annotation.PostConstruct;
@@ -16,7 +11,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -37,9 +31,6 @@ public class CanceledBookingManagedBean implements Serializable {
 
     @ManagedProperty(value = "#{bookingService}")
     private BookingService bookingService;
-
-    @ManagedProperty(value = "#{logsService}")
-    private LogsService logs;
 
     @ManagedProperty(value="#{emailService}")
     private EmailService emailService;
@@ -155,13 +146,6 @@ public class CanceledBookingManagedBean implements Serializable {
         this.bookingService = bookingService;
     }
 
-    public LogsService getLogs() {
-        return logs;
-    }
-
-    public void setLogs(LogsService logs) {
-        this.logs = logs;
-    }
 
     public EmailService getEmailService() {
         return emailService;

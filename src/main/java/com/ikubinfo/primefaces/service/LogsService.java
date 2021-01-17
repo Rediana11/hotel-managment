@@ -6,10 +6,5 @@ import java.util.List;
 
 public interface LogsService {
 
-
-    boolean addSuccessfulLog (Logs log, String detail);
-
-    boolean addErrorLog(Logs log,String detail) ;
-
     List<Logs> getLogs();
 }

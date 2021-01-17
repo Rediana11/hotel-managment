@@ -6,9 +6,8 @@ import java.util.List;
 
 public interface LogsRepository {
 
-    boolean addSuccessfulLog (Logs log,String detail);
 
-    boolean addErrorLog (Logs log, String detail);
+    boolean addErrorLog (Logs log);
 
     List<Logs> getLogs();
 

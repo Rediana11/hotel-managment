@@ -39,8 +39,6 @@ public class BookingManagedBean implements Serializable {
     @ManagedProperty(value = "#{bookingService}")
     private BookingService bookingService;
 
-    @ManagedProperty(value = "#{logsManagedBean}")
-    private LogsManagedBean logsManagedBean;
 
     @ManagedProperty(value = "#{emailService}")
     private EmailService emailService;
@@ -63,6 +61,7 @@ public class BookingManagedBean implements Serializable {
         minDate = new Date(today.getTime() + (oneDay));
         selectedRooms = new ArrayList<SelectRoom>();
         selectedRoom = new SelectRoom();
+
 
     }
 
@@ -101,13 +100,13 @@ public class BookingManagedBean implements Serializable {
         bookingPrice();
         booking.setCreatedBy(loggedUserMangedBean.getUser());
         if (finishReservation()) {
-            logsManagedBean.addSuccessfulLog("Successful reservation");
+
             emailService.sendSimpleMessage(client.getEmail(), "Booking confirmed", emailText());
             messages.showInfoMessage("Successful reservation!");
             return "booking";
         } else {
             messages.showErrorMessage("There was a problem reserving the room");
-            logsManagedBean.addErrorLog("There was a problem reserving the room");
+
         }
 
         return null;
@@ -316,14 +315,6 @@ public class BookingManagedBean implements Serializable {
 
     public void setEmailService(EmailService emailService) {
         this.emailService = emailService;
-    }
-
-    public LogsManagedBean getLogsManagedBean() {
-        return logsManagedBean;
-    }
-
-    public void setLogsManagedBean(LogsManagedBean logsManagedBean) {
-        this.logsManagedBean = logsManagedBean;
     }
 
     public Booking getBooking() {

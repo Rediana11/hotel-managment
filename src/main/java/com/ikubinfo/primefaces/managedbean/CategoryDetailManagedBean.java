@@ -24,8 +24,6 @@ public class CategoryDetailManagedBean implements Serializable {
     @ManagedProperty(value = "#{messages}")
     private Messages messages;
 
-    @ManagedProperty(value = "#{logsManagedBean}")
-    private LogsManagedBean logs;
 
     @PostConstruct
     public void init() {
@@ -66,11 +64,5 @@ public class CategoryDetailManagedBean implements Serializable {
         this.categoryService = categoryService;
     }
 
-    public LogsManagedBean getLogs() {
-        return logs;
-    }
 
-    public void setLogs(LogsManagedBean logs) {
-        this.logs = logs;
-    }
 }

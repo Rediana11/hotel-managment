@@ -16,11 +16,13 @@ public class LogRowMapper implements RowMapper<Logs> {
         Logs log= new Logs();
         User user = new User();
         user.setUsername(result.getString("created_by"));
-        log.setId(result.getInt("logs_id"));
-        log.setName(result.getString("logs_name"));
-        log.setDetail(result.getString("details"));
+        log.setId(result.getInt("id"));
+        log.setType(result.getString("type"));
+        log.setMessage(result.getString("message"));
+        log.setLocation_exception(result.getString("location_exception"));
+        log.setDetails(result.getString("details"));
         log.setCreatedBy(user);
-        log.setCreatedOn(result.getDate("created_on"));
+        log.setCreatedOn(result.getTimestamp("created_on"));
 
         return  log;
     }

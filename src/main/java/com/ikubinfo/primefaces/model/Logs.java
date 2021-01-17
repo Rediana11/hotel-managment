@@ -5,8 +5,10 @@ import java.util.Date;
 public class Logs {
 
     private Integer id;
-    private String name;
-    private String detail;
+    private String type;
+    private String message;
+    private String details;
+    private String location_exception;
     private User createdBy;
     private Date createdOn;
 
@@ -18,20 +20,36 @@ public class Logs {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getDetail() {
-        return detail;
+    public String getMessage() {
+        return message;
     }
 
-    public void setDetail(String details) {
-        this.detail = details;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
+    }
+
+    public String getLocation_exception() {
+        return location_exception;
+    }
+
+    public void setLocation_exception(String location_exception) {
+        this.location_exception = location_exception;
     }
 
     public User getCreatedBy() {
@@ -54,8 +72,10 @@ public class Logs {
     public String toString() {
         return "Logs{" +
                 "id=" + id +
-                ", name='" + name + '\'' +
-                ", details='" + detail + '\'' +
+                ", type='" + type + '\'' +
+                ", message='" + message + '\'' +
+                ", details='" + details + '\'' +
+                ", method='" + location_exception + '\'' +
                 ", createdBy=" + createdBy +
                 ", createdOn=" + createdOn +
                 '}';
