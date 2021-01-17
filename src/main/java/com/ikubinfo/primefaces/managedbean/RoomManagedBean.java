@@ -7,6 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import com.ikubinfo.primefaces.model.Role;
 import com.ikubinfo.primefaces.model.Room;
@@ -21,8 +22,8 @@ import com.ikubinfo.primefaces.util.Messages;
 @ViewScoped
 public class RoomManagedBean implements Serializable {
 	private static final long serialVersionUID = 3800933422824282320L;
-	private Room room;
 
+	private Room room;
 	private List<Room>  reservedRoomsForBooking;
 	private List<Room>  vacantRooms;
 	private List<Room> rooms;
@@ -41,16 +42,12 @@ public class RoomManagedBean implements Serializable {
 	@ManagedProperty(value="#{bookingManagedBean}")
 	private BookingManagedBean bookingManagedBean;
 
-
-
 	@PostConstruct
 	public void init() {
-
 
 		rooms = roomService.getAll(null);
 		vacantRooms= roomService.getAllVacantRooms(bookingManagedBean.getBooking());
 		room = new Room();
-
 	}
 
 	public void loadReservedRooms(){
@@ -58,39 +55,31 @@ public class RoomManagedBean implements Serializable {
 
 	}
 
-	public void save() {
-		if (roomService.save(room)) {
-			getAll();
-			messages.showInfoMessage("Room updated successfully");
-		}
-		room = new Room();
-
-	}
-
-	public void filter() {
-		rooms = roomService.getAll(name);
-	}
 
 	public void delete() {
 		try {
 			roomService.delete(room);
+			messages.showInfoMessage("Room deleted");
 			rooms = roomService.getAll(null);
-			messages.showInfoMessage("Deleted");
 
 		} catch (CategoryInUseException e) {
 			messages.showWarningMessage(e.getMessage());
 		}
-
 	}
 
 	public void getAll() {
 		rooms = roomService.getAll(null);
 	}
 
+	public void filter() {
+		rooms = roomService.getAll(name);
+	}
+
 	public void reset() {
 		name = null;
 		filter();
 	}
+
 
 	public List<Room> getVacantRooms() {
 		return vacantRooms;
@@ -156,6 +145,7 @@ public class RoomManagedBean implements Serializable {
 		this.bookingManagedBean = bookingManagedBean;
 	}
 
+
 	public List<RoomFacility> getFacilities() {
 		return facilities;
 	}
@@ -179,4 +169,5 @@ public class RoomManagedBean implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
 }

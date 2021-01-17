@@ -16,17 +16,18 @@ public interface RoomRepository {
 
 	Room getRoom(int id);
 
-	RoomAbility getAbility(int id);
+	boolean updateRoom(Room room);
 
-	boolean save(Room room);
-
-	boolean create(Room room);
+	boolean create(List<RoomPhoto> photos,Room room);
 
 	void delete(Room room);
+
+	boolean isRoomInUse(Room room);
 
 	List<RoomCategory> getCategories();
 
 	List<RoomAbility> getRoomAbilities();
+
 
 
 }

@@ -53,16 +53,15 @@
 
 							</p:commandButton>
 
-							<p:commandButton immediate="true"
-													 title="Delete"
-													 icon="pi pi-trash"
-													 update=":form:table growl" action="#{categoryManagedBean.delete}">
-										<p:confirm header="Confirmation" message="Are you sure to delete ?"
-												   icon="pi pi-exclamation-triangle" />
+						<p:commandButton immediate="true"  title="Delete"
+										 icon="pi pi-trash"
+										 update="table" action="#{categoryManagedBean.delete}">
+							<p:confirm header="Confirmation" message="Are you sure to delete?"
+									   icon="pi pi-exclamation-triangle" />
 
-										<f:setPropertyActionListener
-												target="#{categoryManagedBean.roomCategory}" value="#{roomCategory}" />
-									</p:commandButton>
+							<f:setPropertyActionListener
+									target="#{categoryManagedBean.roomCategory}" value="#{roomCategory}" />
+						</p:commandButton>
 
 
 									<p:button outcome="categoryDetail"
@@ -70,13 +69,14 @@
 											icon="pi pi-info">
 										<f:param name="id" value="#{roomCategory.id}" />
 									</p:button>
-</p:column>
-						<p:confirmDialog global="true"  height="100" width="250" showEffect="fade" hideEffect="fade">
-							<p:commandButton value="Yes" type="button"
-								styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
-							<p:commandButton value="No" type="button"
-								styleClass="ui-confirmdialog-no" icon="pi pi-times" />
-						</p:confirmDialog>
+
+					<p:confirmDialog global="true"  height="100" width="250" showEffect="fade" hideEffect="fade">
+						<p:commandButton value="Yes" type="button"
+										 styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+						<p:commandButton value="No" type="button"
+										 styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+					</p:confirmDialog>
+					</p:column>
 				</p:dataTable>
 			</h:form>
 

@@ -6,7 +6,7 @@ public class Logs {
 
     private Integer id;
     private String name;
-    private String details;
+    private String detail;
     private User createdBy;
     private Date createdOn;
 
@@ -26,12 +26,12 @@ public class Logs {
         this.name = name;
     }
 
-    public String getDetails() {
-        return details;
+    public String getDetail() {
+        return detail;
     }
 
-    public void setDetails(String details) {
-        this.details = details;
+    public void setDetail(String details) {
+        this.detail = details;
     }
 
     public User getCreatedBy() {
@@ -55,7 +55,7 @@ public class Logs {
         return "Logs{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", details='" + details + '\'' +
+                ", details='" + detail + '\'' +
                 ", createdBy=" + createdBy +
                 ", createdOn=" + createdOn +
                 '}';

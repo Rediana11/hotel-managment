@@ -1,0 +1,21 @@
+package com.ikubinfo.primefaces.util;
+
+import com.ikubinfo.primefaces.repository.LogsRepository;
+import com.ikubinfo.primefaces.service.LogsService;
+
+import javax.faces.context.ExceptionHandler;
+import javax.faces.context.ExceptionHandlerFactory;
+
+public class CustomExceptionHandlerFactory  extends ExceptionHandlerFactory {
+
+    private ExceptionHandlerFactory parent;
+    public CustomExceptionHandlerFactory(ExceptionHandlerFactory parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public ExceptionHandler getExceptionHandler() {
+        ExceptionHandler result = new CustomExceptionHandler(parent.getExceptionHandler());
+        return result;
+    }
+}

@@ -6,6 +6,7 @@ import com.ikubinfo.primefaces.repository.PhotoRepository;
 import com.ikubinfo.primefaces.repository.mapper.PhotoRowMapper;
 import com.ikubinfo.primefaces.repository.mapper.RoomRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -21,19 +22,19 @@ import java.util.Map;
 @Repository
 public class PhotoRepositoryImpl implements PhotoRepository {
 
-    private static final String GET_PHOTOS = "select room_photo_id,  r.room_id, file_name,  file_path, file_type, file_size, room_name,\n" +
+    private static final String GET_PHOTOS = "select room_photo_id,r.is_valid,  r.room_id, file_name,  file_path, file_type, file_size, room_name,\n" +
             "\t\t           r.created_on, (ue.first_name || ' ' || ue.last_name) as created_by\n" +
             "\t\t           from room_photo r join user_ ue on r.created_by= ue.user_id \n" +
             "\t\t\tjoin room on room.room_id=r.room_id\n" +
-            "\t\t\twhere r.is_valid=true";
+            "\t\t\twhere r.is_valid=true and r.room_id=:id";
 
-    private  static final String GET_PHOTO = "select room_photo_id,  r.room_id, file_name,  file_path, file_type, file_size, room_name,\n" +
+    private static final String GET_PHOTO = "select room_photo_id,  r.room_id, file_name,  file_path, file_type, file_size, room_name,\n" +
             "\t\t           r.created_on, (ue.first_name || ' ' || ue.last_name) as created_by\n" +
             "\t\t           from room_photo r join user_ ue on r.created_by= ue.user_id \n" +
             "\t\t\tjoin room on room.room_id=r.room_id\n" +
             "\t\t\twhere r.is_valid=true  and r.room_id =: id";
 
-    private static final String DELETE_PHOTO ="update room_photo set is_valid='false' where room_photo_id=:id";
+    private static final String DELETE_PHOTO = "update room_photo set is_valid='false' where room_photo_id=:id";
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private SimpleJdbcInsert insertPhotoQuery;
@@ -47,17 +48,26 @@ public class PhotoRepositoryImpl implements PhotoRepository {
                 .usingGeneratedKeyColumns("room_photo_id");
         this.jdbcTemplate = new JdbcTemplate(datasource);
     }
+
     @Override
-    public List<RoomPhoto> getAll() {
-        return namedParameterJdbcTemplate.query(GET_PHOTOS, new PhotoRowMapper());    }
+    public List<RoomPhoto> getAll(int id) {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("id", id);
+
+            return namedParameterJdbcTemplate.query(GET_PHOTOS, params, new PhotoRowMapper());
+        } catch (EmptyResultDataAccessException ex) {
+            return null;
+        }
+    }
 
     @Override
     public RoomPhoto getRoomPhoto(int id) {
 
         Map<String, Object> params = new HashMap<>();
-        params.put("id", id );
+        params.put("id", id);
 
-        return  namedParameterJdbcTemplate.queryForObject(GET_PHOTO, params, new PhotoRowMapper());
+        return namedParameterJdbcTemplate.queryForObject(GET_PHOTO, params, new PhotoRowMapper());
 
     }
 
@@ -82,8 +92,6 @@ public class PhotoRepositoryImpl implements PhotoRepository {
         parameters.put("file_type", room.getType());
         parameters.put("file_path", room.getPath());
         parameters.put("room_id", room.getRoom().getId());
-        //parameters.put("created_by", room.getCreatedBy());
-        parameters.put("created_by", 2); //TODO replace this with line 129
         parameters.put("created_on", new Date());
         parameters.put("is_valid", "true");
 

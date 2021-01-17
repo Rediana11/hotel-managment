@@ -8,7 +8,7 @@ public class RoomPhoto {
     private Integer id;
     private String name;
     private String type;
-    private String size;
+    private long size;
     private String path;
     private Room room;
     private User createdBy;
@@ -39,11 +39,11 @@ public class RoomPhoto {
         this.type = type;
     }
 
-    public String getSize() {
+    public long getSize() {
         return size;
     }
 
-    public void setSize(String size) {
+    public void setSize(long size) {
         this.size = size;
     }
 

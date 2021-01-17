@@ -1,11 +1,13 @@
 package com.ikubinfo.primefaces.service.impl;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.ikubinfo.primefaces.model.Booking;
 import com.ikubinfo.primefaces.model.BookingStatus;
 import com.ikubinfo.primefaces.model.Room;
+import com.ikubinfo.primefaces.service.EmailService;
 import org.springframework.stereotype.Service;
 
 import com.ikubinfo.primefaces.model.User;
@@ -24,20 +26,23 @@ class BookingServiceImpl implements BookingService {
 	}
 
 	@Override
-	public List<Booking> getReservedBookings() {
-
-		return bookingRepository.getReservedBookings();
-
+	public List<Booking> getBookings(Date checkIn, Date checkOut) {
+		return bookingRepository.getBookings(checkIn,checkOut);
 	}
 
 	@Override
-	public List<Booking> getActiveBookings() {
-		return bookingRepository.getActiveBookings();
+	public List<Booking> getCheckedInBookings(Date checkIn, Date checkOut) {
+		return bookingRepository.getCheckedInBookings(checkIn,checkOut);
 	}
 
 	@Override
-	public List<Booking> getCanceledBookings() {
-		return bookingRepository.getCanceledBookings();
+	public List<Booking> getActiveBookings(Date checkIn, Date checkOut) {
+		return bookingRepository.getActiveBookings(checkIn,checkOut);
+	}
+
+	@Override
+	public List<Booking> getCanceledBookings(Date checkIn, Date checkOut) {
+		return bookingRepository.getCanceledBookings(checkIn,checkOut);
 	}
 
 	@Override
@@ -62,17 +67,16 @@ class BookingServiceImpl implements BookingService {
 		return bookingRepository.reserve(booking,rooms);
 	}
 
-	@Override
-	public boolean save(Booking booking) {
-		return bookingRepository.save(booking);
-	}
+
 
 	@Override
+	@Transactional
 	public boolean updateBookingStatusToCheckedIn(Booking booking) {
 		return bookingRepository.updateBookingStatusToCheckedIn(booking);
 	}
 
 	@Override
+	@Transactional
 	public boolean updateBookingStatusToCheckedOut(Booking booking) {
 		return bookingRepository.updateBookingStatusToCheckedOut(booking);
 	}

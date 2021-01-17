@@ -30,6 +30,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getLoggedUser(String email,String password) {
+        return userRepository.getLoggedUser(email,password);
+    }
+
+    @Override
     public Client getClientByEmail(String email) {
         return userRepository.getClientByEmail(email);
     }

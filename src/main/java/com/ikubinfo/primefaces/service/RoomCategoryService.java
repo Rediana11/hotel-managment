@@ -13,10 +13,12 @@ public interface RoomCategoryService {
 
     RoomCategory getCategory(int id);
 
-    boolean updateCategory(RoomCategory roomCategory);
+    boolean updateCategory(RoomCategory roomCategory) throws CategoryInUseException;
 
     boolean create(RoomCategory roomCategory);
 
-    void delete(RoomCategory roomCategory) ;
+    void delete(RoomCategory roomCategory) throws CategoryInUseException;
+
+    boolean isCategoryInUse(RoomCategory roomCategory);
 
 }

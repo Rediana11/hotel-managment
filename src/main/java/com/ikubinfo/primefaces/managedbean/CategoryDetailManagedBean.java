@@ -24,6 +24,9 @@ public class CategoryDetailManagedBean implements Serializable {
     @ManagedProperty(value = "#{messages}")
     private Messages messages;
 
+    @ManagedProperty(value = "#{logsManagedBean}")
+    private LogsManagedBean logs;
+
     @PostConstruct
     public void init() {
         roomCategory= new RoomCategory();
@@ -31,6 +34,10 @@ public class CategoryDetailManagedBean implements Serializable {
 
     public void loadCategory(){
         roomCategory = categoryService.getCategory(roomCategory.getId());
+        if (roomCategory==null){
+            messages.showErrorMessage("Category does not exist");
+
+        }
     }
 
 
@@ -57,5 +64,13 @@ public class CategoryDetailManagedBean implements Serializable {
 
     public void setCategoryService(RoomCategoryService categoryService) {
         this.categoryService = categoryService;
+    }
+
+    public LogsManagedBean getLogs() {
+        return logs;
+    }
+
+    public void setLogs(LogsManagedBean logs) {
+        this.logs = logs;
     }
 }

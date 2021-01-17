@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface PhotoRepository {
 
-    List<RoomPhoto> getAll();
+    List<RoomPhoto> getAll(int id);
 
     RoomPhoto getRoomPhoto(int id);
 

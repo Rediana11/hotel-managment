@@ -1,18 +1,18 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
 	  xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 <f:metadata>
 	<f:viewParam name="id" value="#{roomDetailManagedBean.room.id}" />
 	<f:viewAction action="#{roomDetailManagedBean.loadRoom()}" />
 </f:metadata>
 <h:body>
-		<ui:include name="template" src="/template/template.xhtml" />
+	<ui:include name="template" src="/template/template.xhtml" />
 
 
-		<p:growl id="growl"></p:growl>
+	<p:growl id="growl"></p:growl>
 	<h:form id="form">
 
 		<p:dataList value="#{roomDetailManagedBean.room}" var="room" type="definition">
@@ -32,8 +32,8 @@
 		</p:dataList>
 
 	</h:form>
-		<p:button outcome="reservation" value="Back">
-		</p:button>
+	<p:button outcome="reservation" value="Back">
+	</p:button>
 
 
 

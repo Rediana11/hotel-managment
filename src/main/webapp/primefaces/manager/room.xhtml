@@ -25,10 +25,10 @@
 				<h:outputLabel for="name" value="Name "></h:outputLabel>
 				<h:inputText id="name" required="true"
 							 value="#{roomManagedBean.name}"></h:inputText>
-				<p:commandButton  value="Search"
-					action="#{roomManagedBean.filter}" update="form">
+				<p:commandButton  value="Search" icon="fa fa-search"
+					action="#{roomManagedBean.filter}"  update="form">
 				</p:commandButton>
-				<p:commandButton value="Reset" immediate="true"
+				<p:commandButton value="Reset" immediate="true" icon="fa fa-refresh"
 											  action="#{roomManagedBean.reset}" update="form">
 
 				</p:commandButton>
@@ -40,10 +40,10 @@
 		<p:dataTable id="table" sortMode="multiple" styleClass="table table-hover table table-striped table-bordered dataTable "
 					 value="#{roomManagedBean.rooms}"
 					 var="room"
-					 style="text-align:center" widgetVar="DTWVar" rows="5"
+					 style="text-align:center" widgetVar="DTWVar" rows="10"
 					 paginator="true"
 					 paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
-					 rowsPerPageTemplate="5,10,15" rowIndexVar="index">
+					 rowsPerPageTemplate="10,15" rowIndexVar="index">
 
 
 			<p:column headerText="Name">
@@ -61,7 +61,7 @@
 					 </p:column>
 			       <p:column headerText="Facilities">
 				<h:outputLabel value="#{room.facilities}"></h:outputLabel>
-			</p:column>
+		            	</p:column>
 					<p:column headerText="Category">
 						 <h:outputLabel value="#{room.roomCategory.name}"></h:outputLabel>
 					 </p:column>

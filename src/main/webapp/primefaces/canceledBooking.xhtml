@@ -20,11 +20,24 @@
 
 			<h:form id="form">
 
+				<p:outputLabel value="Search by dates: " />
+				<p:calendar id="checkIn"   value="#{canceledBookingManagedBean.checkIn}"  mindate="#{canceledBookingManagedBean.today}" pattern="dd-MM-yyyy"  showOn="button">
+				</p:calendar>
+				<p:calendar id="checkOut"  value="#{canceledBookingManagedBean.checkOut}"  mindate="#{canceledBookingManagedBean.minDate}" pattern="dd-MM-yyyy"  showOn="button">
+				</p:calendar>
 
-				<p:dataTable id="table" value="#{bookingManagedBean.canceledBookings}"
+				<p:commandButton  value="Search" icon="fa fa-search"
+								  action="#{canceledBookingManagedBean.filterCanceledBookings}" update="form">
+				</p:commandButton>
+				<p:commandButton value="Reset" immediate="true" icon="fa fa-refresh"
+								 action="#{canceledBookingManagedBean.resetCanceledBookings}" update="form">
+				</p:commandButton>
+				<br/>
+				<br/>
+				<p:dataTable id="table" value="#{canceledBookingManagedBean.bookings}"
 					var="booking"
 							 class="table table-striped table-bordered dataTable no-footer"
-							 style="text-align:center" widgetVar="DTWVar" rows="5"
+							 style="text-align:center" widgetVar="DTWVar" rows="10"
 							 paginator="true"
 							 paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
 							 rowsPerPageTemplate="5,10,15" rowIndexVar="index">
@@ -108,7 +121,7 @@
 
 				<h:form id="form">
 
-					<p:dataList value="#{bookingManagedBean.booking}" var="booking" type="definition">
+					<p:dataList value="#{canceledBookingManagedBean.booking}" var="booking" type="definition">
 						<f:facet name="header">
 							Booking Info
 						</f:facet>

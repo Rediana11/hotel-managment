@@ -37,50 +37,63 @@ public class CategoryManagedBean implements Serializable {
     @ManagedProperty(value = "#{messages}")
     private Messages messages;
 
-    @PostConstruct
-    public void init()
-    {
+    @ManagedProperty(value = "#{loggedUserMangedBean}")
+    private LoggedUserMangedBean loggedUserMangedBean;
 
-        logger.info(categoryService.getAll().toString());
+    @PostConstruct
+    public void init() {
         categories = categoryService.getAll();
         roomCategory = new RoomCategory();
-
     }
 
-    public void updateCategory() {
-        if (categoryService.updateCategory(roomCategory)) {
-            getAll();
-            messages.showInfoMessage("Category updated successfully");
+    public void updateCategory() throws CategoryInUseException {
+        roomCategory.setUpdatedBy(loggedUserMangedBean.getUser());
+        try {
+            if (categoryService.updateCategory(roomCategory)) {
+                getAll();
+                messages.showInfoMessage("Category updated successfully");
+
+            } else {
+                messages.showErrorMessage("There was a problem updating the category");
+            }
+        }
+        catch (CategoryInUseException e) {
+            messages.showWarningMessage(e.getMessage());
         }
         roomCategory = new RoomCategory();
-
     }
 
-    public void add() {
+    public void delete() {
+        try {
+            categoryService.delete(roomCategory);
+            messages.showInfoMessage(" Category deleted! ");
+            categories = categoryService.getAll();
+        } catch (CategoryInUseException e) {
+            messages.showWarningMessage(e.getMessage());
+        }
+    }
 
+
+    public void add() {
+        roomCategory.setCreatedBy(loggedUserMangedBean.getUser());
         if (categoryService.create(roomCategory)) {
             messages.showInfoMessage("Category was added successfully");
             getAll();
+        } else {
+            messages.showErrorMessage("There was a problem adding the category");
         }
         roomCategory = new RoomCategory();
 
     }
+
     public void filter() {
         categories = categoryService.getAll();
     }
 
-    public void delete() {
-            categoryService.delete(roomCategory);
-            categories = categoryService.getAll();
-            messages.showInfoMessage("Deleted");
-
-
-    }
 
     public void getAll() {
         categories = categoryService.getAll();
     }
-
 
     public RoomCategory getRoomCategory() {
         return roomCategory;
@@ -108,6 +121,14 @@ public class CategoryManagedBean implements Serializable {
 
     public Messages getMessages() {
         return messages;
+    }
+
+    public LoggedUserMangedBean getLoggedUserMangedBean() {
+        return loggedUserMangedBean;
+    }
+
+    public void setLoggedUserMangedBean(LoggedUserMangedBean loggedUserMangedBean) {
+        this.loggedUserMangedBean = loggedUserMangedBean;
     }
 
     public void setMessages(Messages messages) {

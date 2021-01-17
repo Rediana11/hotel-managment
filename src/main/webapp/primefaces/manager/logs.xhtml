@@ -1,0 +1,49 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+<h:head>
+
+</h:head>
+<h:body>
+	<ui:include name="template" src="/template/template.xhtml" />
+	<p:growl id="growl"></p:growl>
+	<p:breadCrumb>
+		<p:menuitem value="Categories" url="#" />
+		<p:menuitem value="Logs" url="#" />
+	</p:breadCrumb>
+	<br/>
+
+			<br/>
+			<br/>
+			<h:form id="form">
+				<p:dataTable id="table" value="#{logsManagedBean.logs}"
+							 var="log"
+							 class="table table-striped table-bordered dataTable no-footer"
+							 style="text-align:center" widgetVar="DTWVar" rows="10"
+							 paginator="true"
+							 paginatorTemplate="{PreviousPageLink} {PageLinks} {NextPageLink} {RowsPerPageDropdown}"
+							 rowsPerPageTemplate="10,15" rowIndexVar="index">
+
+
+					<p:column headerText="Name">
+						<p:outputLabel value="#{log.name}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Details">
+						<p:outputLabel value="#{log.detail}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Created By">
+						<p:outputLabel value="#{log.createdBy.username}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Created On">
+						<p:outputLabel value="#{log.createdOn}"></p:outputLabel>
+					</p:column>
+				</p:dataTable>
+
+			</h:form>
+
+
+
+</h:body>
+</html>

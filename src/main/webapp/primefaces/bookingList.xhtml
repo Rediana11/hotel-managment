@@ -1,0 +1,138 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+</h:head>
+<h:body>
+	<ui:include name="home" src="/template/template.xhtml" />
+		<p:growl id="growl"></p:growl>
+	<p:breadCrumb>
+		<p:menuitem value="Categories" url="#" />
+		<p:menuitem value="Bookings" url="#" />
+	</p:breadCrumb>
+
+
+			<p:button outcome="reservation" icon="fa fa-plus" value="Make a reservation" styleClass="ui-priority-primary">
+			</p:button>
+
+			<br/>
+	<br/>
+	<style type="text/css">
+		.ui-paginator a {
+			margin-right: 5px;
+		}
+	</style>
+			<h:form id="form">
+				<p:outputLabel value="Search by dates: " />
+				<p:calendar id="checkIn"  value="#{bookingManagedBean.checkIn}"  mindate="#{bookingManagedBean.today}" pattern="dd-MM-yyyy"  showOn="button">
+				</p:calendar>
+				<p:calendar id="checkOut" value="#{bookingManagedBean.checkOut}"  mindate="#{bookingManagedBean.minDate}" pattern="dd-MM-yyyy"  showOn="button">
+				</p:calendar>
+
+				<p:commandButton  value="Search" icon="fa fa-search"
+								  action="#{bookingManagedBean.filterBookings}" update="form">
+				</p:commandButton>
+				<p:commandButton value="Reset" immediate="true" icon="fa fa-refresh"
+								 action="#{bookingManagedBean.resetBookings}" update="form">
+				</p:commandButton>
+				<br/>
+				<br/>
+				<p:dataTable id="table" value="#{bookingManagedBean.bookings}"
+					var="booking"
+							 class="table table-striped table-bordered dataTable no-footer"
+							 style="text-align:center" widgetVar="DTWVar" rows="10"
+							 paginator="true"
+							 paginatorTemplate="{CurrentPageReport}  {PreviousPageLink} {PageLinks} {NextPageLink}  {Exporters}"
+							 rowsPerPageTemplate="5,10" rowIndexVar="index">
+
+					<p:column headerText="Check in">
+						<p:outputLabel value="#{booking.checkIn}"></p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Check out">
+						<p:outputLabel value="#{booking.checkOut}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Price">
+						<p:outputLabel value="#{booking.price}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Persons number">
+						<p:outputLabel value="#{booking.personsNumber}"></p:outputLabel>
+					</p:column>
+					<p:column headerText="Booking Status">
+						<p:outputLabel value="#{booking.bookingStatus.name}"></p:outputLabel>
+					</p:column>
+
+					<p:column headerText="Actions">
+
+
+						<p:commandButton immediate="true" title="Delete" icon="pi pi-trash"
+							update=":form:table growl" action="#{bookingManagedBean.delete}">
+							<p:confirm header="Confirmation" message="Are you sure?"
+								icon="pi pi-exclamation-triangle" />
+
+							<f:setPropertyActionListener
+								target="#{activeBookingManagedBean.booking}" value="#{booking}" />
+						</p:commandButton>
+
+						<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+							<p:commandButton value="Yes" type="button"
+								styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+							<p:commandButton value="No" type="button"
+								styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+						</p:confirmDialog>
+
+
+
+
+
+						<p:button outcome="reservedRooms"
+								  title="Details"
+								  icon="pi pi-info">
+							<f:param name="id" value="#{booking.id}" />
+						</p:button>
+					</p:column>
+
+
+				</p:dataTable>
+
+			</h:form>
+
+			<script type="text/javascript">
+				PrimeFaces.locales ['de'] = {
+					closeText: 'Schließen',
+					prevText: 'Zurück',
+					nextText: 'Weiter',
+					monthNames: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember' ],
+					monthNamesShort: ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez' ],
+					dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+					dayNamesShort: ['Son', 'Mon', 'Die', 'Mit', 'Don', 'Fre', 'Sam'],
+					dayNamesMin: ['S', 'M', 'D', 'M ', 'D', 'F ', 'S'],
+					weekHeader: 'Woche',
+					firstDay: 1,
+					isRTL: false,
+					showMonthAfterYear: false,
+					yearSuffix:'',
+					timeOnlyTitle: 'Nur Zeit',
+					timeText: 'Zeit',
+					hourText: 'Stunde',
+					minuteText: 'Minute',
+					secondText: 'Sekunde',
+					currentText: 'Aktuelles Datum',
+					ampm: false,
+					month: 'Monat',
+					week: 'Woche',
+					day: 'Tag',
+					allDayText: 'Ganzer Tag'
+				};
+			</script>
+			<h:form id="editForm">
+
+
+
+			</h:form>
+
+	</h:body>
+	</html>

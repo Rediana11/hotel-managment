@@ -73,18 +73,26 @@
 	</style>
 
 	<h:form id="form">
-		<p:wizard widgetVar="myWizard" showNavBar="false"  >
+		<p:wizard  >
 		<p:tab id="basic" title="Basic information" style="width: auto;">
 			<p:panel header="Dates" style="width: auto;">
 				<p:messages />
-				<h:panelGrid columns="4" cellpadding="10">
-					<p:outputLabel for="checkIn" value="Check in:" />
-					<p:calendar id="checkIn" required="true" requiredMessage="Choose check in date!" value="#{bookingManagedBean.booking.checkIn}" mindate="#{bookingManagedBean.today}"  />
-					<p:outputLabel for="checkOut" value="Check out:" />
-					<p:calendar id="checkOut"   required="true"  requiredMessage="Choose check out date!" value="#{bookingManagedBean.booking.checkOut}" validarMessage="Data gabim" mindate="#{bookingManagedBean.minDate}" >
 
-						<p:clientValidator  event="onChange"/>
+				<h:panelGrid columns="1" cellpadding="10">
+					<div style="text-align:center">
+					<div class="col-sm-8">
+					<p:outputLabel for="checkIn" value="Check in:" />
+					<p:calendar id="checkIn" required="true" requiredMessage="Choose check in date!" value="#{bookingManagedBean.booking.checkIn}" mindate="#{bookingManagedBean.today}" pattern="dd-MM-yyyy"  showOn="button" >
 					</p:calendar>
+					</div>
+					<br/>
+					<div class="col-sm-8">
+					<p:outputLabel for="checkOut" value="Check out:" />
+					<p:calendar id="checkOut"   required="true"  requiredMessage="Choose check out date!" value="#{bookingManagedBean.booking.checkOut}"  mindate="#{bookingManagedBean.minDate}" pattern="dd-MM-yyyy"  showOn="button">
+					</p:calendar>
+					</div>
+					<br/>
+					<div class="col-sm-8">
 					<h:outputLabel for="personsNumber" value="Persons number: " />
 					<p:selectOneMenu id="personsNumber" required="true" requiredMessage="Choose persons number!" value="#{bookingManagedBean.booking.personsNumber}" style="width:125px">
 						<f:selectItem itemLabel="Select One" itemValue="" />
@@ -102,10 +110,9 @@
 						<f:facet name="footer">
 						</f:facet>
 					</p:selectOneMenu>
-
+					</div>
+					</div>
 				</h:panelGrid>
-				<p:commandButton style="..." value="Next" icon="ui-icon-arrow-1-e" action="#{bookingManagedBean.datesValidate}"
-								 iconPos="left" type="button" onclick="PF('myWizard').next();" />
 			</p:panel>
 		</p:tab>
 		<p:tab id="rooms" title="Rooms" style="width: auto;">
@@ -115,7 +122,7 @@
 					<p:dataTable id="table"
 								 var="room"
 
-								 value="#{roomManagedBean.vacantRooms }"
+								 value="#{roomManagedBean.vacantRooms}"
 								 class="table table-striped table-bordered dataTable no-footer"
 								 style="text-align:center" widgetVar="DTWVar" rows="5"
 								 paginator="true"
@@ -164,12 +171,8 @@
 
 
 					</p:dataTable>
-				</h:panelGrid>
-				<p:commandButton style="..." value="Back" icon="ui-icon-arrow-1-w"
-								 iconPos="right" type="button" onclick="PF('myWizard').back();" />
-				<p:commandButton style="..." value="Next" icon="ui-icon-arrow-1-e" action="#{bookingManagedBean.checkedRoomsValidate}"
-								 iconPos="left" type="button" onclick="PF('myWizard').next();" />
 
+				</h:panelGrid>
 			</p:panel>
 		</p:tab>
 		<p:tab id="ask" title="Ask a question">
@@ -182,46 +185,30 @@
 					<p:inputTextarea rows="10" value="#{bookingManagedBean.booking.remarks}" cols="33" />
 					<br/>
 				</h:panelGrid>
-				<p:commandButton style="..." value="Back" icon="ui-icon-arrow-1-w"
-								 iconPos="right" type="button" onclick="PF('myWizard').back();" />
-				<p:commandButton style="..." value="Next" icon="ui-icon-arrow-1-e"
-								 iconPos="left" type="button" onclick="PF('myWizard').next();" />
+
 
 			</p:panel>
 		</p:tab>
-		<p:tab id="personal" title="Personal" style="width: auto;">
+		<p:tab id="personal" title="Personal information" style="width: auto;">
 			<p:panel header="Personal Details" style="width: auto;">
 				<p:messages />
 
 				<h:outputText for="email" value="Search client by email: "/>
-				<p:inputText id="email"
-							 value="#{bookingManagedBean.email}"/>
-				<p:commandButton  value="Search"
+				<p:autoComplete id="email"  placeholder="******@example.**" value="#{bookingManagedBean.email}" />
+
+				<p:commandButton  value="Search" icon="fa fa-search"
 								  action="#{bookingManagedBean.getClientByEmail}" update="form">
 				</p:commandButton>
-				<div>
-
+				<br/>
+				<br/>
+				<br/>
+				<div style="text-align:center">
+					<p:commandButton  icon="fa fa-plus" value="Create new client"
+									  update="addForm"
+									  process="@this" oncomplete="PF('AddDialog').show();">
+					</p:commandButton>
 				</div>
-				<h:panelGrid columns="4" columnClasses="label, value">
 
-
-					<h:outputText value="Firstname: " />
-					<p:inputText required="true"  value="#{bookingManagedBean.client.firstName}" label="Firstname" />
-
-					<h:outputText value="Lastname: " />
-					<p:inputText value="#{bookingManagedBean.client.lastName}"  required="true" label="Lastname"/>
-
-					<h:outputText value="Age: " />
-					<p:inputText   value="#{bookingManagedBean.client.age}" />
-
-					<h:outputText value="Email: *" />
-					<p:inputText   required="true" value="#{bookingManagedBean.client.email}" label="Email"/>
-
-				</h:panelGrid>
-				<p:commandButton style="..." value="Back" icon="ui-icon-arrow-1-w"
-								 iconPos="right" type="button" onclick="PF('myWizard').back();" />
-				<p:commandButton style="..." value="Next" icon="ui-icon-arrow-1-e"
-								 iconPos="left" type="button" onclick="PF('myWizard').next();" />
 
 			</p:panel>
 		</p:tab>
@@ -240,7 +227,6 @@
 					<h:outputText value="#{bookingManagedBean.client.age}" styleClass="outputLabel"/>
 					<h:outputText value="Email: " />
 					<h:outputText value="#{bookingManagedBean.client.email}" styleClass="outputLabel"/>
-
 					<h:outputText value="Check in date: " />
 					<h:outputText value="#{bookingManagedBean.booking.checkIn}" styleClass="outputLabel"/>
 
@@ -249,8 +235,6 @@
 
 					<h:outputText value="Number of persons: " />
 					<h:outputText value="#{bookingManagedBean.booking.personsNumber}" styleClass="outputLabel"/>
-					<h:outputText value="Price" />
-					<h:outputText value="#{bookingManagedBean.booking.price}" styleClass="outputLabel"/>
 
 					<h:outputText value="Choosen room/rooms: " />
 
@@ -268,11 +252,57 @@
 				</h:panelGrid>
 				<p:commandButton value="Submit" action="#{bookingManagedBean.reserve}" update="growl" process="@this"/>
 			</p:panel>
-			<p:commandButton style="..." value="Back" icon="ui-icon-arrow-1-w"
-							 iconPos="right" type="button" onclick="PF('myWizard').back();" />
 		</p:tab>
 
 	</p:wizard>
+	</h:form>
+	<h:form id="addForm">
+
+		<p:dialog header="Add Client" id="addDialog" height="440" width="600" left="auto"
+				  widgetVar="AddDialog" modal="true">
+			<br/>
+			<div class="form-group">
+				<p:outputLabel for="firstName" value="First name" />
+				<h:inputText id="firstName" class="form-control form-control-lg" required="true"
+							 value="#{bookingManagedBean.client.firstName}"></h:inputText>
+			</div>
+			<div class="form-group">
+				<p:outputLabel for="lastName" value="Last name" />
+
+				<h:inputText id="lastName" class="form-control form-control-lg" required="true"
+							 value="#{bookingManagedBean.client.lastName}"></h:inputText>
+			</div>
+			<div class="form-group">
+				<p:outputLabel for="age" value="Age" />
+				<h:inputText id="age" class="form-control form-control-lg" required="true"
+							 converterMessage="Please enter digits only."
+							 value="#{bookingManagedBean.client.age}"></h:inputText>
+			</div>
+			<div class="form-group">
+				<p:outputLabel for="email" value="Email" />
+
+				<h:inputText id="email" class="form-control form-control-lg"  required="true"
+							 value="#{bookingManagedBean.newEmail}"></h:inputText>
+				<small id="username-help">A confirmation email will be sent to your email address.</small>
+
+			</div>
+			<br/>
+			<br/>
+
+			<div class="form-group">
+				<div style="text-align: center;">
+					<p:commandButton style="margin:auto" process="addDialog" update=":form:table growl"
+									 value="Save" actionListener="#{bookingManagedBean.checkIfEmailExists}"
+									 oncomplete="PF('AddDialog').hide();">
+					</p:commandButton>
+
+				</div>
+
+
+			</div>
+
+		</p:dialog>
+
 	</h:form>
 
 </h:body>

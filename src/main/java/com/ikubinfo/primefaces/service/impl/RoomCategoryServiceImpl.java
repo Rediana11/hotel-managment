@@ -1,9 +1,9 @@
 package com.ikubinfo.primefaces.service.impl;
 
 import com.ikubinfo.primefaces.model.RoomCategory;
-import com.ikubinfo.primefaces.repository.BookingRepository;
 import com.ikubinfo.primefaces.repository.RoomCategoryRepository;
 import com.ikubinfo.primefaces.service.RoomCategoryService;
+import com.ikubinfo.primefaces.service.exceptions.CategoryInUseException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -34,9 +34,14 @@ public class RoomCategoryServiceImpl implements RoomCategoryService {
     }
 
     @Override
-    public boolean updateCategory(RoomCategory roomCategory) {
-        roomCategory.setUpdatedOn(new Date());
-        return categoryRepository.updateCategory(roomCategory);
+    public boolean updateCategory(RoomCategory roomCategory) throws CategoryInUseException {
+        if (categoryRepository.isCategoryInUse(roomCategory)) {
+            throw new CategoryInUseException(" Cannot update this category because it is already in use. ");
+        } else {
+            roomCategory.setUpdatedOn(new Date());
+            return categoryRepository.updateCategory(roomCategory);
+        }
+
     }
 
     @Override
@@ -45,7 +50,18 @@ public class RoomCategoryServiceImpl implements RoomCategoryService {
     }
 
     @Override
-    public void delete(RoomCategory roomCategory) {
-        categoryRepository.deleteCategory(roomCategory);
+    public void delete(RoomCategory roomCategory) throws CategoryInUseException {
+        if (categoryRepository.isCategoryInUse(roomCategory)) {
+            throw new CategoryInUseException(" Cannot delete this category because it is already in use. ");
+        } else {
+            categoryRepository.deleteCategory(roomCategory);
+        }
+
+    }
+
+
+    @Override
+    public boolean isCategoryInUse(RoomCategory roomCategory) {
+        return categoryRepository.isCategoryInUse(roomCategory);
     }
 }
